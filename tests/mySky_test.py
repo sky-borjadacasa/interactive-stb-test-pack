@@ -4,7 +4,7 @@ import stbt
 
 def test_open_mysky():
 	stbt.press('KEY_YELLOW')
-	assert stbt.wait_for_match('images/blob_sky_logo.jpg')
+	assert stbt.wait_for_match('mySky/blob_sky_logo.jpg')
 
 ### Old examples:
 def test_that_live_tv_is_playing():
