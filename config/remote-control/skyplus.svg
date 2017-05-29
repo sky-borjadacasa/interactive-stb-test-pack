@@ -38,7 +38,7 @@
      fit-margin-bottom="0"
      inkscape:window-width="1440"
      inkscape:window-height="851"
-     inkscape:window-x="1920"
+     inkscape:window-x="0"
      inkscape:window-y="23"
      inkscape:window-maximized="0" />
   <metadata
@@ -5048,7 +5048,7 @@ QzFlLrLfxI4AAAAASUVORK5CYII=
        class="key"
        key="KEY_SELECT" />
     <ellipse
-       style="opacity:0.01000001;fill:#000000;fill-opacity:1;stroke-width:0.26458332"
+       style="opacity:0.01;fill:#000000;fill-opacity:1;stroke-width:0.26458332"
        id="path4609"
        cx="128.40776"
        cy="104.36272"
@@ -5129,13 +5129,14 @@ QzFlLrLfxI4AAAAASUVORK5CYII=
        class="key"
        key="KEY_TEXT" />
     <ellipse
-       style="fill:#000000;fill-opacity:1;stroke-width:0.26458332;opacity:0.01"
+       style="opacity:0.01000001;fill:#000000;fill-opacity:1;stroke-width:0.26458332"
        id="path4629"
        cx="107.1086"
        cy="135.12817"
        rx="8.0463514"
        ry="5.0486956"
-       class="key" />
+       class="key"
+       key="KEY_BACKUP" />
     <circle
        style="fill:#000000;fill-opacity:1;stroke-width:0.26458332;opacity:0.01"
        id="path4633"
