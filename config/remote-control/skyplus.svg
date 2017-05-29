@@ -5048,13 +5048,14 @@ QzFlLrLfxI4AAAAASUVORK5CYII=
        class="key"
        key="KEY_SELECT" />
     <ellipse
-       style="fill:#000000;fill-opacity:1;stroke-width:0.26458332;opacity:0.01"
+       style="opacity:0.01000001;fill:#000000;fill-opacity:1;stroke-width:0.26458332"
        id="path4609"
        cx="128.40776"
        cy="104.36272"
        rx="4.7331471"
        ry="3.9442894"
-       class="KEY_CHANNELUP" />
+       class="key"
+       key="KEY_CHANNELUP" />
     <ellipse
        style="fill:#000000;fill-opacity:1;stroke-width:0.26458332;opacity:0.01"
        id="path4611"
