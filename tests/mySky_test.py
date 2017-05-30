@@ -20,10 +20,10 @@ def test_open_mysky():
         assert match.match
         print stbt.ocr()
     finally:
-        sleep(1)
         clear_test()
 
 def clear_test():
     """Close MySky app"""
+    sleep(2)
     while stbt.wait_for_match('images/SkyTopLogo.png'):
         stbt.press('KEY_BACKUP')
