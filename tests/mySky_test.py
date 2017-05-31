@@ -28,6 +28,9 @@ def test_open_mysky2():
 def clear_test():
     """Close MySky app"""
     sleep(2)
-    while stbt.wait_for_match('images/SkyTopLogo.png'):
-        sleep(2)
-        stbt.press('KEY_BACKUP')
+    try:
+        while stbt.wait_for_match('images/SkyTopLogo.png'):
+            sleep(2)
+            stbt.press('KEY_BACKUP')
+    except:
+        print 'Nothing to see here'
