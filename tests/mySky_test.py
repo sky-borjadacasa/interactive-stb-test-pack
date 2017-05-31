@@ -24,7 +24,7 @@ def test_open_mysky():
         parameters = stbt.MatchParameters(confirm_method='normed-absdiff', match_threshold=0.8)
         match = stbt.wait_for_match('images/SelectedBackground.png', region=region, match_parameters=parameters)
         print 'TESTING ------'
-        0rint 'Match: {0}, {1}'.format(match.match, match.first_pass_result)
+        print 'Match: {0}, {1}'.format(match.match, match.first_pass_result)
         print 'TESTING ++++++'
         assert match.match
     finally:
