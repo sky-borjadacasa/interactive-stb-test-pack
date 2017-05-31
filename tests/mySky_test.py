@@ -11,6 +11,7 @@ def test_open_mysky():
     """Open MySky app"""
     try:
         stbt.press('KEY_YELLOW')
+        assert stbt.wait_for_match('images/Loading.png')
         assert stbt.wait_for_match('images/SkyTopLogo.png')
     finally:
         clear_test()
