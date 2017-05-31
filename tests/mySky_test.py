@@ -21,7 +21,9 @@ def test_open_mysky():
         assert stbt.match_text("Good afternoon", region=region).match
 
         # Get selectedmenu item:
-        stbt.match('images/SelectedBackground.png', region=region)
+        parameters = stbt.MatchParameters(confirm_method='normed-absdiff')
+        match = stbt.match('images/SelectedBackground.png', region=region, match_parameters=parameters)
+        assert match.match
     finally:
         clear_test()
 
