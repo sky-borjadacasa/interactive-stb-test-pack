@@ -21,6 +21,10 @@ def test_open_mysky2():
         stbt.press('KEY_YELLOW')
         sleep(10)
         region = stbt.Region(880, 0, width=400, height=720)
+        # Just for testing:
+        ocr_result = stbt.ocr()
+        print ocr_result
+
         match = stbt.match_text("Good afternoon", region=region)
         print match.text
         assert match.match
