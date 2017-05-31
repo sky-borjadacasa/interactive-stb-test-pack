@@ -12,23 +12,16 @@ def test_open_mysky():
     try:
         stbt.press('KEY_YELLOW')
         assert stbt.wait_for_match('images/SkyTopLogo.png')
-    finally:
-        clear_test()
-
-def test_open_mysky2():
-    """Open MySky app"""
-    try:
-        stbt.press('KEY_YELLOW')
-        assert stbt.wait_for_match('images/SkyTopLogo.png')
         sleep(10)
         region = stbt.Region(880, 0, width=400, height=720)
         # Just for testing:
         ocr_result = stbt.ocr(region=region)
         print ocr_result
 
-        match = stbt.match_text("Good afternoon", region=region)
-        print match.text
-        assert match.match
+        assert stbt.match_text("Good afternoon", region=region).match
+
+        # Get selectedmenu item:
+        stbt.match('images/SelectedBackground.png', region=region)
     finally:
         clear_test()
 
