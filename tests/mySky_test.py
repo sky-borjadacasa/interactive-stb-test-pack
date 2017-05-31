@@ -5,6 +5,7 @@ Test cases for MySky
 
 from time import sleep
 
+import datetime
 import stbt
 
 def test_open_mysky():
@@ -18,7 +19,7 @@ def test_open_mysky():
         ocr_result = stbt.ocr(region=region)
         print ocr_result
 
-        assert stbt.match_text("Good afternoon", region=region).match
+        assert stbt.match_text(greeting_string(), region=region).match
 
         # Get selectedmenu item:
         parameters = stbt.MatchParameters(confirm_method='normed-absdiff', match_threshold=0.8)
@@ -39,3 +40,16 @@ def clear_test():
             stbt.press('KEY_BACKUP')
     except:
         print 'Nothing to see here'
+
+def greeting_string():
+    """Get greeting string"""
+    now = datetime.datetime.now()
+    mid_day_string = "12:00:00"
+    mid_day = datetime.datetime.strptime(mid_day_string, "%H:%M:%S")
+    mid_day = now.replace(hour=mid_day.time().hour, minute=mid_day.time().minute, \
+        second=mid_day.time().second, microsecond=0)
+
+    if now > mid_day:
+        return 'Good Afternoon'
+    else:
+        return 'Good Morning'
