@@ -22,7 +22,7 @@ def test_open_mysky():
 
         # Get selectedmenu item:
         parameters = stbt.MatchParameters(confirm_method='normed-absdiff', match_threshold=0.8)
-        match = stbt.match('images/SelectedBackground.png', region=region, match_parameters=parameters)
+        match = stbt.wait_for_match('images/SelectedBackground.png', region=region, match_parameters=parameters)
         assert match.match
     finally:
         clear_test()
