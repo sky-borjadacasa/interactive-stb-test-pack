@@ -23,7 +23,7 @@ def test_open_mysky():
         assert stbt.match_text(greeting_string(), region=region).match
 
         # Get selectedmenu item:
-        parameters = stbt.MatchParameters(confirm_method='normed-absdiff', match_threshold=0.8)
+        parameters = stbt.MatchParameters(confirm_method='normed-absdiff', match_threshold=0.8) # Is this relevant?
         match = stbt.match('images/SelectedBackground.png', region=region, match_parameters=parameters)
         print 'TESTING ------'
         print 'Match: {0}, {1}'.format(match.match, match.first_pass_result)
@@ -34,6 +34,20 @@ def test_open_mysky():
         region = match.region
         ocr_result = stbt.ocr(region=region, tesseract_config=ocr_params)
         print ocr_result
+
+        # Find all unselected items:
+        parameters = stbt.MatchParameters(confirm_method='normed-absdiff', match_threshold=0.8) # Is this relevant?
+        matches = stbt.match_all('images/NotSelectedBackground.png', region=region, match_parameters=parameters)
+        for match in matches:
+            print 'TESTING_2 ------'
+            print 'Match: {0}, {1}'.format(match.match, match.first_pass_result)
+            print 'TESTING_2 ++++++'
+            assert match.first_pass_result >= 0.9
+
+            # Get text from selected menu
+            region = match.region
+            ocr_result = stbt.ocr(region=region, tesseract_config=ocr_params)
+            print ocr_result
     finally:
         clear_test()
 
