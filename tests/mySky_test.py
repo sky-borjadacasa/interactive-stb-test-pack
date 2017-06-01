@@ -16,7 +16,8 @@ def test_open_mysky():
         sleep(10)
         region = stbt.Region(880, 0, width=400, height=720)
         # Just for testing:
-        ocr_result = stbt.ocr(region=region)
+        ocr_params = {'language_model_penalty_non_dict_word': 0.5}
+        ocr_result = stbt.ocr(region=region, tesseract_config=ocr_params)
         print ocr_result
 
         assert stbt.match_text(greeting_string(), region=region).match
@@ -28,6 +29,11 @@ def test_open_mysky():
         print 'Match: {0}, {1}'.format(match.match, match.first_pass_result)
         print 'TESTING ++++++'
         assert match.first_pass_result >= 0.9
+
+        # Get text from selected menu
+        region = match.region
+        ocr_result = stbt.ocr(region=region, ocr_params)
+        print ocr_result
     finally:
         clear_test()
 
