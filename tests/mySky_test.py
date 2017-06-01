@@ -32,7 +32,7 @@ def test_open_mysky():
 
         # Get text from selected menu
         region = match.region
-        ocr_result = stbt.ocr(region=region, ocr_params)
+        ocr_result = stbt.ocr(region=region, tesseract_config=ocr_params)
         print ocr_result
     finally:
         clear_test()
