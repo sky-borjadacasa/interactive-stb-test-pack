@@ -22,24 +22,35 @@ for meth in methods:
     method = eval(meth)
 
     # Apply template Matching
-    res = cv2.matchTemplate(img, template, method, mask)
-    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+    count = 0
+    while count < 5:
+        res = cv2.matchTemplate(img, template, method, mask)
 
-    # If the method is TM_SQDIFF or TM_SQDIFF_NORMED, take minimum
-    if method in [cv2.TM_SQDIFF, cv2.TM_SQDIFF_NORMED]:
-        top_left = min_loc
-        bottom_right = max_loc
-        bottom_right = (top_left[0] + w, top_left[1] + h)
-    else:
-        top_left = max_loc
-        bottom_right = (top_left[0] + w, top_left[1] + h)
+        if res == None:
+            break
 
-    cv2.rectangle(img, top_left, bottom_right, 255, 2)
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
 
-    plt.subplot(121), plt.imshow(res, cmap='gray')
-    plt.title('Matching Result'), plt.xticks([]), plt.yticks([])
-    plt.subplot(122), plt.imshow(img, cmap='gray')
-    plt.title('Detected Point'), plt.xticks([]), plt.yticks([])
-    plt.suptitle(meth)
+        # If the method is TM_SQDIFF or TM_SQDIFF_NORMED, take minimum
+        if method in [cv2.TM_SQDIFF, cv2.TM_SQDIFF_NORMED]:
+            top_left = min_loc
+            bottom_right = max_loc
+            bottom_right = (top_left[0] + w, top_left[1] + h)
+        else:
+            top_left = max_loc
+            bottom_right = (top_left[0] + w, top_left[1] + h)
 
-    plt.show()
+        print_image = img.copy()
+        cv2.rectangle(print_image, top_left, bottom_right, 255, 2)
+
+        plt.subplot(121), plt.imshow(res, cmap='gray')
+        plt.title('Matching Result'), plt.xticks([]), plt.yticks([])
+        plt.subplot(122), plt.imshow(print_image, cmap='gray')
+        plt.title('Detected Point'), plt.xticks([]), plt.yticks([])
+        plt.suptitle(meth)
+
+        plt.show()
+
+        # Hide match under black rectangle:
+        cv2.rectangle(img, top_left, bottom_right, (0, 0, 0), -1)
+        count += 1
