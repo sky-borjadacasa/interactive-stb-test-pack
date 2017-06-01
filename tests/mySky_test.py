@@ -37,7 +37,7 @@ def test_open_mysky():
 
         # Find all unselected items:
         parameters = stbt.MatchParameters(confirm_method='none', match_threshold=0.8) # Is this relevant?
-        match = stbt.match_all('images/NotSelectedBackground.png', region=region, match_parameters=parameters)
+        match = stbt.match('images/NotSelectedBackground.png', region=region, match_parameters=parameters)
         print 'TESTING_2 ------'
         print 'Match: {0}, {1}'.format(match.match, match.first_pass_result)
         print 'TESTING_2 ++++++'
