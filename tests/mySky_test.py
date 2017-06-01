@@ -35,7 +35,7 @@ def test_open_mysky():
         ocr_result = stbt.ocr(region=region, tesseract_config=ocr_params)
         print ocr_result
 
-        # Find all unselected items:
+        # Find all unselected items:
         parameters = stbt.MatchParameters(confirm_method='normed-absdiff', match_threshold=0.8) # Is this relevant?
         matches = stbt.match_all('images/NotSelectedBackground.png', region=region, match_parameters=parameters)
         for match in matches:
