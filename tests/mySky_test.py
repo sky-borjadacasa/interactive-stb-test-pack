@@ -27,7 +27,7 @@ def test_open_mysky():
         print 'TESTING ------'
         print 'Match: {0}, {1}'.format(match.match, match.first_pass_result)
         print 'TESTING ++++++'
-        assert match.match
+        assert match.first_pass_result >= 0.9
     finally:
         clear_test()
 
