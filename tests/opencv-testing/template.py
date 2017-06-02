@@ -10,12 +10,13 @@ from matplotlib import pyplot as plt
 img = cv2.imread('MySkyHome.png', 0)
 img2 = img.copy()
 template = cv2.imread('Border.jpg', 0)
-mask = cv2.imread('Mask.png', 0)
+mask = cv2.imread('Mask.jpg', 0)
 w, h = template.shape[::-1]
 
 # All the 6 methods for comparison in a list
 methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR', \
             'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']
+methods = ['cv2.TM_CCOEFF']
 
 for meth in methods:
     img = img2.copy()
@@ -23,13 +24,16 @@ for meth in methods:
 
     # Apply template Matching
     count = 0
-    while count < 5:
+    threshold = 100000000
+    threshold = 50000000
+    while count < 15:
+        count += 1
         res = cv2.matchTemplate(img, template, method, mask)
 
-        if res == None:
-            break
-
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+        print '{0}, {1}'.format(min_val, max_val)
+        if max_val < threshold:
+            continue
 
         # If the method is TM_SQDIFF or TM_SQDIFF_NORMED, take minimum
         if method in [cv2.TM_SQDIFF, cv2.TM_SQDIFF_NORMED]:
@@ -53,4 +57,3 @@ for meth in methods:
 
         # Hide match under black rectangle:
         cv2.rectangle(img, top_left, bottom_right, (0, 0, 0), -1)
-        count += 1
