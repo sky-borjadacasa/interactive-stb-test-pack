@@ -8,7 +8,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 # Constants:
-TM_CCOEFF_THRESHOLD = 100000000 # Maybe it should be 50000000
+TM_CCOEFF_THRESHOLD = 50000000
 TM_CCOEFF_NORMED_THRESHOLD = 0.8
 MAX_MATCHING_LOOPS = 15
 MY_SKY_REGION = ((880, 0), (1280 - 1, 720 - 1)) # The 400 pixels to the right and the whole height of the screen
@@ -74,14 +74,14 @@ def find_image_menu_items(original_image, template, template_mask=None, region=N
 
     # Apply template Matching
     count = 0
-    while count < MAX_MATCHING_LOOPS:
+    while True:
         count += 1
         res = cv2.matchTemplate(image, template, method, template_mask)
 
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
         if max_val < TM_CCOEFF_THRESHOLD:
             print '{0} < {1}'.format(max_val, TM_CCOEFF_THRESHOLD)
-            continue
+            break
         else:
             print '{0} > {1}'.format(max_val, TM_CCOEFF_THRESHOLD)
 
