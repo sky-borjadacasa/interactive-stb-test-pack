@@ -101,23 +101,22 @@ def find_image_menu_items(original_image, template, template_mask=None, region=N
     menu_items.sort(key=lambda x: x.top_left[1])
     
     if show_results:
-        plot_results(original_image, res, menu_items)
+        plot_results(original_image, menu_items, region=region)
 
     return menu_items
 
-def plot_results(image, matching_result, menu_items, region=None):
+def plot_results(image, menu_items, region=None):
     """Function to plot the menus found in an image.
 
     Args:
         image (numpy.ndarray): The image analysed
-        matching_result (numpy.ndarray): The result of the analysis
         menu_items (list(MySkyMenuItem)): List of menu items found
         region (tuple(tuple(int))): Region of the image analysed defined by the top-left and bottom-right coordinates
     """
     print_image = image.copy()
 
-    # TODO: Print region
-    # TODO: Remove res?
+    if region is not None:
+        cv2.rectangle(print_image, region[0], region[1], 255, 2)
 
     count = 0
     for item in menu_items:
@@ -125,12 +124,11 @@ def plot_results(image, matching_result, menu_items, region=None):
         cv2.rectangle(print_image, item.top_left, item.bottom_right, 255, 2)
         count += 1
 
-    plt.subplot(121), plt.imshow(matching_result, cmap='gray')
-    plt.title('Matching Result'), plt.xticks([]), plt.yticks([])
-    plt.subplot(122), plt.imshow(print_image, cmap='gray')
-    plt.title('Detected Point'), plt.xticks([]), plt.yticks([])
+    plt.imshow(print_image, cmap='gray')
+    plt.title('Detected Point')
+    plt.xticks([])
+    plt.yticks([])
     plt.suptitle('Method: TM_CCOEFF')
-
     plt.show()
 
 
