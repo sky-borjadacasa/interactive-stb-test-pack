@@ -37,62 +37,95 @@ class MySkyMenuItem:
     def menu_text(self):
         return self._text
 
+def find_image_menu_items(original_image, template, template_mask=None, region=None, show_results=False):
+    """Function to find the menu items in a given image.
+    This function will return only menu elements with images on them ordered by vertical position.
 
+    Args:
+        image (numpy.ndarray): The image to analyse
+        template (numpy.ndarray): Template of the menu item
+        template (numpy.ndarray): Mask to apply of the menu item
+        region (tuple(tuple(int))): Region of the image to search defined by the top-left and bottom-right coordinates
+
+    Returns:
+        List of the menu items found
+    """
+
+    # These are the 6 methods for comparison in a list:
+    # cv2.TM_CCOEFF
+    # cv2.TM_CCOEFF_NORMED
+    # cv2.TM_CCORR
+    # cv2.TM_CCORR_NORMED
+    # cv2.TM_SQDIFF
+    # cv2.TM_SQDIFF_NORMED
+    method = cv2.TM_CCOEFF
+    width, height = template.shape[::-1]
+    # TODO: Use region
+    imgage = original_image.copy()
+    menu_items = []
+
+    # Apply template Matching
+    count = 0
+    while count < MAX_MATCHING_LOOPS:
+        count += 1
+        res = cv2.matchTemplate(imgage, template, method, template_mask)
+
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+        if max_val < TM_CCOEFF_THRESHOLD:
+            print '{0} < {1}'.format(max_val, TM_CCOEFF_THRESHOLD)
+            continue
+        else:
+            print '{0} > {1}'.format(max_val, TM_CCOEFF_THRESHOLD)
+
+        # If the method is TM_SQDIFF or TM_SQDIFF_NORMED, take minimum
+        top_left = max_loc
+        bottom_right = (top_left[0] + width, top_left[1] + height)
+        item = MySkyMenuItem(top_left, bottom_right)
+        menu_items.append(item)
+
+        # Hide match under black rectangle:
+        cv2.rectangle(imgage, item.top_left, item.bottom_right, (0, 0, 0), -1)
+
+    menu_items.sort(key=lambda x: x.top_left[1])
+    
+    if plot_results:
+        plot_results(original_image, res, menu_items)
+
+    return menu_items, res
+
+def plot_results(image, matching_result, menu_items, region=None):
+    """Function to plot the menus found in an image.
+
+    Args:
+        image (numpy.ndarray): The image analysed
+        matching_result (numpy.ndarray): The result of the analysis
+        menu_items (list(MySkyMenuItem)): List of menu items found
+        region (tuple(tuple(int))): Region of the image analysed defined by the top-left and bottom-right coordinates
+    """
+    print_image = image.copy()
+
+    # TODO: Print region
+
+    count = 0
+    for item in menu_items:
+        print 'Item {0}: ({1}, {2})'.format(count, item.top_left, item.bottom_right)
+        cv2.rectangle(print_image, item.top_left, item.bottom_right, 255, 2)
+        count += 1
+
+    plt.subplot(121), plt.imshow(matching_result, cmap='gray')
+    plt.title('Matching Result'), plt.xticks([]), plt.yticks([])
+    plt.subplot(122), plt.imshow(print_image, cmap='gray')
+    plt.title('Detected Point'), plt.xticks([]), plt.yticks([])
+    plt.suptitle('Method: TM_CCOEFF')
+
+    plt.show()
 
 
 
 # XXX - Testing code
 
-original_image = cv2.imread(TEST_IMAGE_MYSKY_HOME, 0)
+image = cv2.imread(TEST_IMAGE_MYSKY_HOME, 0)
 template = cv2.imread(IMAGE_BORDER, 0)
 mask = cv2.imread(IMAGE_MASK, 0)
-w, h = template.shape[::-1]
 
-# These are the 6 methods for comparison in a list:
-# cv2.TM_CCOEFF
-# cv2.TM_CCOEFF_NORMED
-# cv2.TM_CCORR
-# cv2.TM_CCORR_NORMED
-# cv2.TM_SQDIFF
-# cv2.TM_SQDIFF_NORMED
-
-
-method = cv2.TM_CCOEFF
-img = original_image.copy()
-menu_items = []
-
-# Apply template Matching
-count = 0
-while count < MAX_MATCHING_LOOPS:
-    count += 1
-    res = cv2.matchTemplate(img, template, method, mask)
-
-    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
-    print '{0}, {1}'.format(min_val, max_val)
-    if max_val < TM_CCOEFF_THRESHOLD:
-        continue
-
-    # If the method is TM_SQDIFF or TM_SQDIFF_NORMED, take minimum
-    top_left = max_loc
-    bottom_right = (top_left[0] + w, top_left[1] + h)
-    item = MySkyMenuItem(top_left, bottom_right)
-    menu_items.append(item)
-
-    # Hide match under black rectangle:
-    cv2.rectangle(img, item.top_left, item.bottom_right, (0, 0, 0), -1)
-
-# Show all menus found:
-print_image = original_image.copy()
-menu_items.sort(key=lambda x: x.top_left[1])
-
-for item in menu_items:
-    print 'Item: ({0}, {1}) -> {2}'.format(item.top_left, item.bottom_right, item.top_left[1])
-    cv2.rectangle(print_image, item.top_left, item.bottom_right, 255, 2)
-
-plt.subplot(121), plt.imshow(res, cmap='gray')
-plt.title('Matching Result'), plt.xticks([]), plt.yticks([])
-plt.subplot(122), plt.imshow(print_image, cmap='gray')
-plt.title('Detected Point'), plt.xticks([]), plt.yticks([])
-plt.suptitle('Method: TM_CCOEFF')
-
-plt.show()
+menu_items, res = find_image_menu_items(image, template, mask, show_results=True)
