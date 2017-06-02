@@ -11,6 +11,7 @@ from matplotlib import pyplot as plt
 TM_CCOEFF_THRESHOLD = 100000000 # Maybe it should be 50000000
 TM_CCOEFF_NORMED_THRESHOLD = 0.8
 MAX_MATCHING_LOOPS = 15
+MY_SKY_REGION = ((880, 0), (1280 - 1, 720 - 1)) # The 400 pixels to the right and the whole height of the screen
 
 # Image files:
 IMAGE_BORDER = 'images/Border.png'
@@ -60,15 +61,22 @@ def find_image_menu_items(original_image, template, template_mask=None, region=N
     # cv2.TM_SQDIFF_NORMED
     method = cv2.TM_CCOEFF
     width, height = template.shape[::-1]
-    # TODO: Use region
-    imgage = original_image.copy()
+    
+    if region is not None:
+        x1 = region[0][0]
+        x2 = region[1][0]
+        y1 = region[0][1]
+        y2 = region[1][1]
+        image = original_image[y1:y2, x1:x2].copy()
+    else:
+        image = original_image.copy()
     menu_items = []
 
     # Apply template Matching
     count = 0
     while count < MAX_MATCHING_LOOPS:
         count += 1
-        res = cv2.matchTemplate(imgage, template, method, template_mask)
+        res = cv2.matchTemplate(image, template, method, template_mask)
 
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
         if max_val < TM_CCOEFF_THRESHOLD:
@@ -80,18 +88,22 @@ def find_image_menu_items(original_image, template, template_mask=None, region=N
         # If the method is TM_SQDIFF or TM_SQDIFF_NORMED, take minimum
         top_left = max_loc
         bottom_right = (top_left[0] + width, top_left[1] + height)
+
+        # Hide match under black rectangle:
+        cv2.rectangle(image, top_left, bottom_right, (0, 0, 0), -1)
+
+        if region is not None:
+            top_left = (top_left[0] + x1, top_left[1] + y1)
+            bottom_right = (bottom_right[0] + x1, bottom_right[1] + y1)
         item = MySkyMenuItem(top_left, bottom_right)
         menu_items.append(item)
 
-        # Hide match under black rectangle:
-        cv2.rectangle(imgage, item.top_left, item.bottom_right, (0, 0, 0), -1)
-
     menu_items.sort(key=lambda x: x.top_left[1])
     
-    if plot_results:
+    if show_results:
         plot_results(original_image, res, menu_items)
 
-    return menu_items, res
+    return menu_items
 
 def plot_results(image, matching_result, menu_items, region=None):
     """Function to plot the menus found in an image.
@@ -105,6 +117,7 @@ def plot_results(image, matching_result, menu_items, region=None):
     print_image = image.copy()
 
     # TODO: Print region
+    # TODO: Remove res?
 
     count = 0
     for item in menu_items:
@@ -128,4 +141,4 @@ image = cv2.imread(TEST_IMAGE_MYSKY_HOME, 0)
 template = cv2.imread(IMAGE_BORDER, 0)
 mask = cv2.imread(IMAGE_MASK, 0)
 
-menu_items, res = find_image_menu_items(image, template, mask, show_results=True)
+menu_items = find_image_menu_items(image, template, mask, region=MY_SKY_REGION, show_results=True)
