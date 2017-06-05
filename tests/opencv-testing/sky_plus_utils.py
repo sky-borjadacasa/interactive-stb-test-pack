@@ -12,6 +12,8 @@ TM_CCOEFF_THRESHOLD = 50000000
 TM_CCOEFF_NORMED_THRESHOLD = 0.8
 MAX_MATCHING_LOOPS = 15
 MY_SKY_REGION = ((880, 0), (1280 - 1, 720 - 1)) # The 400 pixels to the right and the whole height of the screen
+MY_SKY_TEXT_MENU_REGION = ((920, 125), (1240, 550))
+VERTICAL_UNSELECTED_TEXT_MENU_ITEM_SIZE = 50
 
 # Image files:
 IMAGE_BORDER = 'images/Border.png'
@@ -101,13 +103,12 @@ def generic_item_find(original_image, template, template_mask=None, region=None)
     menu_items.sort(key=lambda x: x.top_left[1])
     return menu_items
 
-def find_image_menu_items(original_image, region=None, show_results=False):
+def find_image_menu_items(original_image, show_results=False):
     """Function to find the menu items with an image in a given image.
     This function will return only menu elements with images on them ordered by vertical position.
 
     Args:
         image (numpy.ndarray): The image to analyse
-        region (tuple(tuple(int))): Region of the image to search defined by the top-left and bottom-right coordinates
         show_results (bool): If True, will open a window with the items found drawn on top of the original image
 
     Returns:
@@ -119,32 +120,60 @@ def find_image_menu_items(original_image, region=None, show_results=False):
     menu_items = generic_item_find(original_image, template, mask, region=MY_SKY_REGION)
     
     if show_results:
-        plot_results(original_image, menu_items, region=region)
+        plot_results(original_image, menu_items, region=MY_SKY_REGION)
 
     return menu_items
 
-def find_text_menu_items(original_image, region=None, show_results=False):
+def find_text_menu_items(original_image, show_results=False):
     """Function to find the menu items with only text in a given image.
     This function will return only menu elements with text on them ordered by vertical position.
 
     Args:
         image (numpy.ndarray): The image to analyse
-        region (tuple(tuple(int))): Region of the image to search defined by the top-left and bottom-right coordinates
         show_results (bool): If True, will open a window with the items found drawn on top of the original image
 
     Returns:
         List of the menu items found
     """
 
+    # This will find the only selected menu item:
     template = cv2.imread(IMAGE_BORDER_SMALL, 0)
     mask = cv2.imread(IMAGE_MASK_SMALL, 0)
-    # menu_items = generic_item_find(original_image, template, mask, region=MY_SKY_REGION)
+    menu_items = generic_item_find(original_image, template, mask, region=MY_SKY_REGION)
 
-    template = cv2.imread(LINE_SEPARATOR, 0)
-    menu_items = generic_item_find(original_image, template, region=MY_SKY_REGION)
+    # Try to find not selected items, based on size and OCR results (later)
+    selected_item = menu_items[0]
+    region_top = MY_SKY_TEXT_MENU_REGION[0][1]
+    region_bottom = MY_SKY_TEXT_MENU_REGION[1][1]
+
+    # Search up:
+    point = selected_item.top_left[1]
+    while point >= region_top:
+        print 'Top: {0}, Point: {1}'.format(region_top, point)
+        point -= VERTICAL_UNSELECTED_TEXT_MENU_ITEM_SIZE
+        if point >= region_top:
+            top_left = (selected_item.top_left[0], point)
+            bottom_right = (selected_item.bottom_right[0], point + VERTICAL_UNSELECTED_TEXT_MENU_ITEM_SIZE)
+            item = MySkyMenuItem(top_left, bottom_right)
+            menu_items.append(item)
+        else:
+            break
+
+    # Search down:
+    point = menu_items[0].bottom_right[1]
+    while point <= region_bottom:
+        print 'Bottom: {0}, Point: {1}'.format(region_bottom, point)
+        if point + VERTICAL_UNSELECTED_TEXT_MENU_ITEM_SIZE  <= region_bottom:
+            top_left = (selected_item.top_left[0], point)
+            bottom_right = (selected_item.bottom_right[0], point + VERTICAL_UNSELECTED_TEXT_MENU_ITEM_SIZE)
+            item = MySkyMenuItem(top_left, bottom_right)
+            menu_items.append(item)
+        else:
+            break
+        point += VERTICAL_UNSELECTED_TEXT_MENU_ITEM_SIZE
     
     if show_results:
-        plot_results(original_image, menu_items, region=region)
+        plot_results(original_image, menu_items, region=MY_SKY_TEXT_MENU_REGION)
 
     return menu_items
 
@@ -180,8 +209,10 @@ def plot_results(image, menu_items, region=None):
 # XXX - Testing code
 
 image = cv2.imread(TEST_IMAGE_MYSKY_HOME, 0)
-template = cv2.imread(IMAGE_BORDER, 0)
-mask = cv2.imread(IMAGE_MASK, 0)
+menu_items = find_image_menu_items(image, show_results=True)
+
+image = cv2.imread(TEST_IMAGE_MYSKY_MENU, 0)
+menu_items = find_image_menu_items(image, show_results=True)
 
 image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, 0)
-menu_items = find_text_menu_items(image, region=MY_SKY_REGION, show_results=True)
+menu_items = find_text_menu_items(image, show_results=True)
