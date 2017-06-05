@@ -38,14 +38,14 @@ class MySkyMenuItem:
     def menu_text(self):
         return self._text
 
-def find_image_menu_items(original_image, template, template_mask=None, region=None, show_results=False):
-    """Function to find the menu items in a given image.
+def generic_item_find(original_image, template, template_mask=None, region=None):
+    """Function to find the menu items matching a given template.
     This function will return only menu elements with images on them ordered by vertical position.
 
     Args:
         image (numpy.ndarray): The image to analyse
         template (numpy.ndarray): Template of the menu item
-        template (numpy.ndarray): Mask to apply of the menu item
+        template_mask (numpy.ndarray): Mask to apply of the menu item
         region (tuple(tuple(int))): Region of the image to search defined by the top-left and bottom-right coordinates
 
     Returns:
@@ -99,11 +99,55 @@ def find_image_menu_items(original_image, template, template_mask=None, region=N
         menu_items.append(item)
 
     menu_items.sort(key=lambda x: x.top_left[1])
+    return menu_items
+
+def find_image_menu_items(original_image, region=None, show_results=False):
+    """Function to find the menu items with an image in a given image.
+    This function will return only menu elements with images on them ordered by vertical position.
+
+    Args:
+        image (numpy.ndarray): The image to analyse
+        region (tuple(tuple(int))): Region of the image to search defined by the top-left and bottom-right coordinates
+        show_results (bool): If True, will open a window with the items found drawn on top of the original image
+
+    Returns:
+        List of the menu items found
+    """
+
+    template = cv2.imread(IMAGE_BORDER, 0)
+    mask = cv2.imread(IMAGE_MASK, 0)
+    menu_items = generic_item_find(original_image, template, mask, region=MY_SKY_REGION)
     
     if show_results:
         plot_results(original_image, menu_items, region=region)
 
     return menu_items
+
+def find_text_menu_items(original_image, region=None, show_results=False):
+    """Function to find the menu items with only text in a given image.
+    This function will return only menu elements with text on them ordered by vertical position.
+
+    Args:
+        image (numpy.ndarray): The image to analyse
+        region (tuple(tuple(int))): Region of the image to search defined by the top-left and bottom-right coordinates
+        show_results (bool): If True, will open a window with the items found drawn on top of the original image
+
+    Returns:
+        List of the menu items found
+    """
+
+    template = cv2.imread(IMAGE_BORDER_SMALL, 0)
+    mask = cv2.imread(IMAGE_MASK_SMALL, 0)
+    # menu_items = generic_item_find(original_image, template, mask, region=MY_SKY_REGION)
+
+    template = cv2.imread(LINE_SEPARATOR, 0)
+    menu_items = generic_item_find(original_image, template, region=MY_SKY_REGION)
+    
+    if show_results:
+        plot_results(original_image, menu_items, region=region)
+
+    return menu_items
+
 
 def plot_results(image, menu_items, region=None):
     """Function to plot the menus found in an image.
@@ -139,4 +183,5 @@ image = cv2.imread(TEST_IMAGE_MYSKY_HOME, 0)
 template = cv2.imread(IMAGE_BORDER, 0)
 mask = cv2.imread(IMAGE_MASK, 0)
 
-menu_items = find_image_menu_items(image, template, mask, region=MY_SKY_REGION, show_results=True)
+image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, 0)
+menu_items = find_text_menu_items(image, region=MY_SKY_REGION, show_results=True)
