@@ -34,6 +34,7 @@ class MySkyMenuItem:
     """Class to store the attributes of a MySky menu item"""
 
     text = ''
+    selected = False
 
     def __init__(self, image, top_left, bottom_right):
         self.top_left = top_left
@@ -143,6 +144,7 @@ def find_text_menu_items(original_image, show_results=False):
     template = cv2.imread(IMAGE_BORDER_SMALL, 0)
     mask = cv2.imread(IMAGE_MASK_SMALL, 0)
     menu_items = generic_item_find(original_image, template, mask, region=MY_SKY_REGION)
+    menu_items[0].selected = True
 
     # Try to find not selected items, based on size and OCR results (later)
     selected_item = menu_items[0]
@@ -158,6 +160,7 @@ def find_text_menu_items(original_image, show_results=False):
             top_left = (selected_item.top_left[0], point)
             bottom_right = (selected_item.bottom_right[0], point + VERTICAL_UNSELECTED_TEXT_MENU_ITEM_SIZE)
             item = MySkyMenuItem(original_image, top_left, bottom_right)
+            item.selected = False
             menu_items.append(item)
         else:
             break
@@ -170,6 +173,7 @@ def find_text_menu_items(original_image, show_results=False):
             top_left = (selected_item.top_left[0], point)
             bottom_right = (selected_item.bottom_right[0], point + VERTICAL_UNSELECTED_TEXT_MENU_ITEM_SIZE)
             item = MySkyMenuItem(original_image, top_left, bottom_right)
+            item.selected = False
             menu_items.append(item)
         else:
             break
@@ -245,21 +249,21 @@ image = cv2.imread(TEST_IMAGE_MYSKY_HOME, 0)
 menu_items = find_image_menu_items(image, show_results=True)
 
 for item in menu_items:
-    print 'Item: {0}, ({1})'.format(item.text.encode('utf-8'), item.region())
+    print 'Item: [{0}] {1}, ({2})'.format(item.selected, item.text.encode('utf-8'), item.region())
     show_pillow_image(image, item.region())
 
 image = cv2.imread(TEST_IMAGE_MYSKY_MENU, 0)
 menu_items = find_image_menu_items(image, show_results=True)
 
 for item in menu_items:
-    print 'Item: {0}, ({1})'.format(item.text.encode('utf-8'), item.region())
+    print 'Item: [{0}] {1}, ({2})'.format(item.selected, item.text.encode('utf-8'), item.region())
     show_pillow_image(image, item.region())
 
 image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, 0)
 menu_items = find_text_menu_items(image, show_results=True)
 
 for item in menu_items:
-    print 'Item: {0}, ({1})'.format(item.text.encode('utf-8'), item.region())
+    print 'Item: [{0}] {1}, ({2})'.format(item.selected, item.text.encode('utf-8'), item.region())
     show_pillow_image(image, item.region())
 
 print 'Finish'
