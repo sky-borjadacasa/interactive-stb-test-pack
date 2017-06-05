@@ -6,6 +6,7 @@ Library with utilities for navigating SkyPlusHD box menus
 import cv2
 import numpy as np
 import tesserocr
+# TODO: Use stbt.ocr if available
 from PIL import Image
 from matplotlib import pyplot as plt
 
@@ -243,14 +244,22 @@ def show_numpy_image(image, title, subtitle):
 image = cv2.imread(TEST_IMAGE_MYSKY_HOME, 0)
 menu_items = find_image_menu_items(image, show_results=True)
 
+for item in menu_items:
+    print 'Item: {0}, ({1})'.format(item.text.encode('utf-8'), item.region())
+    show_pillow_image(image, item.region())
+
 image = cv2.imread(TEST_IMAGE_MYSKY_MENU, 0)
 menu_items = find_image_menu_items(image, show_results=True)
+
+for item in menu_items:
+    print 'Item: {0}, ({1})'.format(item.text.encode('utf-8'), item.region())
+    show_pillow_image(image, item.region())
 
 image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, 0)
 menu_items = find_text_menu_items(image, show_results=True)
 
 for item in menu_items:
-    print 'Item: {0}, ({1})'.format(item.text, item.region())
+    print 'Item: {0}, ({1})'.format(item.text.encode('utf-8'), item.region())
     show_pillow_image(image, item.region())
 
 print 'Finish'
