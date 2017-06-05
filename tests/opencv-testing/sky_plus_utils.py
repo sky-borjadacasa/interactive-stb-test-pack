@@ -5,6 +5,8 @@ Library with utilities for navigating SkyPlusHD box menus
 
 import cv2
 import numpy as np
+import tesserocr
+from PIL import Image
 from matplotlib import pyplot as plt
 
 # Constants:
@@ -30,15 +32,15 @@ TEST_IMAGE_MYSKY_MENU_1 = 'MySkyMenu1.png'
 class MySkyMenuItem:
     """Class to store the attributes of a MySky menu item"""
 
-    _text = ''
+    text = ''
 
-    def __init__(self, top_left, bottom_right):
+    def __init__(self, image, top_left, bottom_right):
         self.top_left = top_left
         self.bottom_right = bottom_right
-        # TODO: Get text from box
+        self.text = find_text(image, (top_left, bottom_right))
 
-    def menu_text(self):
-        return self._text
+    def region(self):
+        return (self.top_left, self.bottom_right)
 
 def generic_item_find(original_image, template, template_mask=None, region=None):
     """Function to find the menu items matching a given template.
@@ -97,7 +99,7 @@ def generic_item_find(original_image, template, template_mask=None, region=None)
         if region is not None:
             top_left = (top_left[0] + x1, top_left[1] + y1)
             bottom_right = (bottom_right[0] + x1, bottom_right[1] + y1)
-        item = MySkyMenuItem(top_left, bottom_right)
+        item = MySkyMenuItem(original_image, top_left, bottom_right)
         menu_items.append(item)
 
     menu_items.sort(key=lambda x: x.top_left[1])
@@ -154,7 +156,7 @@ def find_text_menu_items(original_image, show_results=False):
         if point >= region_top:
             top_left = (selected_item.top_left[0], point)
             bottom_right = (selected_item.bottom_right[0], point + VERTICAL_UNSELECTED_TEXT_MENU_ITEM_SIZE)
-            item = MySkyMenuItem(top_left, bottom_right)
+            item = MySkyMenuItem(original_image, top_left, bottom_right)
             menu_items.append(item)
         else:
             break
@@ -166,12 +168,19 @@ def find_text_menu_items(original_image, show_results=False):
         if point + VERTICAL_UNSELECTED_TEXT_MENU_ITEM_SIZE  <= region_bottom:
             top_left = (selected_item.top_left[0], point)
             bottom_right = (selected_item.bottom_right[0], point + VERTICAL_UNSELECTED_TEXT_MENU_ITEM_SIZE)
-            item = MySkyMenuItem(top_left, bottom_right)
+            item = MySkyMenuItem(original_image, top_left, bottom_right)
             menu_items.append(item)
         else:
             break
         point += VERTICAL_UNSELECTED_TEXT_MENU_ITEM_SIZE
-    
+
+    for item in menu_items:
+        item.text = find_text(original_image, item.region())
+
+    # Clean and sort results:
+    menu_items = [item for item in menu_items if item.text]
+    menu_items.sort(key=lambda x: x.top_left[1])
+
     if show_results:
         plot_results(original_image, menu_items, region=MY_SKY_TEXT_MENU_REGION)
 
@@ -197,12 +206,35 @@ def plot_results(image, menu_items, region=None):
         cv2.rectangle(print_image, item.top_left, item.bottom_right, 255, 2)
         count += 1
 
-    plt.imshow(print_image, cmap='gray')
-    plt.title('Detected Point')
+    show_numpy_image(print_image, 'Detected Point', 'Method: TM_CCOEFF')
+
+def find_text(image, region):
+    cropped_image = crop_image(image, region)
+    pil_image = Image.fromarray(np.rollaxis(cropped_image, 0, 1))
+    return tesserocr.image_to_text(pil_image).strip()
+
+def crop_image(image, region):
+    x1 = region[0][0]
+    x2 = region[1][0]
+    y1 = region[0][1]
+    y2 = region[1][1]
+    return image[y1:y2, x1:x2].copy()
+
+def show_pillow_image(image, region):
+    cropped_image = crop_image(image, region)
+    pil_image = Image.fromarray(np.rollaxis(cropped_image, 0, 1))
+    pil_image.show()
+
+def show_numpy_image(image, title, subtitle):
+    plt.imshow(image, cmap='gray')
+    plt.title(title)
+    plt.suptitle(subtitle)
     plt.xticks([])
     plt.yticks([])
-    plt.suptitle('Method: TM_CCOEFF')
     plt.show()
+
+
+
 
 
 
@@ -216,3 +248,9 @@ menu_items = find_image_menu_items(image, show_results=True)
 
 image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, 0)
 menu_items = find_text_menu_items(image, show_results=True)
+
+for item in menu_items:
+    print 'Item: {0}, ({1})'.format(item.text, item.region())
+    show_pillow_image(image, item.region())
+
+print 'Finish'
