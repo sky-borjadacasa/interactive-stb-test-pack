@@ -11,12 +11,14 @@ from PIL import Image
 from matplotlib import pyplot as plt
 
 # Constants:
+DEBUG_MODE = True
 TM_CCOEFF_THRESHOLD = 50000000
-TM_CCOEFF_NORMED_THRESHOLD = 0.8
 MAX_MATCHING_LOOPS = 15
 MY_SKY_REGION = ((880, 0), (1280 - 1, 720 - 1)) # The 400 pixels to the right and the whole height of the screen
 MY_SKY_TEXT_MENU_REGION = ((920, 125), (1240, 550))
-VERTICAL_UNSELECTED_TEXT_MENU_ITEM_SIZE = 50
+VERTICAL_TEXT_SIZE = 50
+VERTICAL_TEXT_SIZE_WITH_IMAGE = 70
+HORIZONAL_TEXT_MARGIN = 15
 
 # Image files:
 IMAGE_BORDER = 'images/Border.png'
@@ -107,13 +109,12 @@ def generic_item_find(original_image, template, template_mask=None, region=None)
     menu_items.sort(key=lambda x: x.top_left[1])
     return menu_items
 
-def find_image_menu_items(original_image, show_results=False):
+def find_image_menu_items(original_image):
     """Function to find the menu items with an image in a given image.
     This function will return only menu elements with images on them ordered by vertical position.
 
     Args:
         image (numpy.ndarray): The image to analyse
-        show_results (bool): If True, will open a window with the items found drawn on top of the original image
 
     Returns:
         List of the menu items found
@@ -123,18 +124,17 @@ def find_image_menu_items(original_image, show_results=False):
     mask = cv2.imread(IMAGE_MASK, 0)
     menu_items = generic_item_find(original_image, template, mask, region=MY_SKY_REGION)
     
-    if show_results:
+    if DEBUG_MODE:
         plot_results(original_image, menu_items, region=MY_SKY_REGION)
 
     return menu_items
 
-def find_text_menu_items(original_image, show_results=False):
+def find_text_menu_items(original_image):
     """Function to find the menu items with only text in a given image.
     This function will return only menu elements with text on them ordered by vertical position.
 
     Args:
         image (numpy.ndarray): The image to analyse
-        show_results (bool): If True, will open a window with the items found drawn on top of the original image
 
     Returns:
         List of the menu items found
@@ -186,7 +186,7 @@ def find_text_menu_items(original_image, show_results=False):
     menu_items = [item for item in menu_items if item.text]
     menu_items.sort(key=lambda x: x.top_left[1])
 
-    if show_results:
+    if DEBUG_MODE:
         plot_results(original_image, menu_items, region=MY_SKY_TEXT_MENU_REGION)
 
     return menu_items
@@ -244,26 +244,22 @@ def show_numpy_image(image, title, subtitle):
 
 
 # XXX - Testing code
-
 image = cv2.imread(TEST_IMAGE_MYSKY_HOME, 0)
-menu_items = find_image_menu_items(image, show_results=True)
+menu_items = find_image_menu_items(image)
 
 for item in menu_items:
     print 'Item: [{0}] {1}, ({2})'.format(item.selected, item.text.encode('utf-8'), item.region())
-    show_pillow_image(image, item.region())
 
 image = cv2.imread(TEST_IMAGE_MYSKY_MENU, 0)
-menu_items = find_image_menu_items(image, show_results=True)
+menu_items = find_image_menu_items(image)
 
 for item in menu_items:
     print 'Item: [{0}] {1}, ({2})'.format(item.selected, item.text.encode('utf-8'), item.region())
-    show_pillow_image(image, item.region())
 
 image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, 0)
-menu_items = find_text_menu_items(image, show_results=True)
+menu_items = find_text_menu_items(image)
 
 for item in menu_items:
     print 'Item: [{0}] {1}, ({2})'.format(item.selected, item.text.encode('utf-8'), item.region())
-    show_pillow_image(image, item.region())
 
 print 'Finish'
