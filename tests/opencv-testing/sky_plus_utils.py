@@ -4,6 +4,7 @@ Library with utilities for navigating SkyPlusHD box menus
 """
 
 import cv2
+import string
 import numpy as np
 import tesserocr
 # TODO: Use stbt.ocr if available
@@ -12,13 +13,15 @@ from matplotlib import pyplot as plt
 
 # Constants:
 DEBUG_MODE = True
-TM_CCOEFF_THRESHOLD = 50000000
+TM_CCOEFF_THRESHOLD_BOX_ITEM = 250000000
+TM_CCOEFF_THRESHOLD_TEXT_ITEM = 140000000
 MAX_MATCHING_LOOPS = 15
 MY_SKY_REGION = ((880, 0), (1280 - 1, 720 - 1)) # The 400 pixels to the right and the whole height of the screen
 MY_SKY_TEXT_MENU_REGION = ((920, 125), (1240, 550))
 VERTICAL_TEXT_SIZE = 50
 VERTICAL_TEXT_SIZE_WITH_IMAGE = 45
 HORIZONAL_TEXT_MARGIN = 15
+OCR_CHAR_WHITELIST = string.ascii_letters + ' ' + string.digits
 
 # Image files:
 IMAGE_BORDER = 'images/Border.png'
@@ -43,12 +46,11 @@ class MySkyMenuItem:
     def __init__(self, image, top_left, bottom_right):
         self.top_left = top_left
         self.bottom_right = bottom_right
-        self.text = find_text(image, (top_left, bottom_right))
 
     def region(self):
         return (self.top_left, self.bottom_right)
 
-def generic_item_find(original_image, template, template_mask=None, region=None):
+def generic_item_find(original_image, template, threshold, template_mask=None, region=None):
     """Function to find the menu items matching a given template.
     This function will return only menu elements with images on them ordered by vertical position.
 
@@ -70,7 +72,7 @@ def generic_item_find(original_image, template, template_mask=None, region=None)
     # cv2.TM_SQDIFF
     # cv2.TM_SQDIFF_NORMED
     method = cv2.TM_CCOEFF
-    width, height = template.shape[::-1]
+    depth, width, height = template.shape[::-1]
     
     if region is not None:
         x1 = region[0][0]
@@ -89,11 +91,11 @@ def generic_item_find(original_image, template, template_mask=None, region=None)
         res = cv2.matchTemplate(image, template, method, template_mask)
 
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
-        if max_val < TM_CCOEFF_THRESHOLD:
-            print '{0} < {1}'.format(max_val, TM_CCOEFF_THRESHOLD)
+        if max_val < threshold:
+            print '{0} < {1}'.format(max_val, threshold)
             break
         else:
-            print '{0} > {1}'.format(max_val, TM_CCOEFF_THRESHOLD)
+            print '{0} > {1}'.format(max_val, threshold)
 
         # If the method is TM_SQDIFF or TM_SQDIFF_NORMED, take minimum
         top_left = max_loc
@@ -122,9 +124,9 @@ def find_image_menu_items(original_image):
         List of the menu items found
     """
 
-    template = cv2.imread(IMAGE_BORDER, 0)
-    mask = cv2.imread(IMAGE_MASK, 0)
-    menu_items = generic_item_find(original_image, template, mask, region=MY_SKY_REGION)
+    template = cv2.imread(IMAGE_BORDER, cv2.IMREAD_COLOR)
+    mask = cv2.imread(IMAGE_MASK, cv2.IMREAD_COLOR)
+    menu_items = generic_item_find(original_image, template, TM_CCOEFF_THRESHOLD_BOX_ITEM, mask, region=MY_SKY_REGION)
 
     for item in menu_items:
         item.text, item.selected = get_image_menu_item_text(original_image, item.region())
@@ -146,10 +148,11 @@ def find_text_menu_items(original_image):
     """
 
     # This will find the only selected menu item:
-    template = cv2.imread(IMAGE_BORDER_SMALL, 0)
-    mask = cv2.imread(IMAGE_MASK_SMALL, 0)
-    menu_items = generic_item_find(original_image, template, mask, region=MY_SKY_REGION)
+    template = cv2.imread(IMAGE_BORDER_SMALL, cv2.IMREAD_COLOR)
+    mask = cv2.imread(IMAGE_MASK_SMALL, cv2.IMREAD_COLOR)
+    menu_items = generic_item_find(original_image, template, TM_CCOEFF_THRESHOLD_TEXT_ITEM, mask, region=MY_SKY_REGION)
     menu_items[0].selected = True
+    # TODO: Exit if no selected item
 
     # Try to find not selected items, based on size and OCR results (later)
     selected_item = menu_items[0]
@@ -237,13 +240,24 @@ def get_image_menu_item_text(image, region):
         show_pillow_image(image, text_region)
 
     # TODO: Find out if selected or not
+    color = average_color(image, region)
 
     return text, selected 
 
 def find_text(image, region):
     cropped_image = crop_image(image, region)
     pil_image = Image.fromarray(np.rollaxis(cropped_image, 0, 1))
-    return tesserocr.image_to_text(pil_image).strip()
+
+    # TODO: Use stbt.ocr
+    with tesserocr.PyTessBaseAPI() as api:
+        api.SetImage(pil_image)
+        # TODO: Refactor
+        api.SetVariable('tessedit_char_whitelist', OCR_CHAR_WHITELIST)
+        api.SetVariable('language_model_penalty_non_dict_word', '0.01')
+        api.SetVariable('tessedit_enable_dict_correction', '1')
+        text = api.GetUTF8Text().strip()
+        print 'Found text: {0}'.format(text.encode('utf-8'))
+        return text
 
 def crop_image(image, region):
     x1 = region[0][0]
@@ -253,17 +267,27 @@ def crop_image(image, region):
     return image[y1:y2, x1:x2].copy()
 
 def show_pillow_image(image, region):
-    cropped_image = crop_image(image, region)
+    rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    cropped_image = crop_image(rgb_image, region)
     pil_image = Image.fromarray(np.rollaxis(cropped_image, 0, 1))
     pil_image.show()
 
 def show_numpy_image(image, title, subtitle):
-    plt.imshow(image, cmap='gray')
+    rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    plt.imshow(rgb_image, cmap='gray')
     plt.title(title)
     plt.suptitle(subtitle)
     plt.xticks([])
     plt.yticks([])
     plt.show()
+
+def average_color(image, region):
+    # XXX
+    cropped_image = crop_image(image, region)
+    row_average = np.average(cropped_image, axis=0)
+    average = np.average(row_average, axis=0)
+    print 'Average color: {0}'.format(average)
+    return average
 
 
 
@@ -271,19 +295,19 @@ def show_numpy_image(image, title, subtitle):
 
 
 # XXX - Testing code
-image = cv2.imread(TEST_IMAGE_MYSKY_HOME, 0)
+image = cv2.imread(TEST_IMAGE_MYSKY_HOME, cv2.IMREAD_COLOR)
 menu_items = find_image_menu_items(image)
 
 for item in menu_items:
     print 'Item: [{0}] {1}, ({2})'.format(item.selected, item.text.encode('utf-8'), item.region())
 
-image = cv2.imread(TEST_IMAGE_MYSKY_MENU, 0)
+image = cv2.imread(TEST_IMAGE_MYSKY_MENU, cv2.IMREAD_COLOR)
 menu_items = find_image_menu_items(image)
 
 for item in menu_items:
     print 'Item: [{0}] {1}, ({2})'.format(item.selected, item.text.encode('utf-8'), item.region())
 
-image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, 0)
+image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, cv2.IMREAD_COLOR)
 menu_items = find_text_menu_items(image)
 
 for item in menu_items:
