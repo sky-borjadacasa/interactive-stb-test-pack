@@ -194,6 +194,9 @@ def find_text_menu_items(original_image):
     if DEBUG_MODE:
         plot_results(original_image, menu_items, region=MY_SKY_TEXT_MENU_REGION)
 
+        for item in menu_items:
+            show_pillow_image(original_image, item.region())
+
     return menu_items
 
 
@@ -228,9 +231,10 @@ def get_image_menu_item_text(image, region):
     y2 = region[1][1]
 
     text_region = ((x1, y1), (x2, y2))
-    show_pillow_image(image, text_region)
     text = find_text(image, text_region).strip()
-    print 'FIND_TEXT_REGION: {0}'.format(text.encode('utf-8'))
+
+    if DEBUG_MODE:
+        show_pillow_image(image, text_region)
 
     # TODO: Find out if selected or not
 
