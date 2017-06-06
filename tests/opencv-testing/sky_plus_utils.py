@@ -17,13 +17,15 @@ MAX_MATCHING_LOOPS = 15
 MY_SKY_REGION = ((880, 0), (1280 - 1, 720 - 1)) # The 400 pixels to the right and the whole height of the screen
 MY_SKY_TEXT_MENU_REGION = ((920, 125), (1240, 550))
 VERTICAL_TEXT_SIZE = 50
-VERTICAL_TEXT_SIZE_WITH_IMAGE = 70
+VERTICAL_TEXT_SIZE_WITH_IMAGE = 45
 HORIZONAL_TEXT_MARGIN = 15
 
 # Image files:
 IMAGE_BORDER = 'images/Border.png'
+IMAGE_BORDER_BIG = 'images/BorderBig.png'
 IMAGE_BORDER_SMALL = 'images/BorderSmall.png'
 IMAGE_MASK = 'images/Mask.png'
+IMAGE_MASK_BIG = 'images/MaskBig.png'
 IMAGE_MASK_SMALL = 'images/MaskSmall.png'
 
 # Test image files:
@@ -123,6 +125,9 @@ def find_image_menu_items(original_image):
     template = cv2.imread(IMAGE_BORDER, 0)
     mask = cv2.imread(IMAGE_MASK, 0)
     menu_items = generic_item_find(original_image, template, mask, region=MY_SKY_REGION)
+
+    for item in menu_items:
+        item.text, item.selected = get_image_menu_item_text(original_image, item.region())
     
     if DEBUG_MODE:
         plot_results(original_image, menu_items, region=MY_SKY_REGION)
@@ -155,10 +160,10 @@ def find_text_menu_items(original_image):
     point = selected_item.top_left[1]
     while point >= region_top:
         print 'Top: {0}, Point: {1}'.format(region_top, point)
-        point -= VERTICAL_UNSELECTED_TEXT_MENU_ITEM_SIZE
+        point -= VERTICAL_TEXT_SIZE
         if point >= region_top:
             top_left = (selected_item.top_left[0], point)
-            bottom_right = (selected_item.bottom_right[0], point + VERTICAL_UNSELECTED_TEXT_MENU_ITEM_SIZE)
+            bottom_right = (selected_item.bottom_right[0], point + VERTICAL_TEXT_SIZE)
             item = MySkyMenuItem(original_image, top_left, bottom_right)
             item.selected = False
             menu_items.append(item)
@@ -169,15 +174,15 @@ def find_text_menu_items(original_image):
     point = menu_items[0].bottom_right[1]
     while point <= region_bottom:
         print 'Bottom: {0}, Point: {1}'.format(region_bottom, point)
-        if point + VERTICAL_UNSELECTED_TEXT_MENU_ITEM_SIZE  <= region_bottom:
+        if point + VERTICAL_TEXT_SIZE  <= region_bottom:
             top_left = (selected_item.top_left[0], point)
-            bottom_right = (selected_item.bottom_right[0], point + VERTICAL_UNSELECTED_TEXT_MENU_ITEM_SIZE)
+            bottom_right = (selected_item.bottom_right[0], point + VERTICAL_TEXT_SIZE)
             item = MySkyMenuItem(original_image, top_left, bottom_right)
             item.selected = False
             menu_items.append(item)
         else:
             break
-        point += VERTICAL_UNSELECTED_TEXT_MENU_ITEM_SIZE
+        point += VERTICAL_TEXT_SIZE
 
     for item in menu_items:
         item.text = find_text(original_image, item.region())
@@ -212,6 +217,24 @@ def plot_results(image, menu_items, region=None):
         count += 1
 
     show_numpy_image(print_image, 'Detected Point', 'Method: TM_CCOEFF')
+
+def get_image_menu_item_text(image, region):
+    text = 'DUMMY'
+    selected = False
+
+    x1 = region[0][0] + HORIZONAL_TEXT_MARGIN
+    x2 = region[1][0] - HORIZONAL_TEXT_MARGIN
+    y1 = region[1][1] - VERTICAL_TEXT_SIZE_WITH_IMAGE
+    y2 = region[1][1]
+
+    text_region = ((x1, y1), (x2, y2))
+    show_pillow_image(image, text_region)
+    text = find_text(image, text_region).strip()
+    print 'FIND_TEXT_REGION: {0}'.format(text.encode('utf-8'))
+
+    # TODO: Find out if selected or not
+
+    return text, selected 
 
 def find_text(image, region):
     cropped_image = crop_image(image, region)
