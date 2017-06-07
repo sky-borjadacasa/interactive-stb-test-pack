@@ -3,11 +3,25 @@
 Library with utilities for navigating SkyPlusHD box menus
 """
 
-import cv2
+# Import util:
+def install_and_import(package):
+    try:
+        importlib.import_module(package)
+    except ImportError:
+        import pip
+        pip.main(['install', package])
+    finally:
+        globals()[package] = importlib.import_module(package)
+
+import importlib
 import string
+install_and_import('cv2')
+install_and_import('numpy')
+install_and_import('tesserocr')
+install_and_import('PIL')
+install_and_import('matplotlib')
+install_and_import('scipy.stats')
 import numpy as np
-import tesserocr
-# TODO: Use stbt.ocr if available
 from PIL import Image
 from matplotlib import pyplot as plt
 from scipy.stats import itemfreq
