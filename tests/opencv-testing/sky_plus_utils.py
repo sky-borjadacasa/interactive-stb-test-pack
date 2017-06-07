@@ -21,10 +21,12 @@ install_and_import('tesserocr')
 install_and_import('PIL')
 install_and_import('matplotlib')
 install_and_import('scipy.stats')
+install_and_import('fuzzyset')
 import numpy as np
 from PIL import Image
 from matplotlib import pyplot as plt
 from scipy.stats import itemfreq
+from fuzzyset import FuzzySet
 
 # Constants:
 DEBUG_MODE = True
@@ -36,7 +38,11 @@ MY_SKY_TEXT_MENU_REGION = ((920, 125), (1240, 550))
 VERTICAL_TEXT_SIZE = 50
 VERTICAL_TEXT_SIZE_WITH_IMAGE = 45
 HORIZONAL_TEXT_MARGIN = 15
+
+# Text recognition:
 OCR_CHAR_WHITELIST = string.ascii_letters + ' ' + string.digits
+FUZZY_DICT_FILENAME = 'fuzzy_dict.txt'
+FUZZY_SET = None
 
 # Colors:
 YELLOW_BACKGROUND_RGB = np.array([235, 189, 0])
@@ -278,15 +284,13 @@ def find_text(image, region):
     pil_image = Image.fromarray(np.rollaxis(cropped_image, 0, 1))
     pil_image.show()
 
-    # TODO: Use stbt.ocr
     with tesserocr.PyTessBaseAPI() as api:
         api.SetImage(pil_image)
-        # TODO: Refactor
         api.SetVariable('tessedit_char_whitelist', OCR_CHAR_WHITELIST)
-        api.SetVariable('language_model_penalty_non_dict_word', '0.01')
-        api.SetVariable('tessedit_enable_dict_correction', '1')
-        text = api.GetUTF8Text().strip()
-        print 'Found text: {0}'.format(text.encode('utf-8'))
+        text = api.GetUTF8Text().strip().encode('utf-8')
+        if text:
+            text = fuzzy_match(text)
+        print 'Found text: {0}'.format(text)
         return text
 
 def crop_image(image, region):
@@ -347,6 +351,19 @@ def rgb_luminance(color):
 
 def bgr_to_rgb(color):
     return color[::-1]
+
+def load_fuzzy_set():
+    file = open(FUZZY_DICT_FILENAME, 'r')
+    lines = [line.lstrip() for line in file.read().split('\n')]
+    return FuzzySet(lines)
+
+FUZZY_SET = load_fuzzy_set()
+
+def fuzzy_match(text):
+    matches = FUZZY_SET.get(text)
+    # We get directly the most likely match
+    return matches[0][1]
+
 
 
 
