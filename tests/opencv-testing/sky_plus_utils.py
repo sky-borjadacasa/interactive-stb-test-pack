@@ -10,6 +10,7 @@ import tesserocr
 # TODO: Use stbt.ocr if available
 from PIL import Image
 from matplotlib import pyplot as plt
+from scipy.stats import itemfreq
 
 # Constants:
 DEBUG_MODE = True
@@ -22,6 +23,13 @@ VERTICAL_TEXT_SIZE = 50
 VERTICAL_TEXT_SIZE_WITH_IMAGE = 45
 HORIZONAL_TEXT_MARGIN = 15
 OCR_CHAR_WHITELIST = string.ascii_letters + ' ' + string.digits
+
+# Colors:
+YELLOW_BACKGROUND_RGB = np.array([235, 189, 0])
+BLUE_BACKGROUND_RGB = np.array([30, 87, 161])
+BLACK_RGB = np.array([0, 0, 0])
+WHITE_RGB = np.array([255, 255, 255])
+COLOR_THRESHOLD = 10
 
 # Image files:
 IMAGE_BORDER = 'images/Border.png'
@@ -219,7 +227,11 @@ def plot_results(image, menu_items, region=None):
     count = 0
     for item in menu_items:
         print 'Item {0}: ({1}, {2})'.format(count, item.top_left, item.bottom_right)
-        cv2.rectangle(print_image, item.top_left, item.bottom_right, 255, 2)
+        if item.selected:
+            color = (0, 0, 255)
+        else:
+            color = (255, 255, 255)
+        cv2.rectangle(print_image, item.top_left, item.bottom_right, color, 2)
         count += 1
 
     show_numpy_image(print_image, 'Detected Point', 'Method: TM_CCOEFF')
@@ -239,14 +251,18 @@ def get_image_menu_item_text(image, region):
     if DEBUG_MODE:
         show_pillow_image(image, text_region)
 
-    # TODO: Find out if selected or not
-    color = average_color(image, region)
+    # Find out if selected or not
+    # Exclude text color from the search:
+    color = dominant_color(image, region, exclude_list=[BLACK_RGB, WHITE_RGB])
+    selected = is_similar_color(bgr_to_rgb(color), YELLOW_BACKGROUND_RGB)
 
     return text, selected 
 
 def find_text(image, region):
     cropped_image = crop_image(image, region)
+    cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
     pil_image = Image.fromarray(np.rollaxis(cropped_image, 0, 1))
+    pil_image.show()
 
     # TODO: Use stbt.ocr
     with tesserocr.PyTessBaseAPI() as api:
@@ -281,14 +297,42 @@ def show_numpy_image(image, title, subtitle):
     plt.yticks([])
     plt.show()
 
-def average_color(image, region):
-    # XXX
+def dominant_color(image, region, exclude_list=[]):
     cropped_image = crop_image(image, region)
-    row_average = np.average(cropped_image, axis=0)
-    average = np.average(row_average, axis=0)
-    print 'Average color: {0}'.format(average)
-    return average
+    arr = np.float32(cropped_image)
+    pixels = arr.reshape((-1, 3))
 
+    n_colors = 5
+    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
+    flags = cv2.KMEANS_RANDOM_CENTERS
+    _, labels, centroids = cv2.kmeans(pixels, n_colors, None, criteria, 10, flags)
+
+    palette = np.uint8(centroids)
+    label_frequency = itemfreq(labels)
+    label_frequency.sort(0)
+
+    for label in label_frequency[::-1]:
+        color = palette[label[0]]
+        rgb_color = bgr_to_rgb(color)
+        exclude = False
+        for exclude_color in exclude_list:
+            if is_similar_color(rgb_color, exclude_color):
+                exclude = True
+                break
+        if exclude:
+            continue
+        else:
+            return color
+
+def is_similar_color(color_a, color_b):
+    distance = abs(rgb_luminance(color_a) - rgb_luminance(color_b))
+    return distance < COLOR_THRESHOLD
+
+def rgb_luminance(color):
+    return (0.299 * color[0] + 0.587 * color[1] + 0.114 * color[2])
+
+def bgr_to_rgb(color):
+    return color[::-1]
 
 
 
