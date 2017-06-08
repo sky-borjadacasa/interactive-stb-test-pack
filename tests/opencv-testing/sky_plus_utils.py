@@ -21,7 +21,7 @@ import string
 install_and_import('cv2', 'opencv-python')
 install_and_import('numpy')
 install_and_import('tesserocr')
-install_and_import('PIL')
+install_and_import('PIL', 'pillow')
 install_and_import('matplotlib')
 install_and_import('scipy.stats', 'scipy')
 install_and_import('fuzzyset')
