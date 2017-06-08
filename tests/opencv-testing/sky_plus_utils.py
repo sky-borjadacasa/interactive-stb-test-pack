@@ -4,23 +4,26 @@ Library with utilities for navigating SkyPlusHD box menus
 """
 
 # Import util:
-def install_and_import(package):
+def install_and_import(package, package_name=None):
     try:
         importlib.import_module(package)
     except ImportError:
         import pip
-        pip.main(['install', package])
+        if package_name is not None:
+            pip.main(['install', package_name])
+        else:
+            pip.main(['install', package])
     finally:
         globals()[package] = importlib.import_module(package)
 
 import importlib
 import string
-install_and_import('cv2')
+install_and_import('cv2', 'opencv-python')
 install_and_import('numpy')
 install_and_import('tesserocr')
 install_and_import('PIL')
 install_and_import('matplotlib')
-install_and_import('scipy.stats')
+install_and_import('scipy.stats', 'scipy')
 install_and_import('fuzzyset')
 import numpy as np
 from PIL import Image
