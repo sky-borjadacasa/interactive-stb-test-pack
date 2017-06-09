@@ -32,12 +32,11 @@ from scipy.stats import itemfreq
 from fuzzyset import FuzzySet
 
 # Constants:
-DEBUG_MODE = True
 TM_CCOEFF_THRESHOLD_BOX_ITEM = 250000000
 TM_CCOEFF_THRESHOLD_TEXT_ITEM = 140000000
 VERTICAL_TEXT_SIZE = 50
 VERTICAL_TEXT_SIZE_WITH_IMAGE = 45
-HORIZONAL_TEXT_MARGIN = 15
+HORIZONAL_TEXT_MARGIN = 10
 
 # Regions:
 MY_SKY_REGION = ((880, 0), (1280 - 1, 720 - 1)) # The 400 pixels to the right and the whole height of the screen
@@ -73,7 +72,7 @@ class MySkyMenuItem(object):
     text = ''
     selected = False
 
-    def __init__(self, image, top_left, bottom_right):
+    def __init__(self, top_left, bottom_right):
         self.top_left = top_left
         self.bottom_right = bottom_right
 
@@ -87,11 +86,18 @@ class SkyPlusTestUtils(object):
         lines = [line.lstrip() for line in file.read().split('\n')]
         return FuzzySet(lines)
 
-    def __init__(self):
+    def __init__(self, image, debug_mode=False, show_images_results=False):
         self.coiso = 'cena'
         self.fuzzy_set = self.load_fuzzy_set()
+        self.image = image
+        self.debug_mode = debug_mode
+        self.show_images_results = show_images_results
 
-    def generic_item_find(self, original_image, template, threshold, template_mask=None, region=None):
+    def debug(self, text):
+        if self.debug_mode:
+            print text
+
+    def generic_item_find(self, template, threshold, template_mask=None, region=None):
         """Function to find the menu items matching a given template.
         This function will return only menu elements with images on them ordered by vertical position.
 
@@ -120,9 +126,9 @@ class SkyPlusTestUtils(object):
             x2 = region[1][0]
             y1 = region[0][1]
             y2 = region[1][1]
-            image = original_image[y1:y2, x1:x2].copy()
+            image = self.image[y1:y2, x1:x2].copy()
         else:
-            image = original_image.copy()
+            image = self.image.copy()
         menu_items = []
 
         # Apply template Matching
@@ -133,10 +139,10 @@ class SkyPlusTestUtils(object):
 
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
             if max_val < threshold:
-                print '{0} < {1}'.format(max_val, threshold)
+                self.debug('{0} < {1}'.format(max_val, threshold))
                 break
             else:
-                print '{0} > {1}'.format(max_val, threshold)
+                self.debug('{0} > {1}'.format(max_val, threshold))
 
             # If the method is TM_SQDIFF or TM_SQDIFF_NORMED, take minimum
             top_left = max_loc
@@ -148,13 +154,13 @@ class SkyPlusTestUtils(object):
             if region is not None:
                 top_left = (top_left[0] + x1, top_left[1] + y1)
                 bottom_right = (bottom_right[0] + x1, bottom_right[1] + y1)
-            item = MySkyMenuItem(original_image, top_left, bottom_right)
+            item = MySkyMenuItem(top_left, bottom_right)
             menu_items.append(item)
 
         menu_items.sort(key=lambda x: x.top_left[1])
         return menu_items
 
-    def find_image_menu_items(self, original_image):
+    def find_image_menu_items(self):
         """Function to find the menu items with an image in a given image.
         This function will return only menu elements with images on them ordered by vertical position.
 
@@ -167,17 +173,17 @@ class SkyPlusTestUtils(object):
 
         template = cv2.imread(IMAGE_BORDER, cv2.IMREAD_COLOR)
         mask = cv2.imread(IMAGE_MASK, cv2.IMREAD_COLOR)
-        menu_items = self.generic_item_find(original_image, template, TM_CCOEFF_THRESHOLD_BOX_ITEM, mask, region=MY_SKY_REGION)
+        menu_items = self.generic_item_find(template, TM_CCOEFF_THRESHOLD_BOX_ITEM, mask, region=MY_SKY_REGION)
 
         for item in menu_items:
-            item.text, item.selected = self.get_image_menu_item_text(original_image, item.region())
+            item.text, item.selected = self.get_image_menu_item_text(item.region())
         
-        if DEBUG_MODE:
-            self.plot_results(original_image, menu_items, region=MY_SKY_REGION)
+        if self.debug_mode and self.show_images_results:
+            self.plot_results(menu_items, region=MY_SKY_REGION)
 
         return menu_items
 
-    def find_text_menu_items(self, original_image):
+    def find_text_menu_items(self):
         """Function to find the menu items with only text in a given image.
         This function will return only menu elements with text on them ordered by vertical position.
 
@@ -191,9 +197,12 @@ class SkyPlusTestUtils(object):
         # This will find the only selected menu item:
         template = cv2.imread(IMAGE_BORDER_SMALL, cv2.IMREAD_COLOR)
         mask = cv2.imread(IMAGE_MASK_SMALL, cv2.IMREAD_COLOR)
-        menu_items = self.generic_item_find(original_image, template, TM_CCOEFF_THRESHOLD_TEXT_ITEM, mask, region=MY_SKY_REGION)
+        menu_items = self.generic_item_find(template, TM_CCOEFF_THRESHOLD_TEXT_ITEM, mask, region=MY_SKY_REGION)
+        if not menu_items:
+            return []
+
+        # Mark the found item as selected:
         menu_items[0].selected = True
-        # TODO: Exit if no selected item
 
         # Try to find not selected items, based on size and OCR results (later)
         selected_item = menu_items[0]
@@ -203,12 +212,12 @@ class SkyPlusTestUtils(object):
         # Search up:
         point = selected_item.top_left[1]
         while point >= region_top:
-            print 'Top: {0}, Point: {1}'.format(region_top, point)
+            self.debug('Top: {0}, Point: {1}'.format(region_top, point))
             point -= VERTICAL_TEXT_SIZE
             if point >= region_top:
                 top_left = (selected_item.top_left[0], point)
                 bottom_right = (selected_item.bottom_right[0], point + VERTICAL_TEXT_SIZE)
-                item = MySkyMenuItem(original_image, top_left, bottom_right)
+                item = MySkyMenuItem(self.image, top_left, bottom_right)
                 item.selected = False
                 menu_items.append(item)
             else:
@@ -217,11 +226,11 @@ class SkyPlusTestUtils(object):
         # Search down:
         point = menu_items[0].bottom_right[1]
         while point <= region_bottom:
-            print 'Bottom: {0}, Point: {1}'.format(region_bottom, point)
+            self.debug('Bottom: {0}, Point: {1}'.format(region_bottom, point))
             if point + VERTICAL_TEXT_SIZE  <= region_bottom:
                 top_left = (selected_item.top_left[0], point)
                 bottom_right = (selected_item.bottom_right[0], point + VERTICAL_TEXT_SIZE)
-                item = MySkyMenuItem(original_image, top_left, bottom_right)
+                item = MySkyMenuItem(top_left, bottom_right)
                 item.selected = False
                 menu_items.append(item)
             else:
@@ -229,37 +238,36 @@ class SkyPlusTestUtils(object):
             point += VERTICAL_TEXT_SIZE
 
         for item in menu_items:
-            item.text = self.find_text(original_image, item.region())
+            item.text = self.find_text(item.region())
 
         # Clean and sort results:
         menu_items = [item for item in menu_items if item.text]
         menu_items.sort(key=lambda x: x.top_left[1])
 
-        if DEBUG_MODE:
-            self.plot_results(original_image, menu_items, region=MY_SKY_TEXT_MENU_REGION)
+        if self.debug_mode and self.show_images_results:
+            self.plot_results(menu_items, region=MY_SKY_TEXT_MENU_REGION)
 
             for item in menu_items:
-                self.show_pillow_image(original_image, item.region())
+                self.show_pillow_image(item.region())
 
         return menu_items
 
 
-    def plot_results(self, image, menu_items, region=None):
+    def plot_results(self, menu_items, region=None):
         """Function to plot the menus found in an image.
 
         Args:
-            image (numpy.ndarray): The image analysed
             menu_items (list(MySkyMenuItem)): List of menu items found
             region (tuple(tuple(int))): Region of the image analysed defined by the top-left and bottom-right coordinates
         """
-        print_image = image.copy()
+        print_image = self.image.copy()
 
         if region is not None:
             cv2.rectangle(print_image, region[0], region[1], 255, 2)
 
         count = 0
         for item in menu_items:
-            print 'Item {0}: ({1}, {2})'.format(count, item.top_left, item.bottom_right)
+            self.debug('Item {0}: ({1}, {2})'.format(count, item.top_left, item.bottom_right))
             if item.selected:
                 color = (0, 0, 255)
             else:
@@ -269,7 +277,7 @@ class SkyPlusTestUtils(object):
 
         self.show_numpy_image(print_image, 'Detected Point', 'Method: TM_CCOEFF')
 
-    def get_image_menu_item_text(self, image, region):
+    def get_image_menu_item_text(self, region):
         text = 'DUMMY'
         selected = False
 
@@ -279,23 +287,24 @@ class SkyPlusTestUtils(object):
         y2 = region[1][1]
 
         text_region = ((x1, y1), (x2, y2))
-        text = self.find_text(image, text_region).strip()
+        text = self.find_text(text_region).strip()
 
-        if DEBUG_MODE:
-            self.show_pillow_image(image, text_region)
+        if self.debug_mode and self.show_images_results:
+            self.show_pillow_image(text_region)
 
         # Find out if selected or not
         # Exclude text color from the search:
-        color = self.dominant_color(image, region, exclude_list=[BLACK_RGB, WHITE_RGB])
+        color = self.dominant_color(self.image, region, exclude_list=[BLACK_RGB, WHITE_RGB])
         selected = self.is_similar_color(self.bgr_to_rgb(color), YELLOW_BACKGROUND_RGB)
 
         return text, selected 
 
-    def find_text(self, image, region):
-        cropped_image = self.crop_image(image, region)
+    def find_text(self, region):
+        cropped_image = self.crop_image(self.image, region)
         cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
         pil_image = Image.fromarray(np.rollaxis(cropped_image, 0, 1))
-        pil_image.show()
+        if self.debug_mode and self.show_images_results:
+            pil_image.show()
 
         with tesserocr.PyTessBaseAPI() as api:
             api.SetImage(pil_image)
@@ -303,7 +312,7 @@ class SkyPlusTestUtils(object):
             text = api.GetUTF8Text().strip().encode('utf-8')
             if text:
                 text = self.fuzzy_match(text)
-            print 'Found text: {0}'.format(text)
+            self.debug('Found text: {0}'.format(text))
             return text
 
     def crop_image(self, image, region):
@@ -313,13 +322,12 @@ class SkyPlusTestUtils(object):
         y2 = region[1][1]
         return image[y1:y2, x1:x2].copy()
 
-    def show_pillow_image(self, image, region):
-        rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    def show_pillow_image(self, region):
+        rgb_image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
         cropped_image = self.crop_image(rgb_image, region)
         pil_image = Image.fromarray(np.rollaxis(cropped_image, 0, 1))
         pil_image.show()
 
-    # XXX - Refactor? Only called once
     def show_numpy_image(self, image, title, subtitle):
         rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         plt.imshow(rgb_image, cmap='gray')
@@ -377,22 +385,23 @@ class SkyPlusTestUtils(object):
 
 
 # XXX - Testing code
-instance = SkyPlusTestUtils()
-
 image = cv2.imread(TEST_IMAGE_MYSKY_HOME, cv2.IMREAD_COLOR)
-menu_items = instance.find_image_menu_items(image)
+instance = SkyPlusTestUtils(image, debug_mode=True, show_images_results=True)
+menu_items = instance.find_image_menu_items()
 
 for item in menu_items:
     print 'Item: [{0}] {1}, ({2})'.format(item.selected, item.text.encode('utf-8'), item.region())
 
 image = cv2.imread(TEST_IMAGE_MYSKY_MENU, cv2.IMREAD_COLOR)
-menu_items = instance.find_image_menu_items(image)
+instance = SkyPlusTestUtils(image, debug_mode=True, show_images_results=True)
+menu_items = instance.find_image_menu_items()
 
 for item in menu_items:
     print 'Item: [{0}] {1}, ({2})'.format(item.selected, item.text.encode('utf-8'), item.region())
 
 image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, cv2.IMREAD_COLOR)
-menu_items = instance.find_text_menu_items(image)
+instance = SkyPlusTestUtils(image, debug_mode=True, show_images_results=True)
+menu_items = instance.find_text_menu_items()
 
 for item in menu_items:
     print 'Item: [{0}] {1}, ({2})'.format(item.selected, item.text.encode('utf-8'), item.region())
