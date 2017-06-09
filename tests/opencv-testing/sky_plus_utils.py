@@ -5,6 +5,12 @@ Library with utilities for navigating SkyPlusHD box menus
 
 # Import util:
 def install_and_import(package, package_name=None):
+    """Function to install and import the needed packages.
+
+    Args:
+        pacakge (str): The name of the package to import
+        package_name (str): Name of the pip package when it's not the same as the package name
+    """
     try:
         importlib.import_module(package)
     except ImportError:
@@ -71,29 +77,143 @@ class MySkyMenuItem(object):
 
     text = ''
     selected = False
+    region = None
 
     def __init__(self, top_left, bottom_right):
         self.top_left = top_left
         self.bottom_right = bottom_right
+        self.region = (top_left, bottom_right)
 
-    def region(self):
-        return (self.top_left, self.bottom_right)
+def load_fuzzy_set():
+    """Function to load the fuzzy matching expression dictionary
+
+    Returns:
+        List of the expressions to match
+    """
+    dict_file = open(FUZZY_DICT_FILENAME, 'r')
+    lines = [line.lstrip() for line in dict_file.read().split('\n')]
+    return FuzzySet(lines)
+
+def crop_image(image, region):
+    """Crop the image
+
+    Args:
+        image (numpy.ndarray): Image to crop
+        region (tuple(tuple(int))): Region to crop
+
+    Returns:
+        Cropped image
+    """
+    x1 = region[0][0]
+    x2 = region[1][0]
+    y1 = region[0][1]
+    y2 = region[1][1]
+    return image[y1:y2, x1:x2].copy()
+
+def show_numpy_image(image, title, subtitle):
+    """Show the given image region on the screen
+
+    Args:
+        image (numpy.ndarray): Image to show
+        title (str): Title to show
+        subtitle (str): Subtitle to show
+    """
+    rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    plt.imshow(rgb_image, cmap='gray')
+    plt.title(title)
+    plt.suptitle(subtitle)
+    plt.xticks([])
+    plt.yticks([])
+    plt.show()
+
+def rgb_luminance(color):
+    """Calculate luminance of RGB color
+
+    Args:
+        color (numpy.ndarray): Color to search in RGB format
+
+    Returns:
+        Luminance of the color
+    """
+    return 0.299 * color[0] + 0.587 * color[1] + 0.114 * color[2]
+
+def bgr_to_rgb(color):
+    """Convert color from BGR to RGB
+
+    Args:
+        color_a (numpy.ndarray): Color in BGR format
+
+    Returns:
+        Color in RGB format
+    """
+    return color[::-1]
+
+def is_similar_color_rgb(color_a, color_b):
+    """Tell if two colors are similar
+
+    Args:
+        color_a (numpy.ndarray): Color to search in RGB format
+        color_b (numpy.ndarray): Color to search in RGB format
+
+    Returns:
+        True if colors distance is lower than defined threshold
+    """
+    distance = abs(rgb_luminance(color_a) - rgb_luminance(color_b))
+    return distance < COLOR_THRESHOLD
+
+def dominant_color(image, region, exclude_list=[]):
+    """Get the dominant color of a region
+
+    Args:
+        image (numpy.ndarray): Image to search
+        region (tuple(tuple(int))): Region of the image to search
+        exclude_list (list): List of colors to avoid searching for
+
+    Returns:
+        RGB color found
+    """
+    cropped_image = crop_image(image, region)
+    arr = np.float32(cropped_image)
+    pixels = arr.reshape((-1, 3))
+
+    n_colors = 5
+    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
+    flags = cv2.KMEANS_RANDOM_CENTERS
+    _, labels, centroids = cv2.kmeans(pixels, n_colors, None, criteria, 10, flags)
+
+    palette = np.uint8(centroids)
+    label_frequency = itemfreq(labels)
+    label_frequency.sort(0)
+
+    for label in label_frequency[::-1]:
+        color = palette[label[0]]
+        rgb_color = bgr_to_rgb(color)
+        exclude = False
+        for exclude_color in exclude_list:
+            if is_similar_color_rgb(rgb_color, exclude_color):
+                exclude = True
+                break
+        if exclude:
+            continue
+        else:
+            return color
 
 class SkyPlusTestUtils(object):
-
-    def load_fuzzy_set(self):
-        file = open(FUZZY_DICT_FILENAME, 'r')
-        lines = [line.lstrip() for line in file.read().split('\n')]
-        return FuzzySet(lines)
+    """Class that contains the logic to analyse the contents of the MySky menu"""
 
     def __init__(self, image, debug_mode=False, show_images_results=False):
         self.coiso = 'cena'
-        self.fuzzy_set = self.load_fuzzy_set()
+        self.fuzzy_set = load_fuzzy_set()
         self.image = image
         self.debug_mode = debug_mode
         self.show_images_results = show_images_results
 
     def debug(self, text):
+        """Print the given text if debug mode is on.
+
+        Args:
+            text (str): The text to print
+        """
         if self.debug_mode:
             print text
 
@@ -102,8 +222,8 @@ class SkyPlusTestUtils(object):
         This function will return only menu elements with images on them ordered by vertical position.
 
         Args:
-            image (numpy.ndarray): The image to analyse
             template (numpy.ndarray): Template of the menu item
+            threshold (int): The threshold to use for matching the template
             template_mask (numpy.ndarray): Mask to apply of the menu item
             region (tuple(tuple(int))): Region of the image to search defined by the top-left and bottom-right coordinates
 
@@ -120,7 +240,7 @@ class SkyPlusTestUtils(object):
         # cv2.TM_SQDIFF_NORMED
         method = cv2.TM_CCOEFF
         depth, width, height = template.shape[::-1]
-        
+
         if region is not None:
             x1 = region[0][0]
             x2 = region[1][0]
@@ -161,11 +281,8 @@ class SkyPlusTestUtils(object):
         return menu_items
 
     def find_image_menu_items(self):
-        """Function to find the menu items with an image in a given image.
+        """Function to find the menu items with an image in the image.
         This function will return only menu elements with images on them ordered by vertical position.
-
-        Args:
-            image (numpy.ndarray): The image to analyse
 
         Returns:
             List of the menu items found
@@ -176,19 +293,16 @@ class SkyPlusTestUtils(object):
         menu_items = self.generic_item_find(template, TM_CCOEFF_THRESHOLD_BOX_ITEM, mask, region=MY_SKY_REGION)
 
         for item in menu_items:
-            item.text, item.selected = self.get_image_menu_item_text(item.region())
-        
+            item.text, item.selected = self.get_image_menu_item_text(item.region)
+
         if self.debug_mode and self.show_images_results:
             self.plot_results(menu_items, region=MY_SKY_REGION)
 
         return menu_items
 
     def find_text_menu_items(self):
-        """Function to find the menu items with only text in a given image.
+        """Function to find the menu items with only text in the image.
         This function will return only menu elements with text on them ordered by vertical position.
-
-        Args:
-            image (numpy.ndarray): The image to analyse
 
         Returns:
             List of the menu items found
@@ -217,7 +331,7 @@ class SkyPlusTestUtils(object):
             if point >= region_top:
                 top_left = (selected_item.top_left[0], point)
                 bottom_right = (selected_item.bottom_right[0], point + VERTICAL_TEXT_SIZE)
-                item = MySkyMenuItem(self.image, top_left, bottom_right)
+                item = MySkyMenuItem(top_left, bottom_right)
                 item.selected = False
                 menu_items.append(item)
             else:
@@ -227,7 +341,7 @@ class SkyPlusTestUtils(object):
         point = menu_items[0].bottom_right[1]
         while point <= region_bottom:
             self.debug('Bottom: {0}, Point: {1}'.format(region_bottom, point))
-            if point + VERTICAL_TEXT_SIZE  <= region_bottom:
+            if point + VERTICAL_TEXT_SIZE <= region_bottom:
                 top_left = (selected_item.top_left[0], point)
                 bottom_right = (selected_item.bottom_right[0], point + VERTICAL_TEXT_SIZE)
                 item = MySkyMenuItem(top_left, bottom_right)
@@ -238,7 +352,7 @@ class SkyPlusTestUtils(object):
             point += VERTICAL_TEXT_SIZE
 
         for item in menu_items:
-            item.text = self.find_text(item.region())
+            item.text = self.find_text(item.region)
 
         # Clean and sort results:
         menu_items = [item for item in menu_items if item.text]
@@ -248,7 +362,7 @@ class SkyPlusTestUtils(object):
             self.plot_results(menu_items, region=MY_SKY_TEXT_MENU_REGION)
 
             for item in menu_items:
-                self.show_pillow_image(item.region())
+                self.show_pillow_image(item.region)
 
         return menu_items
 
@@ -275,9 +389,17 @@ class SkyPlusTestUtils(object):
             cv2.rectangle(print_image, item.top_left, item.bottom_right, color, 2)
             count += 1
 
-        self.show_numpy_image(print_image, 'Detected Point', 'Method: TM_CCOEFF')
+        show_numpy_image(print_image, 'Detected Point', 'Method: TM_CCOEFF')
 
     def get_image_menu_item_text(self, region):
+        """Read the text in the given region and tell if the menu item is selected or not
+
+        Args:
+            region (tuple(tuple(int))): Region of the image to search defined by the top-left and bottom-right coordinates
+
+        Returns:
+            Text and selection status of the given item
+        """
         text = 'DUMMY'
         selected = False
 
@@ -294,13 +416,21 @@ class SkyPlusTestUtils(object):
 
         # Find out if selected or not
         # Exclude text color from the search:
-        color = self.dominant_color(self.image, region, exclude_list=[BLACK_RGB, WHITE_RGB])
-        selected = self.is_similar_color(self.bgr_to_rgb(color), YELLOW_BACKGROUND_RGB)
+        color = dominant_color(self.image, region, exclude_list=[BLACK_RGB, WHITE_RGB])
+        selected = is_similar_color_rgb(bgr_to_rgb(color), YELLOW_BACKGROUND_RGB)
 
-        return text, selected 
+        return text, selected
 
     def find_text(self, region):
-        cropped_image = self.crop_image(self.image, region)
+        """Read the text in the given region
+
+        Args:
+            region (tuple(tuple(int))): Region of the image to search defined by the top-left and bottom-right coordinates
+
+        Returns:
+            Text of the given item
+        """
+        cropped_image = crop_image(self.image, region)
         cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
         pil_image = Image.fromarray(np.rollaxis(cropped_image, 0, 1))
         if self.debug_mode and self.show_images_results:
@@ -315,66 +445,26 @@ class SkyPlusTestUtils(object):
             self.debug('Found text: {0}'.format(text))
             return text
 
-    def crop_image(self, image, region):
-        x1 = region[0][0]
-        x2 = region[1][0]
-        y1 = region[0][1]
-        y2 = region[1][1]
-        return image[y1:y2, x1:x2].copy()
-
     def show_pillow_image(self, region):
+        """Show the given image region on the screen
+
+        Args:
+            region (tuple(tuple(int))): Region of the image to show defined by the top-left and bottom-right coordinates
+        """
         rgb_image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
-        cropped_image = self.crop_image(rgb_image, region)
+        cropped_image = crop_image(rgb_image, region)
         pil_image = Image.fromarray(np.rollaxis(cropped_image, 0, 1))
         pil_image.show()
 
-    def show_numpy_image(self, image, title, subtitle):
-        rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        plt.imshow(rgb_image, cmap='gray')
-        plt.title(title)
-        plt.suptitle(subtitle)
-        plt.xticks([])
-        plt.yticks([])
-        plt.show()
-
-    def dominant_color(self, image, region, exclude_list=[]):
-        cropped_image = self.crop_image(image, region)
-        arr = np.float32(cropped_image)
-        pixels = arr.reshape((-1, 3))
-
-        n_colors = 5
-        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
-        flags = cv2.KMEANS_RANDOM_CENTERS
-        _, labels, centroids = cv2.kmeans(pixels, n_colors, None, criteria, 10, flags)
-
-        palette = np.uint8(centroids)
-        label_frequency = itemfreq(labels)
-        label_frequency.sort(0)
-
-        for label in label_frequency[::-1]:
-            color = palette[label[0]]
-            rgb_color = self.bgr_to_rgb(color)
-            exclude = False
-            for exclude_color in exclude_list:
-                if self.is_similar_color(rgb_color, exclude_color):
-                    exclude = True
-                    break
-            if exclude:
-                continue
-            else:
-                return color
-
-    def is_similar_color(self, color_a, color_b):
-        distance = abs(self.rgb_luminance(color_a) - self.rgb_luminance(color_b))
-        return distance < COLOR_THRESHOLD
-
-    def rgb_luminance(self, color):
-        return (0.299 * color[0] + 0.587 * color[1] + 0.114 * color[2])
-
-    def bgr_to_rgb(self, color):
-        return color[::-1]
-
     def fuzzy_match(self, text):
+        """Get the text fuzzy matched against our dictionary
+
+        Args:
+            text (str): Text to match
+
+        Returns:
+            Matched text
+        """
         matches = self.fuzzy_set.get(text)
         # We get directly the most likely match
         return matches[0][1]
@@ -385,25 +475,25 @@ class SkyPlusTestUtils(object):
 
 
 # XXX - Testing code
-image = cv2.imread(TEST_IMAGE_MYSKY_HOME, cv2.IMREAD_COLOR)
-instance = SkyPlusTestUtils(image, debug_mode=True, show_images_results=True)
-menu_items = instance.find_image_menu_items()
+testing_image = cv2.imread(TEST_IMAGE_MYSKY_HOME, cv2.IMREAD_COLOR)
+instance = SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
+menu_item_list = instance.find_image_menu_items()
 
-for item in menu_items:
-    print 'Item: [{0}] {1}, ({2})'.format(item.selected, item.text.encode('utf-8'), item.region())
+for menu_item in menu_item_list:
+    print 'Item: [{0}] {1}, ({2})'.format(menu_item.selected, menu_item.text.encode('utf-8'), menu_item.region)
 
-image = cv2.imread(TEST_IMAGE_MYSKY_MENU, cv2.IMREAD_COLOR)
-instance = SkyPlusTestUtils(image, debug_mode=True, show_images_results=True)
-menu_items = instance.find_image_menu_items()
+testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU, cv2.IMREAD_COLOR)
+instance = SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
+menu_item_list = instance.find_image_menu_items()
 
-for item in menu_items:
-    print 'Item: [{0}] {1}, ({2})'.format(item.selected, item.text.encode('utf-8'), item.region())
+for menu_item in menu_item_list:
+    print 'Item: [{0}] {1}, ({2})'.format(menu_item.selected, menu_item.text.encode('utf-8'), menu_item.region)
 
-image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, cv2.IMREAD_COLOR)
-instance = SkyPlusTestUtils(image, debug_mode=True, show_images_results=True)
-menu_items = instance.find_text_menu_items()
+testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, cv2.IMREAD_COLOR)
+instance = SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
+menu_item_list = instance.find_text_menu_items()
 
-for item in menu_items:
-    print 'Item: [{0}] {1}, ({2})'.format(item.selected, item.text.encode('utf-8'), item.region())
+for menu_item in menu_item_list:
+    print 'Item: [{0}] {1}, ({2})'.format(menu_item.selected, menu_item.text.encode('utf-8'), menu_item.region)
 
 print 'Finish'
