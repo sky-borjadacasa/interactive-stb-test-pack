@@ -469,31 +469,33 @@ class SkyPlusTestUtils(object):
         # We get directly the most likely match
         return matches[0][1]
 
+####################
+### TESTING CODE ###
+####################
 
+def test_function():
+    testing_image = cv2.imread(TEST_IMAGE_MYSKY_HOME, cv2.IMREAD_COLOR)
+    instance = SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
+    menu_item_list = instance.find_image_menu_items()
 
+    for menu_item in menu_item_list:
+        print 'Item: [{0}] {1}, ({2})'.format(menu_item.selected, menu_item.text.encode('utf-8'), menu_item.region)
 
+    testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU, cv2.IMREAD_COLOR)
+    instance = SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
+    menu_item_list = instance.find_image_menu_items()
 
+    for menu_item in menu_item_list:
+        print 'Item: [{0}] {1}, ({2})'.format(menu_item.selected, menu_item.text.encode('utf-8'), menu_item.region)
 
-# XXX - Testing code
-testing_image = cv2.imread(TEST_IMAGE_MYSKY_HOME, cv2.IMREAD_COLOR)
-instance = SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
-menu_item_list = instance.find_image_menu_items()
+    testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, cv2.IMREAD_COLOR)
+    instance = SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
+    menu_item_list = instance.find_text_menu_items()
 
-for menu_item in menu_item_list:
-    print 'Item: [{0}] {1}, ({2})'.format(menu_item.selected, menu_item.text.encode('utf-8'), menu_item.region)
+    for menu_item in menu_item_list:
+        print 'Item: [{0}] {1}, ({2})'.format(menu_item.selected, menu_item.text.encode('utf-8'), menu_item.region)
 
-testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU, cv2.IMREAD_COLOR)
-instance = SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
-menu_item_list = instance.find_image_menu_items()
+    print 'Finish'
 
-for menu_item in menu_item_list:
-    print 'Item: [{0}] {1}, ({2})'.format(menu_item.selected, menu_item.text.encode('utf-8'), menu_item.region)
-
-testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, cv2.IMREAD_COLOR)
-instance = SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
-menu_item_list = instance.find_text_menu_items()
-
-for menu_item in menu_item_list:
-    print 'Item: [{0}] {1}, ({2})'.format(menu_item.selected, menu_item.text.encode('utf-8'), menu_item.region)
-
-print 'Finish'
+if __name__ == '__main__':
+    test_function()
