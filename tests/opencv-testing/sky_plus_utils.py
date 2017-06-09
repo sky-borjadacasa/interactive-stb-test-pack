@@ -104,6 +104,8 @@ def crop_image(image, region):
     Returns:
         Cropped image
     """
+    if region is None:
+        return image.copy()
     x1 = region[0][0]
     x2 = region[1][0]
     y1 = region[0][1]
@@ -273,7 +275,7 @@ class SkyPlusTestUtils(object):
         method = cv2.TM_CCOEFF
         depth, width, height = template.shape[::-1]
 
-        if region is not None:
+        if region:
             x1 = region[0][0]
             x2 = region[1][0]
             y1 = region[0][1]
@@ -303,7 +305,7 @@ class SkyPlusTestUtils(object):
             # Hide match under black rectangle:
             cv2.rectangle(image, top_left, bottom_right, (0, 0, 0), -1)
 
-            if region is not None:
+            if region:
                 top_left = (top_left[0] + x1, top_left[1] + y1)
                 bottom_right = (bottom_right[0] + x1, bottom_right[1] + y1)
             item = MySkyMenuItem(top_left, bottom_right)
@@ -408,7 +410,7 @@ class SkyPlusTestUtils(object):
         """
         print_image = self.image.copy()
 
-        if region is not None:
+        if region:
             cv2.rectangle(print_image, region[0], region[1], 255, 2)
 
         count = 0
@@ -501,13 +503,22 @@ class SkyPlusTestUtils(object):
         # We get directly the most likely match
         return matches[0][1]
 
-    # TODO: Support region searching
-    def contour_detection(self):
-        image2 = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
-        img_filt = cv2.medianBlur(image2, 5)
-        img_th = cv2.adaptiveThreshold(img_filt, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
-        im2, contours, hierarchy = cv2.findContours(img_th, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    def contour_detection(self, region=None):
+        image_gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+        cropped_image = crop_image(image_gray, region)
+        blurred_image = cv2.medianBlur(cropped_image, 5)
+        threshold_image = cv2.adaptiveThreshold(blurred_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+        _, contours, hierarchy = cv2.findContours(threshold_image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         contours = sorted(contours, key=cv2.contourArea, reverse=True)[:10]
+
+        # Move contours to absolute coordinates
+        if region:
+            region_x = region[0][0]
+            region_y = region[0][1]
+            for cont in contours:
+                for point in cont:
+                    point[0][0] += region_x
+                    point[0][1] += region_y
 
         filtered_contours = []
         for cont in contours:
@@ -527,6 +538,12 @@ class SkyPlusTestUtils(object):
         bounding_box = lambda cont: cv2.boundingRect(cont)
         boxes = [cv2.boundingRect(cont) for cont in filtered_contours]
         self.debug('boxes: {0}'.format(boxes))
+
+        # Remove boxes close to region:
+        if region:
+            region_box = (region[0][0], region[0][1], region[1][0] - region[0][0], region[1][1] - region[0][1])
+            close_to_region = lambda b: boxes_are_similar(b, region_box)
+            boxes = [box for box in boxes if not close_to_region(box)]
 
         # Get box groups:
         groups = []
@@ -575,9 +592,13 @@ class SkyPlusTestUtils(object):
 
 
         if self.debug_mode and self.show_images_results:
+            image2 = self.image.copy()
+            cv2.drawContours(image2, contours, -1, (0,255,0), 1)
+            show_numpy_image(image2, 'Contour detection', 'All contours', convert=cv2.COLOR_BGR2RGB)
+
             image3 = self.image.copy()
             cv2.drawContours(image3, filtered_contours, -1, (0,255,0), 1)
-            show_numpy_image(image3, 'Countour detection', 'Original contours', convert=cv2.COLOR_BGR2RGB)
+            show_numpy_image(image3, 'Contour detection', 'Filtered contours', convert=cv2.COLOR_BGR2RGB)
 
             image4 = self.image.copy()
             for box in boxes:
@@ -586,7 +607,7 @@ class SkyPlusTestUtils(object):
                 w = box[2]
                 h = box[3]
                 cv2.rectangle(image4, (x, y), (x+w, y+h), (0, 255, 0), 1)
-            show_numpy_image(image4, 'Countour detection', 'Square contours', convert=cv2.COLOR_BGR2RGB)
+            show_numpy_image(image4, 'Contour detection', 'Square contours', convert=cv2.COLOR_BGR2RGB)
 
             image5 = self.image.copy()
             for box in inner_boxes:
@@ -595,7 +616,7 @@ class SkyPlusTestUtils(object):
                 w = box[2]
                 h = box[3]
                 cv2.rectangle(image5, (x, y), (x+w, y+h), (0, 255, 0), 1)
-            show_numpy_image(image5, 'Countour detection', 'Grouped boxes', convert=cv2.COLOR_BGR2RGB)
+            show_numpy_image(image5, 'Contour detection', 'Grouped boxes', convert=cv2.COLOR_BGR2RGB)
 
             image6 = self.image.copy()
             for box in outer_boxes:
@@ -604,7 +625,7 @@ class SkyPlusTestUtils(object):
                 w = box[2]
                 h = box[3]
                 cv2.rectangle(image6, (x, y), (x+w, y+h), (0, 255, 0), 1)
-            show_numpy_image(image6, 'Countour detection', 'Inner boxes cleaned', convert=cv2.COLOR_BGR2RGB)
+            show_numpy_image(image6, 'Contour detection', 'Inner boxes cleaned', convert=cv2.COLOR_BGR2RGB)
 
         return outer_boxes
 
@@ -618,7 +639,7 @@ def test_function():
     #testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, cv2.IMREAD_COLOR)
     instance = SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
 
-    instance.contour_detection()
+    instance.contour_detection(MY_SKY_REGION)
     return 0
     menu_item_list = instance.find_image_menu_items()
 
