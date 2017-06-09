@@ -200,6 +200,36 @@ def dominant_color(image, region, exclude_list=[]):
         else:
             return color
 
+# TODO - Clean
+def intersection(a, b):
+    x = max(a[0], b[0])
+    y = max(a[1], b[1])
+    w = min(a[0] + a[2], b[0] + b[2]) - x
+    h = min(a[1] + a[3], b[1] + b[3]) - y
+    if w < 0 or h < 0:
+        return None
+    return (x, y, w, h)
+
+# TODO - Clean
+def is_inside(a, b):
+    # is b inside a?
+    x_distance = a[0] - b[0]
+    y_distance = a[1] - b[1]
+    w_distance = a[0] + a[2] - b[0] - b[2]
+    h_distance = a[1] + a[3] - b[1] - b[3]
+    return x_distance <= 0 and y_distance <= 0 \
+        and w_distance >= 0 and h_distance >= 0
+
+# TODO - Clean
+def boxes_are_similar(a, b):
+    size_threshold = 30 # TODO: Fine tune
+    x_distance = abs(a[0] - b[0])
+    y_distance = abs(a[1] - b[1])
+    w_distance = abs(a[0] + a[2] - b[0] - b[2])
+    h_distance = abs(a[1] + a[3] - b[1] - b[3])
+    return x_distance < size_threshold and y_distance < size_threshold \
+        and w_distance < size_threshold and h_distance < size_threshold
+
 class SkyPlusTestUtils(object):
     """Class that contains the logic to analyse the contents of the MySky menu"""
 
@@ -471,13 +501,14 @@ class SkyPlusTestUtils(object):
         # We get directly the most likely match
         return matches[0][1]
 
+    # TODO: Support region searching
     def contour_detection(self):
         image2 = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
         img_filt = cv2.medianBlur(image2, 5)
         img_th = cv2.adaptiveThreshold(img_filt, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
         im2, contours, hierarchy = cv2.findContours(img_th, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         contours = sorted(contours, key=cv2.contourArea, reverse=True)[:10]
-        print 'Contours count: {0}'.format(len(contours))
+
         filtered_contours = []
         for cont in contours:
             # approximate the contour
@@ -492,19 +523,90 @@ class SkyPlusTestUtils(object):
                 continue
         self.debug('Found {0} contours'.format(len(filtered_contours)))
 
+        # Get bounding boxes for contours:
+        bounding_box = lambda cont: cv2.boundingRect(cont)
+        boxes = [cv2.boundingRect(cont) for cont in filtered_contours]
+        self.debug('boxes: {0}'.format(boxes))
+
+        # Get box groups:
+        groups = []
+        for box in boxes:
+            if not groups:
+                group = [box]
+                groups.append(group)
+            matched = False
+            for group in groups:
+                if boxes_are_similar(group[0], box):
+                    matched = True
+                    group.append(box)
+                    break
+            if matched:
+                continue
+            else:
+                group = [box]
+                groups.append(group)
+        self.debug('Groups: {0}'.format(groups))
+
+        # Get group intersections:
+        inner_boxes = []
+        for group in groups:
+            new_box = group[0]
+            for box in group:
+                intersect = intersection(new_box, box)
+                if intersect is not None:
+                    new_box = intersect
+            inner_boxes.append(new_box)
+        self.debug('inner_boxes: {0}'.format(inner_boxes))
+
+        # Clean redundant inner boxes:
+        outer_boxes = []
+        for box in inner_boxes:
+            inside = False
+            for box2 in inner_boxes:
+                if box == box2:
+                    continue
+                if is_inside(box2, box):
+                    inside = True
+            if not inside:
+                outer_boxes.append(box)
+        outer_boxes = list(set(outer_boxes))
+        self.debug('outer_boxes: {0}'.format(outer_boxes))
+
+
+
         if self.debug_mode and self.show_images_results:
             image3 = self.image.copy()
             cv2.drawContours(image3, filtered_contours, -1, (0,255,0), 1)
-            show_numpy_image(image3, 'Countour detection', 'image3', convert=cv2.COLOR_BGR2RGB)
+            show_numpy_image(image3, 'Countour detection', 'Original contours', convert=cv2.COLOR_BGR2RGB)
 
             image4 = self.image.copy()
-            for contour in filtered_contours:
-                x, y, w, h = cv2.boundingRect(contour)
+            for box in boxes:
+                x = box[0]
+                y = box[1]
+                w = box[2]
+                h = box[3]
                 cv2.rectangle(image4, (x, y), (x+w, y+h), (0, 255, 0), 1)
-            show_numpy_image(image4, 'Countour detection', 'image4', convert=cv2.COLOR_BGR2RGB)
-            #show_numpy_image(image2, 'Countour detection', 'image2')
-            #show_numpy_image(img_filt, 'Countour detection', 'img_filt')
-            #show_numpy_image(img_th, 'Countour detection', 'img_th')
+            show_numpy_image(image4, 'Countour detection', 'Square contours', convert=cv2.COLOR_BGR2RGB)
+
+            image5 = self.image.copy()
+            for box in inner_boxes:
+                x = box[0]
+                y = box[1]
+                w = box[2]
+                h = box[3]
+                cv2.rectangle(image5, (x, y), (x+w, y+h), (0, 255, 0), 1)
+            show_numpy_image(image5, 'Countour detection', 'Grouped boxes', convert=cv2.COLOR_BGR2RGB)
+
+            image6 = self.image.copy()
+            for box in outer_boxes:
+                x = box[0]
+                y = box[1]
+                w = box[2]
+                h = box[3]
+                cv2.rectangle(image6, (x, y), (x+w, y+h), (0, 255, 0), 1)
+            show_numpy_image(image6, 'Countour detection', 'Inner boxes cleaned', convert=cv2.COLOR_BGR2RGB)
+
+        return outer_boxes
 
 ####################
 ### TESTING CODE ###
@@ -512,8 +614,8 @@ class SkyPlusTestUtils(object):
 
 def test_function():
     testing_image = cv2.imread(TEST_IMAGE_MYSKY_HOME, cv2.IMREAD_COLOR)
-    testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU, cv2.IMREAD_COLOR)
-    testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, cv2.IMREAD_COLOR)
+    #testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU, cv2.IMREAD_COLOR)
+    #testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, cv2.IMREAD_COLOR)
     instance = SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
 
     instance.contour_detection()
