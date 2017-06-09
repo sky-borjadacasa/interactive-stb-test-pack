@@ -110,7 +110,7 @@ def crop_image(image, region):
     y2 = region[1][1]
     return image[y1:y2, x1:x2].copy()
 
-def show_numpy_image(image, title, subtitle):
+def show_numpy_image(image, title, subtitle, convert=None):
     """Show the given image region on the screen
 
     Args:
@@ -118,7 +118,9 @@ def show_numpy_image(image, title, subtitle):
         title (str): Title to show
         subtitle (str): Subtitle to show
     """
-    rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    rgb_image = image
+    if convert is not None:
+        rgb_image = cv2.cvtColor(image, convert)
     plt.imshow(rgb_image, cmap='gray')
     plt.title(title)
     plt.suptitle(subtitle)
@@ -389,7 +391,7 @@ class SkyPlusTestUtils(object):
             cv2.rectangle(print_image, item.top_left, item.bottom_right, color, 2)
             count += 1
 
-        show_numpy_image(print_image, 'Detected Point', 'Method: TM_CCOEFF')
+        show_numpy_image(print_image, 'Detected Point', 'Method: TM_CCOEFF', convert=cv2.COLOR_BGR2RGB)
 
     def get_image_menu_item_text(self, region):
         """Read the text in the given region and tell if the menu item is selected or not
@@ -469,13 +471,53 @@ class SkyPlusTestUtils(object):
         # We get directly the most likely match
         return matches[0][1]
 
+    def contour_detection(self):
+        image2 = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+        img_filt = cv2.medianBlur(image2, 5)
+        img_th = cv2.adaptiveThreshold(img_filt, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+        im2, contours, hierarchy = cv2.findContours(img_th, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        contours = sorted(contours, key=cv2.contourArea, reverse=True)[:10]
+        print 'Contours count: {0}'.format(len(contours))
+        filtered_contours = []
+        for cont in contours:
+            # approximate the contour
+            peri = cv2.arcLength(cont, True)
+            approximation = 0.01
+            approx = cv2.approxPolyDP(cont, approximation * peri, True)
+         
+            # if our approximated contour has four points, then
+            # we can assume that we have found our screen
+            if len(approx) == 4:
+                filtered_contours.append(approx)
+                continue
+        self.debug('Found {0} contours'.format(len(filtered_contours)))
+
+        if self.debug_mode and self.show_images_results:
+            image3 = self.image.copy()
+            cv2.drawContours(image3, filtered_contours, -1, (0,255,0), 1)
+            show_numpy_image(image3, 'Countour detection', 'image3', convert=cv2.COLOR_BGR2RGB)
+
+            image4 = self.image.copy()
+            for contour in filtered_contours:
+                x, y, w, h = cv2.boundingRect(contour)
+                cv2.rectangle(image4, (x, y), (x+w, y+h), (0, 255, 0), 1)
+            show_numpy_image(image4, 'Countour detection', 'image4', convert=cv2.COLOR_BGR2RGB)
+            #show_numpy_image(image2, 'Countour detection', 'image2')
+            #show_numpy_image(img_filt, 'Countour detection', 'img_filt')
+            #show_numpy_image(img_th, 'Countour detection', 'img_th')
+
 ####################
 ### TESTING CODE ###
 ####################
 
 def test_function():
     testing_image = cv2.imread(TEST_IMAGE_MYSKY_HOME, cv2.IMREAD_COLOR)
+    testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU, cv2.IMREAD_COLOR)
+    testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, cv2.IMREAD_COLOR)
     instance = SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
+
+    instance.contour_detection()
+    return 0
     menu_item_list = instance.find_image_menu_items()
 
     for menu_item in menu_item_list:
