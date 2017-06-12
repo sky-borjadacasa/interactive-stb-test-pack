@@ -41,7 +41,7 @@ from fuzzyset import FuzzySet
 TM_CCOEFF_THRESHOLD_BOX_ITEM = 250000000
 TM_CCOEFF_THRESHOLD_TEXT_ITEM = 140000000
 VERTICAL_TEXT_SIZE = 50
-VERTICAL_TEXT_SIZE_WITH_IMAGE = 45
+VERTICAL_TEXT_SIZE_WITH_IMAGE = 50
 HORIZONAL_TEXT_MARGIN = 10
 
 # Regions:
@@ -58,6 +58,7 @@ BLUE_BACKGROUND_RGB = np.array([30, 87, 161])
 BLACK_RGB = np.array([0, 0, 0])
 WHITE_RGB = np.array([255, 255, 255])
 COLOR_THRESHOLD = 10
+PALETTE_SIZE = 3
 
 # Image files:
 IMAGE_BORDER = 'images/Border.png'
@@ -165,13 +166,15 @@ def is_similar_color_rgb(color_a, color_b):
     distance = abs(rgb_luminance(color_a) - rgb_luminance(color_b))
     return distance < COLOR_THRESHOLD
 
-def dominant_color(image, region, exclude_list=[]):
+# TODO: Refactor include_list to another function
+def dominant_color(image, region, exclude_list=[], include_list=[]):
     """Get the dominant color of a region
 
     Args:
         image (numpy.ndarray): Image to search
         region (tuple(tuple(int))): Region of the image to search
         exclude_list (list): List of colors to avoid searching for
+        include_list (list): List of colors to search for
 
     Returns:
         RGB color found
@@ -180,14 +183,21 @@ def dominant_color(image, region, exclude_list=[]):
     arr = np.float32(cropped_image)
     pixels = arr.reshape((-1, 3))
 
-    n_colors = 5
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
     flags = cv2.KMEANS_RANDOM_CENTERS
-    _, labels, centroids = cv2.kmeans(pixels, n_colors, None, criteria, 10, flags)
+    _, labels, centroids = cv2.kmeans(pixels, PALETTE_SIZE, None, criteria, 10, flags)
 
     palette = np.uint8(centroids)
     label_frequency = itemfreq(labels)
     label_frequency.sort(0)
+
+    if include_list:
+        for label in label_frequency[::-1]:
+            color = palette[label[0]]
+            rgb_color = bgr_to_rgb(color)
+            for include_color in include_list:
+                if is_similar_color_rgb(rgb_color, include_color):
+                    return color
 
     for label in label_frequency[::-1]:
         color = palette[label[0]]
@@ -222,9 +232,8 @@ def is_inside(a, b):
     return x_distance <= 0 and y_distance <= 0 \
         and w_distance >= 0 and h_distance >= 0
 
-# TODO - Clean
 def boxes_are_similar(a, b):
-    size_threshold = 30 # TODO: Fine tune
+    size_threshold = 10 # TODO: Fine tune
     x_distance = abs(a[0] - b[0])
     y_distance = abs(a[1] - b[1])
     w_distance = abs(a[0] + a[2] - b[0] - b[2])
@@ -386,7 +395,7 @@ class SkyPlusTestUtils(object):
             point += VERTICAL_TEXT_SIZE
 
         for item in menu_items:
-            item.text = self.find_text(item.region)
+            item.text = self.find_text_in_box(item.region)
 
         # Clean and sort results:
         menu_items = [item for item in menu_items if item.text]
@@ -443,7 +452,7 @@ class SkyPlusTestUtils(object):
         y2 = region[1][1]
 
         text_region = ((x1, y1), (x2, y2))
-        text = self.find_text(text_region).strip()
+        text = self.find_text_in_box(text_region).strip()
 
         if self.debug_mode and self.show_images_results:
             self.show_pillow_image(text_region)
@@ -455,7 +464,7 @@ class SkyPlusTestUtils(object):
 
         return text, selected
 
-    def find_text(self, region):
+    def find_text_in_box(self, region):
         """Read the text in the given region
 
         Args:
@@ -476,8 +485,18 @@ class SkyPlusTestUtils(object):
             text = api.GetUTF8Text().strip().encode('utf-8')
             if text:
                 text = self.fuzzy_match(text)
-            self.debug('Found text: {0}'.format(text))
-            return text
+
+            # Find out if selected or not
+            # Exclude text color from the search and search for yellow
+            color = dominant_color(self.image, region, exclude_list=[BLACK_RGB, WHITE_RGB], include_list=[YELLOW_BACKGROUND_RGB])
+            self.show_pillow_image(region)
+            print 'Color: {0}'.format(color)
+            if color is not None:
+                selected = is_similar_color_rgb(bgr_to_rgb(color), YELLOW_BACKGROUND_RGB)
+
+            self.debug('Found text: {0}, {1}'.format(text, selected))
+
+            return text, selected
 
     def show_pillow_image(self, region):
         """Show the given image region on the screen
@@ -500,15 +519,17 @@ class SkyPlusTestUtils(object):
             Matched text
         """
         matches = self.fuzzy_set.get(text)
+        self.debug('Matches for "{0}":\n{1}'.format(text, matches))
         # We get directly the most likely match
         return matches[0][1]
 
-    def contour_detection(self, region=None):
+    def contour_detection(self, region=None, include_region=False):
         image_gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
         cropped_image = crop_image(image_gray, region)
         blurred_image = cv2.medianBlur(cropped_image, 5)
         threshold_image = cv2.adaptiveThreshold(blurred_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
         _, contours, hierarchy = cv2.findContours(threshold_image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        # TODO: Fine tune this value or extract to constant
         contours = sorted(contours, key=cv2.contourArea, reverse=True)[:10]
 
         # Move contours to absolute coordinates
@@ -540,7 +561,7 @@ class SkyPlusTestUtils(object):
         self.debug('boxes: {0}'.format(boxes))
 
         # Remove boxes close to region:
-        if region:
+        if region and not include_region:
             region_box = (region[0][0], region[0][1], region[1][0] - region[0][0], region[1][1] - region[0][1])
             close_to_region = lambda b: boxes_are_similar(b, region_box)
             boxes = [box for box in boxes if not close_to_region(box)]
@@ -589,8 +610,7 @@ class SkyPlusTestUtils(object):
         outer_boxes = list(set(outer_boxes))
         self.debug('outer_boxes: {0}'.format(outer_boxes))
 
-
-
+        # Print steps for debugging
         if self.debug_mode and self.show_images_results:
             image2 = self.image.copy()
             cv2.drawContours(image2, contours, -1, (0,255,0), 1)
@@ -627,7 +647,27 @@ class SkyPlusTestUtils(object):
                 cv2.rectangle(image6, (x, y), (x+w, y+h), (0, 255, 0), 1)
             show_numpy_image(image6, 'Contour detection', 'Inner boxes cleaned', convert=cv2.COLOR_BGR2RGB)
 
+        outer_boxes.sort(key=lambda box: box[1])
         return outer_boxes
+
+    def get_menu_items(self, region=None):
+        boxes = self.contour_detection(region=region)
+
+        menu_items = []
+        for box in boxes:
+            top_left = (box[0], box[1] + box[3] - VERTICAL_TEXT_SIZE_WITH_IMAGE)
+            bottom_right = (box[0] + box[2], box[1] + box[3])
+            text_region = (top_left, bottom_right)
+            text_boxes = self.contour_detection(region=text_region, include_region=True)
+
+            top_left = (box[0], box[1])
+            item = MySkyMenuItem(top_left, bottom_right)
+            item.text, item.selected = self.find_text_in_box(text_region)
+            menu_items.append(item)
+
+        return menu_items
+
+
 
 ####################
 ### TESTING CODE ###
@@ -635,12 +675,14 @@ class SkyPlusTestUtils(object):
 
 def test_function():
     testing_image = cv2.imread(TEST_IMAGE_MYSKY_HOME, cv2.IMREAD_COLOR)
-    #testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU, cv2.IMREAD_COLOR)
-    #testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, cv2.IMREAD_COLOR)
+    testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU, cv2.IMREAD_COLOR)
+    testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, cv2.IMREAD_COLOR)
     instance = SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
-
-    instance.contour_detection(MY_SKY_REGION)
+    menu_item_list = instance.get_menu_items(MY_SKY_REGION)
+    for menu_item in menu_item_list:
+        print 'Item: [{0}] {1}, ({2})'.format(menu_item.selected, menu_item.text.encode('utf-8'), menu_item.region)
     return 0
+
     menu_item_list = instance.find_image_menu_items()
 
     for menu_item in menu_item_list:
