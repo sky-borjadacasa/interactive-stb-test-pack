@@ -212,8 +212,16 @@ def dominant_color(image, region, exclude_list=[], include_list=[]):
         else:
             return color
 
-# TODO - Clean
 def intersection(a, b):
+    """Calculate the intersection of two regions
+
+    Args:
+        a (tuple): Tuple giving the x, y, width and height of region
+        b (tuple): Tuple giving the x, y, width and height of region
+
+    Returns:
+        Intersection of both regions or None if there's no intersection
+    """
     x = max(a[0], b[0])
     y = max(a[1], b[1])
     w = min(a[0] + a[2], b[0] + b[2]) - x
@@ -222,9 +230,16 @@ def intersection(a, b):
         return None
     return (x, y, w, h)
 
-# TODO - Clean
 def is_inside(a, b):
-    # is b inside a?
+    """Say if region b is inside region a
+
+    Args:
+        a (tuple): Tuple giving the x, y, width and height of region
+        b (tuple): Tuple giving the x, y, width and height of region
+
+    Returns:
+        True if b is inside a, False otherwise
+    """
     x_distance = a[0] - b[0]
     y_distance = a[1] - b[1]
     w_distance = a[0] + a[2] - b[0] - b[2]
@@ -233,6 +248,15 @@ def is_inside(a, b):
         and w_distance >= 0 and h_distance >= 0
 
 def boxes_are_similar(a, b):
+    """Say if two boxes are similar (i.e., line distances are under a maximum threshold)
+
+    Args:
+        a (tuple): Tuple giving the x, y, width and height of region
+        b (tuple): Tuple giving the x, y, width and height of region
+
+    Returns:
+        True if boxes are similar
+    """
     size_threshold = 10 # TODO: Fine tune
     x_distance = abs(a[0] - b[0])
     y_distance = abs(a[1] - b[1])
@@ -260,89 +284,6 @@ class SkyPlusTestUtils(object):
         if self.debug_mode:
             print text
 
-    def generic_item_find(self, template, threshold, template_mask=None, region=None):
-        """Function to find the menu items matching a given template.
-        This function will return only menu elements with images on them ordered by vertical position.
-
-        Args:
-            template (numpy.ndarray): Template of the menu item
-            threshold (int): The threshold to use for matching the template
-            template_mask (numpy.ndarray): Mask to apply of the menu item
-            region (tuple(tuple(int))): Region of the image to search defined by the top-left and bottom-right coordinates
-
-        Returns:
-            List of the menu items found
-        """
-
-        # These are the 6 methods for comparison in a list:
-        # cv2.TM_CCOEFF
-        # cv2.TM_CCOEFF_NORMED
-        # cv2.TM_CCORR
-        # cv2.TM_CCORR_NORMED
-        # cv2.TM_SQDIFF
-        # cv2.TM_SQDIFF_NORMED
-        method = cv2.TM_CCOEFF
-        depth, width, height = template.shape[::-1]
-
-        if region:
-            x1 = region[0][0]
-            x2 = region[1][0]
-            y1 = region[0][1]
-            y2 = region[1][1]
-            image = self.image[y1:y2, x1:x2].copy()
-        else:
-            image = self.image.copy()
-        menu_items = []
-
-        # Apply template Matching
-        count = 0
-        while True:
-            count += 1
-            res = cv2.matchTemplate(image, template, method, template_mask)
-
-            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
-            if max_val < threshold:
-                self.debug('{0} < {1}'.format(max_val, threshold))
-                break
-            else:
-                self.debug('{0} > {1}'.format(max_val, threshold))
-
-            # If the method is TM_SQDIFF or TM_SQDIFF_NORMED, take minimum
-            top_left = max_loc
-            bottom_right = (top_left[0] + width, top_left[1] + height)
-
-            # Hide match under black rectangle:
-            cv2.rectangle(image, top_left, bottom_right, (0, 0, 0), -1)
-
-            if region:
-                top_left = (top_left[0] + x1, top_left[1] + y1)
-                bottom_right = (bottom_right[0] + x1, bottom_right[1] + y1)
-            item = MySkyMenuItem(top_left, bottom_right)
-            menu_items.append(item)
-
-        menu_items.sort(key=lambda x: x.top_left[1])
-        return menu_items
-
-    def find_image_menu_items(self):
-        """Function to find the menu items with an image in the image.
-        This function will return only menu elements with images on them ordered by vertical position.
-
-        Returns:
-            List of the menu items found
-        """
-
-        template = cv2.imread(IMAGE_BORDER, cv2.IMREAD_COLOR)
-        mask = cv2.imread(IMAGE_MASK, cv2.IMREAD_COLOR)
-        menu_items = self.generic_item_find(template, TM_CCOEFF_THRESHOLD_BOX_ITEM, mask, region=MY_SKY_REGION)
-
-        for item in menu_items:
-            item.text, item.selected = self.get_image_menu_item_text(item.region)
-
-        if self.debug_mode and self.show_images_results:
-            self.plot_results(menu_items, region=MY_SKY_REGION)
-
-        return menu_items
-
     def find_text_menu_items(self):
         """Function to find the menu items with only text in the image.
         This function will return only menu elements with text on them ordered by vertical position.
@@ -354,7 +295,8 @@ class SkyPlusTestUtils(object):
         # This will find the only selected menu item:
         template = cv2.imread(IMAGE_BORDER_SMALL, cv2.IMREAD_COLOR)
         mask = cv2.imread(IMAGE_MASK_SMALL, cv2.IMREAD_COLOR)
-        menu_items = self.generic_item_find(template, TM_CCOEFF_THRESHOLD_TEXT_ITEM, mask, region=MY_SKY_REGION)
+        menu_items = self.get_menu_items(MY_SKY_TEXT_MENU_REGION)
+
         if not menu_items:
             return []
 
@@ -395,7 +337,7 @@ class SkyPlusTestUtils(object):
             point += VERTICAL_TEXT_SIZE
 
         for item in menu_items:
-            item.text = self.find_text_in_box(item.region)
+            item.text, _ = self.find_text_in_box(item.region)
 
         # Clean and sort results:
         menu_items = [item for item in menu_items if item.text]
@@ -452,15 +394,11 @@ class SkyPlusTestUtils(object):
         y2 = region[1][1]
 
         text_region = ((x1, y1), (x2, y2))
-        text = self.find_text_in_box(text_region).strip()
+        text, selected = self.find_text_in_box(text_region)
+        text = text.strip()
 
         if self.debug_mode and self.show_images_results:
             self.show_pillow_image(text_region)
-
-        # Find out if selected or not
-        # Exclude text color from the search:
-        color = dominant_color(self.image, region, exclude_list=[BLACK_RGB, WHITE_RGB])
-        selected = is_similar_color_rgb(bgr_to_rgb(color), YELLOW_BACKGROUND_RGB)
 
         return text, selected
 
@@ -528,7 +466,7 @@ class SkyPlusTestUtils(object):
         cropped_image = crop_image(image_gray, region)
         blurred_image = cv2.medianBlur(cropped_image, 5)
         threshold_image = cv2.adaptiveThreshold(blurred_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
-        _, contours, hierarchy = cv2.findContours(threshold_image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        _, contours, _ = cv2.findContours(threshold_image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         # TODO: Fine tune this value or extract to constant
         contours = sorted(contours, key=cv2.contourArea, reverse=True)[:10]
 
@@ -543,11 +481,11 @@ class SkyPlusTestUtils(object):
 
         filtered_contours = []
         for cont in contours:
-            # approximate the contour
-            peri = cv2.arcLength(cont, True)
+            # Approximate the contour:
+            perimeter = cv2.arcLength(cont, True)
             approximation = 0.01
-            approx = cv2.approxPolyDP(cont, approximation * peri, True)
-         
+            approx = cv2.approxPolyDP(cont, approximation * perimeter, True)
+
             # if our approximated contour has four points, then
             # we can assume that we have found our screen
             if len(approx) == 4:
@@ -556,7 +494,6 @@ class SkyPlusTestUtils(object):
         self.debug('Found {0} contours'.format(len(filtered_contours)))
 
         # Get bounding boxes for contours:
-        bounding_box = lambda cont: cv2.boundingRect(cont)
         boxes = [cv2.boundingRect(cont) for cont in filtered_contours]
         self.debug('boxes: {0}'.format(boxes))
 
@@ -613,11 +550,11 @@ class SkyPlusTestUtils(object):
         # Print steps for debugging
         if self.debug_mode and self.show_images_results:
             image2 = self.image.copy()
-            cv2.drawContours(image2, contours, -1, (0,255,0), 1)
+            cv2.drawContours(image2, contours, -1, (0, 255, 0), 1)
             show_numpy_image(image2, 'Contour detection', 'All contours', convert=cv2.COLOR_BGR2RGB)
 
             image3 = self.image.copy()
-            cv2.drawContours(image3, filtered_contours, -1, (0,255,0), 1)
+            cv2.drawContours(image3, filtered_contours, -1, (0, 255, 0), 1)
             show_numpy_image(image3, 'Contour detection', 'Filtered contours', convert=cv2.COLOR_BGR2RGB)
 
             image4 = self.image.copy()
@@ -658,7 +595,6 @@ class SkyPlusTestUtils(object):
             top_left = (box[0], box[1] + box[3] - VERTICAL_TEXT_SIZE_WITH_IMAGE)
             bottom_right = (box[0] + box[2], box[1] + box[3])
             text_region = (top_left, bottom_right)
-            text_boxes = self.contour_detection(region=text_region, include_region=True)
 
             top_left = (box[0], box[1])
             item = MySkyMenuItem(top_left, bottom_right)
@@ -675,22 +611,14 @@ class SkyPlusTestUtils(object):
 
 def test_function():
     testing_image = cv2.imread(TEST_IMAGE_MYSKY_HOME, cv2.IMREAD_COLOR)
-    testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU, cv2.IMREAD_COLOR)
-    testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, cv2.IMREAD_COLOR)
     instance = SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
     menu_item_list = instance.get_menu_items(MY_SKY_REGION)
     for menu_item in menu_item_list:
         print 'Item: [{0}] {1}, ({2})'.format(menu_item.selected, menu_item.text.encode('utf-8'), menu_item.region)
-    return 0
-
-    menu_item_list = instance.find_image_menu_items()
-
-    for menu_item in menu_item_list:
-        print 'Item: [{0}] {1}, ({2})'.format(menu_item.selected, menu_item.text.encode('utf-8'), menu_item.region)
 
     testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU, cv2.IMREAD_COLOR)
     instance = SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
-    menu_item_list = instance.find_image_menu_items()
+    menu_item_list = instance.get_menu_items(MY_SKY_REGION)
 
     for menu_item in menu_item_list:
         print 'Item: [{0}] {1}, ({2})'.format(menu_item.selected, menu_item.text.encode('utf-8'), menu_item.region)
