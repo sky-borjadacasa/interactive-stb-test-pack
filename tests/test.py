@@ -9,6 +9,7 @@ def test_username():
 	p = os.system('sudo whoami')
 	p = os.system('sudo pip install opencv-python')
 	p = os.system('sudo pip install numpy')
+	p = os.system('sudo aptitude install tesseract-ocr tesseract-ocr-eng libtesseract-dev libleptonica-dev')
 	p = os.system('sudo pip install tesserocr')
 	p = os.system('sudo pip install pillow')
 	p = os.system('sudo pip install matplotlib')
