@@ -3,4 +3,5 @@
 import os
 import pwd
 
-print pwd.getpwuid( os.getuid() )[ 0 ]
+def test_username():
+    print pwd.getpwuid(os.getuid())[0]
