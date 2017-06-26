@@ -1,5 +1,7 @@
 #!/bin/bash -ex
 
+echo "Setup running"
+
 # Install Python packages
 sudo pip install opencv-python
 sudo pip install numpy
@@ -8,3 +10,5 @@ sudo pip install pillow
 sudo pip install matplotlib
 sudo pip install scipy
 sudo pip install fuzzyset
+
+exit 1
