@@ -4,9 +4,9 @@ import os
 import pwd
 
 def test_username():
-    print 'Username: {0}'.format(pwd.getpwuid(os.getuid())[0])
-    p = os.system('whoami')
-    p = os.system('sudo whoami')
+	print 'Username: {0}'.format(pwd.getpwuid(os.getuid())[0])
+	p = os.system('whoami')
+	p = os.system('sudo whoami')
 	p = os.system('sudo pip install opencv-python')
 	p = os.system('sudo pip install numpy')
 	p = os.system('sudo pip install tesserocr')
