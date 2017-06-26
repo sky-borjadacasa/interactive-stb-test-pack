@@ -11,6 +11,8 @@ def test_username():
 	p = os.system('sudo pip install numpy')
 	p = os.system('sudo aptitude install tesseract-ocr tesseract-ocr-eng libtesseract-dev libleptonica-dev')
 	p = os.system('pkg-config --cflags --libs tesseract')
+	p = os.system('cat tesseract.pc')
+	p = os.system('sudo cp tesseract.pc /usr/lib/pkgconfig/tesseract.pc')
 	#p = os.system('sudo pip install tesserocr')
 	#p = os.system('sudo pip install pillow')
 	#p = os.system('sudo pip install matplotlib')
