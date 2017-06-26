@@ -43,6 +43,7 @@ TM_CCOEFF_THRESHOLD_TEXT_ITEM = 140000000
 VERTICAL_TEXT_SIZE = 50
 VERTICAL_TEXT_SIZE_WITH_IMAGE = 50
 HORIZONAL_TEXT_MARGIN = 10
+BOX_SIMILARITY_THRESHOLD = 10
 
 # Regions:
 MY_SKY_REGION = ((880, 0), (1280 - 1, 720 - 1)) # The 400 pixels to the right and the whole height of the screen
@@ -166,8 +167,32 @@ def is_similar_color_rgb(color_a, color_b):
     distance = abs(rgb_luminance(color_a) - rgb_luminance(color_b))
     return distance < COLOR_THRESHOLD
 
-# TODO: Refactor include_list to another function
-def dominant_color(image, region, exclude_list=[], include_list=[]):
+def get_palette(image, region):
+    """Get the dominant colors of a region
+
+    Args:
+        image (numpy.ndarray): Image to search
+        region (tuple(tuple(int))): Region of the image to search
+
+    Returns:
+        Palette of colors
+        Color frequency of image
+    """
+    cropped_image = crop_image(image, region)
+    arr = np.float32(cropped_image)
+    pixels = arr.reshape((-1, 3))
+
+    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
+    flags = cv2.KMEANS_RANDOM_CENTERS
+    _, labels, centroids = cv2.kmeans(pixels, PALETTE_SIZE, None, criteria, 10, flags)
+
+    palette = np.uint8(centroids)
+    color_frequency = itemfreq(labels)
+    color_frequency.sort(0)
+
+    return palette, color_frequency
+
+def dominant_color(image, region, exclude_list=[]):
     """Get the dominant color of a region
 
     Args:
@@ -179,27 +204,9 @@ def dominant_color(image, region, exclude_list=[], include_list=[]):
     Returns:
         RGB color found
     """
-    cropped_image = crop_image(image, region)
-    arr = np.float32(cropped_image)
-    pixels = arr.reshape((-1, 3))
+    palette, color_frequency = get_palette(image, region)
 
-    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
-    flags = cv2.KMEANS_RANDOM_CENTERS
-    _, labels, centroids = cv2.kmeans(pixels, PALETTE_SIZE, None, criteria, 10, flags)
-
-    palette = np.uint8(centroids)
-    label_frequency = itemfreq(labels)
-    label_frequency.sort(0)
-
-    if include_list:
-        for label in label_frequency[::-1]:
-            color = palette[label[0]]
-            rgb_color = bgr_to_rgb(color)
-            for include_color in include_list:
-                if is_similar_color_rgb(rgb_color, include_color):
-                    return color
-
-    for label in label_frequency[::-1]:
+    for label in color_frequency[::-1]:
         color = palette[label[0]]
         rgb_color = bgr_to_rgb(color)
         exclude = False
@@ -211,6 +218,25 @@ def dominant_color(image, region, exclude_list=[], include_list=[]):
             continue
         else:
             return color
+
+def is_color_in_palette(palette, color_frequency, color_to_find):
+    """Find the most common color in a palette that matches the wanted color
+
+    Args:
+        palette (numpy.ndarray): Palette of colors
+        color_frequency (numpy.ndarray): Color frequency of image
+        color_to_find (tuple(int)): Region of the image to search
+
+    Returns:
+        The most common color in a palette that matches the wanted color
+    """
+    for label in color_frequency[::-1]:
+        color = palette[label[0]]
+        rgb_color = bgr_to_rgb(color)
+        if is_similar_color_rgb(rgb_color, color_to_find):
+            return True
+    return False
+
 
 def intersection(a, b):
     """Calculate the intersection of two regions
@@ -257,7 +283,7 @@ def boxes_are_similar(a, b):
     Returns:
         True if boxes are similar
     """
-    size_threshold = 10 # TODO: Fine tune
+    size_threshold = BOX_SIMILARITY_THRESHOLD
     x_distance = abs(a[0] - b[0])
     y_distance = abs(a[1] - b[1])
     w_distance = abs(a[0] + a[2] - b[0] - b[2])
@@ -293,8 +319,6 @@ class SkyPlusTestUtils(object):
         """
 
         # This will find the only selected menu item:
-        template = cv2.imread(IMAGE_BORDER_SMALL, cv2.IMREAD_COLOR)
-        mask = cv2.imread(IMAGE_MASK_SMALL, cv2.IMREAD_COLOR)
         menu_items = self.get_menu_items(MY_SKY_TEXT_MENU_REGION)
 
         if not menu_items:
@@ -424,13 +448,9 @@ class SkyPlusTestUtils(object):
             if text:
                 text = self.fuzzy_match(text)
 
-            # Find out if selected or not
-            # Exclude text color from the search and search for yellow
-            color = dominant_color(self.image, region, exclude_list=[BLACK_RGB, WHITE_RGB], include_list=[YELLOW_BACKGROUND_RGB])
-            self.show_pillow_image(region)
-            print 'Color: {0}'.format(color)
-            if color is not None:
-                selected = is_similar_color_rgb(bgr_to_rgb(color), YELLOW_BACKGROUND_RGB)
+            # Find out if selected or not:
+            palette, color_frequency = get_palette(self.image, region)
+            selected = is_color_in_palette(palette, color_frequency, YELLOW_BACKGROUND_RGB)
 
             self.debug('Found text: {0}, {1}'.format(text, selected))
 
@@ -462,6 +482,15 @@ class SkyPlusTestUtils(object):
         return matches[0][1]
 
     def contour_detection(self, region=None, include_region=False):
+        """Get contours found in the image or given region to find menu items later
+
+        Args:
+            region (tuple(tuple(int))): Region to crop
+            include_region (bool): Weather to include the region in the found boxes or not
+
+        Returns:
+            List of boxes found orderer by vertical position
+        """
         image_gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
         cropped_image = crop_image(image_gray, region)
         blurred_image = cv2.medianBlur(cropped_image, 5)
@@ -588,6 +617,14 @@ class SkyPlusTestUtils(object):
         return outer_boxes
 
     def get_menu_items(self, region=None):
+        """Get menu items in the image or given region
+
+        Args:
+            region (tuple(tuple(int))): Region to find menu items
+
+        Returns:
+            List of menu items found orderer by vertical position
+        """
         boxes = self.contour_detection(region=region)
 
         menu_items = []
@@ -602,35 +639,3 @@ class SkyPlusTestUtils(object):
             menu_items.append(item)
 
         return menu_items
-
-
-
-####################
-### TESTING CODE ###
-####################
-
-def test_function():
-    testing_image = cv2.imread(TEST_IMAGE_MYSKY_HOME, cv2.IMREAD_COLOR)
-    instance = SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
-    menu_item_list = instance.get_menu_items(MY_SKY_REGION)
-    for menu_item in menu_item_list:
-        print 'Item: [{0}] {1}, ({2})'.format(menu_item.selected, menu_item.text.encode('utf-8'), menu_item.region)
-
-    testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU, cv2.IMREAD_COLOR)
-    instance = SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
-    menu_item_list = instance.get_menu_items(MY_SKY_REGION)
-
-    for menu_item in menu_item_list:
-        print 'Item: [{0}] {1}, ({2})'.format(menu_item.selected, menu_item.text.encode('utf-8'), menu_item.region)
-
-    testing_image = cv2.imread(TEST_IMAGE_MYSKY_MENU_1, cv2.IMREAD_COLOR)
-    instance = SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
-    menu_item_list = instance.find_text_menu_items()
-
-    for menu_item in menu_item_list:
-        print 'Item: [{0}] {1}, ({2})'.format(menu_item.selected, menu_item.text.encode('utf-8'), menu_item.region)
-
-    print 'Finish'
-
-if __name__ == '__main__':
-    test_function()
