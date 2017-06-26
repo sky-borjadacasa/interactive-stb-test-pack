@@ -4,4 +4,4 @@ import os
 import pwd
 
 def test_username():
-    print pwd.getpwuid(os.getuid())[0]
+    print 'Username: {0}'.format(pwd.getpwuid(os.getuid())[0])
