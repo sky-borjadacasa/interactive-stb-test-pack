@@ -7,8 +7,7 @@ from time import sleep
 
 import datetime
 import stbt
-import imp
-sky_plus_utils = imp.load_source('sky_plus_utils', './opencv-testing/sky_plus_utils.py')
+import sky_plus_utils
 
 class MySkyMainMenu(FrameObject):
 	@property
