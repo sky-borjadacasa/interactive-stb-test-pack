@@ -7,11 +7,20 @@ from time import sleep
 
 import datetime
 import stbt
+import imp
+sky_plus_utils = imp.load_source('sky_plus_utils', './opencv-testing/sky_plus_utils.py')
+import mysky_frame_objects
 
 def test_open_mysky():
     """Open MySky app"""
     try:
         stbt.press('KEY_YELLOW')
+        menu = wait_until(mysky_frame_objects.MySkyMainMenu())
+        print menu
+
+
+
+
         assert stbt.wait_for_match('images/SkyTopLogo.png')
         sleep(10)
         region = stbt.Region(880, 0, width=400, height=720)
