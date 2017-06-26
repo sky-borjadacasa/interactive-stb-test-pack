@@ -9,7 +9,7 @@ def test_username():
 	p = os.system('sudo whoami')
 	p = os.system('sudo pip install opencv-python')
 	p = os.system('sudo pip install numpy')
-	p = os.system('sudo apt-get install tesseract-ocr tesseract-ocr-eng libtesseract-dev libleptonica-dev')
+	p = os.system('sudo apt-get -y install tesseract-ocr tesseract-ocr-eng libtesseract-dev libleptonica-dev')
 	p = os.system('pkg-config --cflags --libs tesseract')
 	p = os.system('pwd')
 	p = os.system('cat tesseract.pc')
