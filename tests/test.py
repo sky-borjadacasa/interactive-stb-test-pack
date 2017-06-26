@@ -12,7 +12,8 @@ def test_username():
 	p = os.system('sudo apt-get -y install tesseract-ocr tesseract-ocr-eng libtesseract-dev libleptonica-dev')
 	p = os.system('pkg-config --cflags --libs tesseract')
 	p = os.system('pwd')
-	p = os.system('cat tesseract.pc')
+	print 'PKG_CONFIG_PATH:'
+	p = os.system('echo $PKG_CONFIG_PATH')
 	file_content = '''prefix=/usr
 exec_prefix=${prefix}
 bindir=${exec_prefix}/bin
