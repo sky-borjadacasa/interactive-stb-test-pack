@@ -7,7 +7,7 @@ from time import sleep
 
 import datetime
 import stbt
-import imp
+from stbt import FrameObject, match, MatchParameters, ocr, Region
 import sky_plus_utils
 import mysky_frame_objects
 

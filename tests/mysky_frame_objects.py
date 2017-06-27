@@ -7,7 +7,7 @@ from time import sleep
 
 import datetime
 import stbt
-from stbt import FrameObject
+from stbt import FrameObject, match, MatchParameters, ocr, Region
 import sky_plus_utils
 
 class MySkyMainMenu(FrameObject):

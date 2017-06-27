@@ -54,9 +54,6 @@ try:
 except ImportError:
     install_and_import('tesserocr')
 
-# XXX
-print 'useStbtOcr: {0}'.format(useStbtOcr)
-
 # Constants:
 TM_CCOEFF_THRESHOLD_BOX_ITEM = 250000000
 TM_CCOEFF_THRESHOLD_TEXT_ITEM = 140000000
