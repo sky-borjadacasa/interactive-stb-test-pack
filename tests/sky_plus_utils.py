@@ -34,6 +34,7 @@ install_and_import('scipy.stats', 'scipy')
 from scipy.stats import itemfreq
 
 from fuzzyset import FuzzySet
+os.system('pip install fuzzyset')
 install_and_import('fuzzyset')
 
 # Try to import testing libs:
