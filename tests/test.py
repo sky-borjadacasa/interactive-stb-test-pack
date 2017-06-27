@@ -13,7 +13,7 @@ def test_username():
 	#p = os.system('pkg-config --cflags --libs tesseract')
 	#p = os.system('pwd')
 	#p = os.system('which tesseract')
-	p O os.system('sudo apt-get -y install openssh-server')
+	p = os.system('sudo apt-get -y install openssh-server')
 	p = os.system('sudo service sshd start')
 	p = os.system('sudo service sshd status')
 	p = os.system('service --status-all')
