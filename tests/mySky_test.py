@@ -15,7 +15,7 @@ def test_open_mysky():
     """Open MySky app"""
     try:
         stbt.press('KEY_YELLOW')
-        menu = wait_until(mysky_frame_objects.MySkyMainMenu())
+        menu = stbt.wait_until(mysky_frame_objects.MySkyMainMenu())
         print menu
 
 
