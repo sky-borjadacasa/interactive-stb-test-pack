@@ -49,10 +49,10 @@ except ImportError:
 # Switch between tesserocr for testing and stbt.ocr for running in the tester:
 useStbtOcr = False
 try:
-    install_and_import('tesserocr')
-except ImportError:
     import stbt
     useStbtOcr = True
+except ImportError:
+    install_and_import('tesserocr')
 
 # XXX
 print 'useStbtOcr: {0}'.format(useStbtOcr)
