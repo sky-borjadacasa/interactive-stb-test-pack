@@ -36,7 +36,7 @@ from matplotlib import pyplot as plt
 from scipy.stats import itemfreq
 from fuzzyset import FuzzySet
 
-def useStbtOcr = False
+useStbtOcr = False
 try:
     install_and_import('tesserocr')
 except ImportError:
