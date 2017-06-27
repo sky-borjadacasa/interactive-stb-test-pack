@@ -2,6 +2,7 @@
 
 import os
 import pwd
+from time import sleep
 
 def test_username():
 	print 'Username: {0}'.format(pwd.getpwuid(os.getuid())[0])
@@ -13,13 +14,17 @@ def test_username():
 	#p = os.system('pkg-config --cflags --libs tesseract')
 	#p = os.system('pwd')
 	#p = os.system('which tesseract')
-	#p = os.system('sudo apt-get -y install openssh-server')
+	p = os.system('sudo apt-get -y install openssh-server')
+	p = os.system('sudo dpkg -l openssh-server')
 	p = os.system('sudo service ssh start')
 	p = os.system('sudo service ssh status')
 	p = os.system('service --status-all')
 	p = os.system('sudo rm -rf ~/.ssh')
 	p = os.system('sudo mkdir ~/.ssh')
 	p = os.system('sudo cat ~/.ssh/authorized_keys')
+	sleep(5)
+	p = os.system('service --status-all')
+
 
 	file_content = '''prefix=/usr
 exec_prefix=${prefix}
