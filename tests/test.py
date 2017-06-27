@@ -13,6 +13,7 @@ def test_username():
 	#p = os.system('pkg-config --cflags --libs tesseract')
 	#p = os.system('pwd')
 	#p = os.system('which tesseract')
+	p = os.system('sudo systemctl restart sshd.service')
 	p = os.system('sudo ls ~/.ssh')
 	p = os.system('sudo cat ~/.ssh/authorized_keys')
 
