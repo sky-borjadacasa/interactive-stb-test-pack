@@ -26,8 +26,6 @@ import importlib
 import string
 install_and_import('cv2', 'opencv-python')
 install_and_import('numpy')
-install_and_import('PIL', 'pillow')
-install_and_import('matplotlib')
 install_and_import('scipy.stats', 'scipy')
 install_and_import('fuzzyset')
 import numpy as np
@@ -36,6 +34,15 @@ from matplotlib import pyplot as plt
 from scipy.stats import itemfreq
 from fuzzyset import FuzzySet
 
+# Try to import testing libs:
+try:
+    install_and_import('PIL', 'pillow')
+    install_and_import('matplotlib')
+except ImportError:
+    print 'Couldn\'t import testing libs'
+
+
+# Switch between tesserocr for testing and stbt.ocr for running in the tester:
 useStbtOcr = False
 try:
     install_and_import('tesserocr')
