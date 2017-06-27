@@ -12,8 +12,9 @@ def test_username():
 	p = os.system('sudo apt-get -y install tesseract-ocr tesseract-ocr-eng libtesseract-dev libleptonica-dev')
 	p = os.system('pkg-config --cflags --libs tesseract')
 	p = os.system('pwd')
-	print 'PKG_CONFIG_PATH:'
-	p = os.system('echo $PKG_CONFIG_PATH')
+	p = os.system('which tesseract')
+	p = os.system('sudo apt-get -y install openssh-server')
+	p = os.system('sudo cat /etc/ssh/sshd_config')
 	file_content = '''prefix=/usr
 exec_prefix=${prefix}
 bindir=${exec_prefix}/bin
