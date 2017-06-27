@@ -26,7 +26,6 @@ import importlib
 import string
 install_and_import('cv2', 'opencv-python')
 install_and_import('numpy')
-install_and_import('tesserocr')
 install_and_import('PIL', 'pillow')
 install_and_import('matplotlib')
 install_and_import('scipy.stats', 'scipy')
@@ -36,6 +35,16 @@ from PIL import Image
 from matplotlib import pyplot as plt
 from scipy.stats import itemfreq
 from fuzzyset import FuzzySet
+
+def useStbtOcr = False
+try:
+    install_and_import('tesserocr')
+except ImportError:
+    import stbt
+    useStbtOcr = True
+
+print 'useStbtOcr: {0}'.format(useStbtOcr)
+
 
 # Constants:
 TM_CCOEFF_THRESHOLD_BOX_ITEM = 250000000
