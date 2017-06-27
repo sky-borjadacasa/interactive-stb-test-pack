@@ -26,18 +26,21 @@ import importlib
 import string
 install_and_import('cv2', 'opencv-python')
 install_and_import('numpy')
-install_and_import('scipy.stats', 'scipy')
 install_and_import('fuzzyset')
 import numpy as np
-from PIL import Image
-from matplotlib import pyplot as plt
-from scipy.stats import itemfreq
 from fuzzyset import FuzzySet
+
+import os
+os.system('sudo apt-get -y install python-scipy')
+install_and_import('scipy.stats', 'scipy')
+from scipy.stats import itemfreq
 
 # Try to import testing libs:
 try:
     install_and_import('PIL', 'pillow')
     install_and_import('matplotlib')
+    from PIL import Image
+    from matplotlib import pyplot as plt
 except ImportError:
     print 'Couldn\'t import testing libs'
 
