@@ -7,6 +7,7 @@ from time import sleep
 
 import datetime
 import stbt
+from stbt import FrameObject
 import sky_plus_utils
 
 class MySkyMainMenu(FrameObject):
