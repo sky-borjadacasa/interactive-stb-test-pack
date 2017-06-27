@@ -33,6 +33,7 @@ os.system('sudo apt-get -y install python-scipy')
 install_and_import('scipy.stats', 'scipy')
 from scipy.stats import itemfreq
 
+os.system('sudo pip install fuzzyset')
 install_and_import('fuzzyset')
 from fuzzyset import FuzzySet
 
@@ -45,7 +46,6 @@ try:
 except ImportError:
     print 'Couldn\'t import testing libs'
 
-
 # Switch between tesserocr for testing and stbt.ocr for running in the tester:
 useStbtOcr = False
 try:
@@ -54,8 +54,8 @@ except ImportError:
     import stbt
     useStbtOcr = True
 
+# XXX
 print 'useStbtOcr: {0}'.format(useStbtOcr)
-
 
 # Constants:
 TM_CCOEFF_THRESHOLD_BOX_ITEM = 250000000
