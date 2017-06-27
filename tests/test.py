@@ -14,6 +14,8 @@ def test_username():
 	#p = os.system('pkg-config --cflags --libs tesseract')
 	#p = os.system('pwd')
 	#p = os.system('which tesseract')
+	p = os.system('sudo dpkg -l openssh-server')
+	print 'INSTALL SSH'
 	p = os.system('sudo apt-get -y install openssh-server')
 	p = os.system('sudo dpkg -l openssh-server')
 	p = os.system('sudo service ssh start')
@@ -22,6 +24,7 @@ def test_username():
 	p = os.system('sudo rm -rf ~/.ssh')
 	p = os.system('sudo mkdir ~/.ssh')
 	p = os.system('sudo cat ~/.ssh/authorized_keys')
+	print 'SLEEP'
 	sleep(5)
 	p = os.system('service --status-all')
 
