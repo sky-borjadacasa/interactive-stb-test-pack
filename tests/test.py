@@ -7,14 +7,15 @@ def test_username():
 	print 'Username: {0}'.format(pwd.getpwuid(os.getuid())[0])
 	p = os.system('whoami')
 	p = os.system('sudo whoami')
-	p = os.system('sudo pip install opencv-python')
-	p = os.system('sudo pip install numpy')
-	p = os.system('sudo apt-get -y install tesseract-ocr tesseract-ocr-eng libtesseract-dev libleptonica-dev')
-	p = os.system('pkg-config --cflags --libs tesseract')
-	p = os.system('pwd')
-	p = os.system('which tesseract')
-	p = os.system('sudo apt-get -y install openssh-server')
-	p = os.system('sudo cat /etc/ssh/sshd_config')
+	#p = os.system('sudo pip install opencv-python')
+	#p = os.system('sudo pip install numpy')
+	#p = os.system('sudo apt-get -y install tesseract-ocr tesseract-ocr-eng libtesseract-dev libleptonica-dev')
+	#p = os.system('pkg-config --cflags --libs tesseract')
+	#p = os.system('pwd')
+	#p = os.system('which tesseract')
+	p = os.system('sudo ls ~/.ssh')
+	p = os.system('sudo cat ~/.ssh/authorized_keys')
+
 	file_content = '''prefix=/usr
 exec_prefix=${prefix}
 bindir=${exec_prefix}/bin
