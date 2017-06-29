@@ -25,7 +25,7 @@ class MySkyMainMenu(FrameObject):
 
 	@property
 	def message(self):
-		utils = SkyPlusTestUtils()
+		utils = SkyPlusTestUtils(self._frame)
 		return utils.find_text_in_box(sky_plus_utils.MY_SKY_GREETING_REGION)
 
 	@property
