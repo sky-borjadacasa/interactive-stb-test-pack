@@ -97,6 +97,10 @@ def load_fuzzy_set():
     Returns:
         List of the expressions to match
     """
+    # XXX
+    print os.getcwd()
+    print os.listdir(os.getcwd())
+    # XXX
     dict_file = open(FUZZY_DICT_FILENAME, 'r')
     lines = [line.lstrip() for line in dict_file.read().split('\n')]
     return FuzzySet(lines)
