@@ -10,10 +10,13 @@ import stbt
 from stbt import FrameObject, match, MatchParameters, ocr, Region
 import sky_plus_utils
 
+# Regions:
+MY_SKY_REGION = Region(880, 0, width=400, height=720) # The 400 pixels to the right and the whole height of the screen
+
 class MySkyMainMenu(FrameObject):
 	@property
 	def is_visible(self):
-	    return bool(self._info)
+		return stbt.match('images/SkyTopLogo.png', region=MY_SKY_REGION)
 
 	@property
 	def title(self):

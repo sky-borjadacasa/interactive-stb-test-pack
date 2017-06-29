@@ -17,7 +17,7 @@ def test_open_mysky():
     try:
         stbt.press('KEY_YELLOW')
         menu = stbt.wait_until(MySkyMainMenu)
-        print menu
+        assert menu.is_visible
         return 0
 
 
