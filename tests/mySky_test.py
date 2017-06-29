@@ -10,13 +10,15 @@ import stbt
 from stbt import FrameObject, match, MatchParameters, ocr, Region
 import sky_plus_utils
 import mysky_frame_objects
+from mysky_frame_objects import MySkyMainMenu
 
 def test_open_mysky():
     """Open MySky app"""
     try:
         stbt.press('KEY_YELLOW')
-        menu = stbt.wait_until(mysky_frame_objects.MySkyMainMenu())
+        menu = stbt.wait_until(MySkyMainMenu)
         print menu
+        return 0
 
 
 
