@@ -69,7 +69,7 @@ MY_SKY_TEXT_MENU_REGION = ((920, 125), (1240, 550))
 
 # Text recognition:
 OCR_CHAR_WHITELIST = string.ascii_letters + ' ' + string.digits
-FUZZY_DICT_FILENAME = './fuzzy_dict.txt'
+FUZZY_DICT_FILENAME = 'dicts/fuzzy_dict.txt'
 
 # Colors:
 YELLOW_BACKGROUND_RGB = np.array([235, 189, 0])

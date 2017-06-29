@@ -5,7 +5,6 @@ Test cases for MySky
 
 from time import sleep
 
-import os # XXX
 import datetime
 import stbt
 from stbt import FrameObject, match, MatchParameters, ocr, Region
@@ -20,10 +19,6 @@ def test_open_mysky():
         menu = stbt.wait_until(MySkyMainMenu)
         assert menu.is_visible
         print 'MySky menu is visible'
-        # XXX
-        print 'CWD: {0}'.format(os.getcwd())
-        print 'LS: {0}'.format(os.listdir(os.getcwd()))
-        # XXX
         
         sleep(10)
 
