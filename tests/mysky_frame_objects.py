@@ -9,6 +9,7 @@ import datetime
 import stbt
 from stbt import FrameObject, match, MatchParameters, ocr, Region
 import sky_plus_utils
+from sky_plus_utils import SkyPlusTestUtils
 
 # Regions:
 MY_SKY_REGION = Region(880, 0, width=400, height=720) # The 400 pixels to the right and the whole height of the screen
@@ -24,11 +25,8 @@ class MySkyMainMenu(FrameObject):
 
 	@property
 	def message(self):
-	    right_of_info = Region(
-	        x=self._info.region.right, y=self._info.region.y,
-	        width=390, height=self._info.region.height)
-	    return ocr(region=right_of_info, frame=self._frame) \
-	           .replace('\n', ' ')
+		utils = SkyPlusTestUtils()
+		return utils.find_text_in_box(sky_plus_utils.MY_SKY_GREETING_REGION)
 
 	@property
 	def _info(self):

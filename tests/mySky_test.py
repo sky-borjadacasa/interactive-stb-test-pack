@@ -18,13 +18,18 @@ def test_open_mysky():
         stbt.press('KEY_YELLOW')
         menu = stbt.wait_until(MySkyMainMenu)
         assert menu.is_visible
+        print 'MySky menu is visible'
+        
+        sleep(10)
+
+        greeting = menu.message
+        print 'Greeting: {0}'.format(greeting)
+        assert greeting == greeting_string()
+
         return 0
 
 
 
-
-        assert stbt.wait_for_match('images/SkyTopLogo.png')
-        sleep(10)
         region = stbt.Region(880, 0, width=400, height=720)
         # Just for testing:
         ocr_params = {'language_model_penalty_non_dict_word': 0.5}
