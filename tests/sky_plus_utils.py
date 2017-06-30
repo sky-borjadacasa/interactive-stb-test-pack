@@ -69,7 +69,6 @@ MY_SKY_TEXT_MENU_REGION = ((920, 125), (1240, 550))
 
 # Text recognition:
 OCR_CHAR_WHITELIST = string.ascii_letters + ' ' + string.digits
-FUZZY_DICT_FILENAME = 'dicts/fuzzy_dict.txt'
 
 # Colors:
 YELLOW_BACKGROUND_RGB = np.array([235, 189, 0])
@@ -453,24 +452,40 @@ class SkyPlusTestUtils(object):
         """
         cropped_image = crop_image(self.image, region)
         cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
-        pil_image = Image.fromarray(np.rollaxis(cropped_image, 0, 1))
-        if self.debug_mode and self.show_images_results:
-            pil_image.show()
 
-        with tesserocr.PyTessBaseAPI() as api:
-            api.SetImage(pil_image)
-            api.SetVariable('tessedit_char_whitelist', OCR_CHAR_WHITELIST)
-            text = api.GetUTF8Text().strip().encode('utf-8')
+        if useStbtOcr:
+            # XXX
+            text = stbt.ocr()
+            print 'New OCR text: {0}'.format(text)
             if text:
                 text = self.fuzzy_match(text)
+            print 'New OCR fuzzy text: {0}'.format(text)
 
             # Find out if selected or not:
             palette, color_frequency = get_palette(self.image, region)
             selected = is_color_in_palette(palette, color_frequency, YELLOW_BACKGROUND_RGB)
 
-            self.debug('Found text: {0}, {1}'.format(text, selected))
-
             return text, selected
+            # XXX
+        else:
+            pil_image = Image.fromarray(np.rollaxis(cropped_image, 0, 1))
+            if self.debug_mode and self.show_images_results:
+                pil_image.show()
+
+            with tesserocr.PyTessBaseAPI() as api:
+                api.SetImage(pil_image)
+                api.SetVariable('tessedit_char_whitelist', OCR_CHAR_WHITELIST)
+                text = api.GetUTF8Text().strip().encode('utf-8')
+                if text:
+                    text = self.fuzzy_match(text)
+
+                # Find out if selected or not:
+                palette, color_frequency = get_palette(self.image, region)
+                selected = is_color_in_palette(palette, color_frequency, YELLOW_BACKGROUND_RGB)
+
+                self.debug('Found text: {0}, {1}'.format(text, selected))
+
+                return text, selected
 
     def show_pillow_image(self, region):
         """Show the given image region on the screen
