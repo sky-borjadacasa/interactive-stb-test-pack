@@ -109,7 +109,9 @@ def load_fuzzy_set():
         'My details and messages', \
         'TV picture problems', \
         'No satelite signal', \
-        'Forgotten PIN']
+        'Forgotten PIN', \
+        'Good Morning', \
+        'Good Afternoon']
     return FuzzySet(lines)
 
 def crop_image(image, region):
@@ -461,12 +463,8 @@ class SkyPlusTestUtils(object):
 
         if useStbtOcr:
             # XXX
-            text = stbt.ocr(region=get_stbt_region(region))
+            text = stbt.ocr(region=get_stbt_region(region)).strip().encode('utf-8')
             print 'New OCR text: {0}'.format(text)
-            print 'Text type: {0}'.format(type(text))
-            text = text.strip().encode('utf-8')
-            print 'New OCR text: {0}'.format(text)
-            print 'Text type: {0}'.format(type(text))
             if text:
                 text = self.fuzzy_match(text)
             print 'New OCR fuzzy text: {0}'.format(text)
