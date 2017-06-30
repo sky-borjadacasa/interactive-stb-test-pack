@@ -97,9 +97,6 @@ def load_fuzzy_set():
     Returns:
         List of the expressions to match
     """
-    #dict_file = open(FUZZY_DICT_FILENAME, 'r')
-    #lines = [line.lstrip() for line in dict_file.read().split('\n')]
-    # XXX
     lines = ['Sky Q', \
         'Manage your account', \
         'Fix a problem', \
@@ -202,8 +199,6 @@ def get_palette(image, region):
 
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
     flags = cv2.KMEANS_RANDOM_CENTERS
-    # XXX
-    # _, labels, centroids = cv2.kmeans(pixels, PALETTE_SIZE, None, criteria, 10, flags)
     _, labels, centroids = cv2.kmeans(pixels, K=PALETTE_SIZE, bestLabels=None, criteria=criteria, attempts=10, flags=flags)
 
     palette = np.uint8(centroids)
@@ -311,8 +306,15 @@ def boxes_are_similar(a, b):
     return x_distance < size_threshold and y_distance < size_threshold \
         and w_distance < size_threshold and h_distance < size_threshold
 
-# XXX
 def get_stbt_region(region):
+    """Convert a region in ((x1, y1), (x2, y2)) format to a stbt.Region type
+
+    Args:
+        region (tuple(tuple(int))): Region to convert
+
+    Returns:
+        stbt.Region object representing the same area
+    """
     stbt_region = Region(region[0][0], region[0][1], right=region[1][0], bottom=region[1][1])
     return stbt_region
 
@@ -463,6 +465,7 @@ class SkyPlusTestUtils(object):
         cropped_image = crop_image(self.image, region)
         cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
 
+        text = ''
         if useStbtOcr:
             # XXX
             text = stbt.ocr(region=get_stbt_region(region)).strip().encode('utf-8')
@@ -470,12 +473,6 @@ class SkyPlusTestUtils(object):
             if text:
                 text = self.fuzzy_match(text)
             print 'New OCR fuzzy text: {0}'.format(text)
-
-            # Find out if selected or not:
-            palette, color_frequency = get_palette(self.image, region)
-            selected = is_color_in_palette(palette, color_frequency, YELLOW_BACKGROUND_RGB)
-
-            return text, selected
             # XXX
         else:
             pil_image = Image.fromarray(np.rollaxis(cropped_image, 0, 1))
@@ -489,13 +486,13 @@ class SkyPlusTestUtils(object):
                 if text:
                     text = self.fuzzy_match(text)
 
-                # Find out if selected or not:
-                palette, color_frequency = get_palette(self.image, region)
-                selected = is_color_in_palette(palette, color_frequency, YELLOW_BACKGROUND_RGB)
+        # Find out if selected or not:
+        palette, color_frequency = get_palette(self.image, region)
+        selected = is_color_in_palette(palette, color_frequency, YELLOW_BACKGROUND_RGB)
 
-                self.debug('Found text: {0}, {1}'.format(text, selected))
+        self.debug('Found text: {0}, {1}'.format(text, selected))
 
-                return text, selected
+        return text, selected
 
     def show_pillow_image(self, region):
         """Show the given image region on the screen
