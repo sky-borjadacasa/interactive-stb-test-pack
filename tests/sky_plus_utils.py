@@ -50,6 +50,7 @@ except ImportError:
 useStbtOcr = False
 try:
     import stbt
+    from stbt import Region
     useStbtOcr = True
 except ImportError:
     install_and_import('tesserocr')
