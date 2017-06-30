@@ -463,6 +463,10 @@ class SkyPlusTestUtils(object):
             # XXX
             text = stbt.ocr(region=get_stbt_region(region))
             print 'New OCR text: {0}'.format(text)
+            print 'Text type: {0}'.format(type(text))
+            text = text.strip().encode('utf-8')
+            print 'New OCR text: {0}'.format(text)
+            print 'Text type: {0}'.format(type(text))
             if text:
                 text = self.fuzzy_match(text)
             print 'New OCR fuzzy text: {0}'.format(text)
