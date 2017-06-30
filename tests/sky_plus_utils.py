@@ -202,6 +202,8 @@ def get_palette(image, region):
 
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
     flags = cv2.KMEANS_RANDOM_CENTERS
+    # XXX
+    print 'DEBUG: {0}'.format(inspect.getsource(cv2.kmeans))
     _, labels, centroids = cv2.kmeans(pixels, PALETTE_SIZE, None, criteria, 10, flags)
 
     palette = np.uint8(centroids)
