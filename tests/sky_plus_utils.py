@@ -306,6 +306,11 @@ def boxes_are_similar(a, b):
     return x_distance < size_threshold and y_distance < size_threshold \
         and w_distance < size_threshold and h_distance < size_threshold
 
+# XXX
+def get_stbt_region(region):
+    stbt_region = Region(region[0][0], region[0][1], right=region[1][0], bottom=region[1][1])
+    return stbt_region
+
 class SkyPlusTestUtils(object):
     """Class that contains the logic to analyse the contents of the MySky menu"""
 
@@ -455,7 +460,7 @@ class SkyPlusTestUtils(object):
 
         if useStbtOcr:
             # XXX
-            text = stbt.ocr()
+            text = stbt.ocr(get_stbt_region(region))
             print 'New OCR text: {0}'.format(text)
             if text:
                 text = self.fuzzy_match(text)
