@@ -97,8 +97,19 @@ def load_fuzzy_set():
     Returns:
         List of the expressions to match
     """
-    dict_file = open(FUZZY_DICT_FILENAME, 'r')
-    lines = [line.lstrip() for line in dict_file.read().split('\n')]
+    #dict_file = open(FUZZY_DICT_FILENAME, 'r')
+    #lines = [line.lstrip() for line in dict_file.read().split('\n')]
+    # XXX
+    lines = ['Sky Q', \
+        'Manage your account', \
+        'Fix a problem', \
+        'Bills and payments', \
+        'TV package and settings', \
+        'Broadband and Talk', \
+        'My details and messages', \
+        'TV picture problems', \
+        'No satelite signal', \
+        'Forgotten PIN']
     return FuzzySet(lines)
 
 def crop_image(image, region):
