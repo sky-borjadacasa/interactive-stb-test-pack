@@ -18,7 +18,7 @@ class MySkyMainMenu(object):
 
 	def __init__(self):
 		super(FrameObject, self).__init__()
-        self.utils = SkyPlusTestUtils(super._frame)
+        self.utils = SkyPlusTestUtils(self._frame)
 
 	@property
 	def is_visible(self):
