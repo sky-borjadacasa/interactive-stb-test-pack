@@ -461,7 +461,7 @@ class SkyPlusTestUtils(object):
 
         if useStbtOcr:
             # XXX
-            text = stbt.ocr(get_stbt_region(region))
+            text = stbt.ocr(region=get_stbt_region(region))
             print 'New OCR text: {0}'.format(text)
             if text:
                 text = self.fuzzy_match(text)
