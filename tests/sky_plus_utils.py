@@ -467,13 +467,9 @@ class SkyPlusTestUtils(object):
 
         text = ''
         if useStbtOcr:
-            # XXX
             text = stbt.ocr(region=get_stbt_region(region)).strip().encode('utf-8')
-            print 'New OCR text: {0}'.format(text)
             if text:
                 text = self.fuzzy_match(text)
-            print 'New OCR fuzzy text: {0}'.format(text)
-            # XXX
         else:
             pil_image = Image.fromarray(np.rollaxis(cropped_image, 0, 1))
             if self.debug_mode and self.show_images_results:

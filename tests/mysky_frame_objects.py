@@ -15,6 +15,11 @@ from sky_plus_utils import SkyPlusTestUtils
 MY_SKY_REGION = Region(880, 0, width=400, height=720) # The 400 pixels to the right and the whole height of the screen
 
 class MySkyMainMenu(FrameObject):
+
+	def __init__(self):
+		super(FrameObject, self).__init__()
+        self.utils = SkyPlusTestUtils(self._frame)
+
 	@property
 	def is_visible(self):
 		return stbt.match('images/SkyTopLogo.png', region=MY_SKY_REGION)
@@ -25,8 +30,7 @@ class MySkyMainMenu(FrameObject):
 
 	@property
 	def message(self):
-		utils = SkyPlusTestUtils(self._frame)
-		text, _ = utils.find_text_in_box(sky_plus_utils.MY_SKY_GREETING_REGION)
+		text, _ = self.utils.find_text_in_box(sky_plus_utils.MY_SKY_GREETING_REGION)
 		return text
 
 	@property
