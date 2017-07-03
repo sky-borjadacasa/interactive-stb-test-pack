@@ -318,6 +318,19 @@ def get_stbt_region(region):
     stbt_region = Region(region[0][0], region[0][1], right=region[1][0], bottom=region[1][1])
     return stbt_region
 
+def get_utils_region(stbt_region):
+    """Convert a stbt.Region type to a region in ((x1, y1), (x2, y2)) format 
+
+    Args:
+        stbt.Region object representing the same area to convert
+
+    Returns:
+        Region in the (tuple(tuple(int))) format
+    """
+    region = ((stbt_region.x, stbt_region.y), (stbt_region.right, stbt_region.bottom))
+    stbt_region = Region(region[0][0], region[0][1], right=region[1][0], bottom=region[1][1])
+    return region
+
 class SkyPlusTestUtils(object):
     """Class that contains the logic to analyse the contents of the MySky menu"""
 

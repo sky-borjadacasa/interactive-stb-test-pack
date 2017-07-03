@@ -45,4 +45,5 @@ class MySkyMainMenu(FrameObject):
 
     @property
     def menu_items(self):
-        return self._utils.get_menu_items(region=MY_SKY_REGION)
+        region = self._utils.get_utils_region(MY_SKY_REGION)
+        return self._utils.get_menu_items(region=region)
