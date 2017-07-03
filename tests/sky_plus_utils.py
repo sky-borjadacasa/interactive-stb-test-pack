@@ -542,7 +542,7 @@ class SkyPlusTestUtils(object):
         cropped_image = crop_image(image_gray, region)
         blurred_image = cv2.medianBlur(cropped_image, 5)
         threshold_image = cv2.adaptiveThreshold(blurred_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
-        _, contours, _ = cv2.findContours(threshold_image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        contours = cv2.findContours(threshold_image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)[1]
         # TODO: Fine tune this value or extract to constant
         contours = sorted(contours, key=cv2.contourArea, reverse=True)[:10]
 
