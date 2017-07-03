@@ -27,6 +27,8 @@ def test_open_mysky():
         assert greeting == greeting_string()
 
         menu_items = menu.menu_items
+        print menu_items
+        print len(menu_items)
         assert len(menu_items) == 3
 
         return 0
