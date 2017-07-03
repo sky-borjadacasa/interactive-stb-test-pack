@@ -577,7 +577,8 @@ class SkyPlusTestUtils(object):
                 continue
         self.debug('Found {0} contours'.format(len(filtered_contours)))
         # XXX
-        print 'Found {0} contours'.format(len(filtered_contours))
+        print 'Found {0} contours'.format(len(contours))
+        print 'Filtered {0} contours'.format(len(filtered_contours))
 
         # Get bounding boxes for contours:
         boxes = [cv2.boundingRect(cont) for cont in filtered_contours]
