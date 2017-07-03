@@ -331,6 +331,10 @@ def get_utils_region(stbt_region):
     stbt_region = Region(region[0][0], region[0][1], right=region[1][0], bottom=region[1][1])
     return region
 
+def is_cv_version2():
+    (major, minor, _) = cv2.__version__.split(".")
+    return major == '2'
+
 class SkyPlusTestUtils(object):
     """Class that contains the logic to analyse the contents of the MySky menu"""
 
@@ -542,7 +546,11 @@ class SkyPlusTestUtils(object):
         cropped_image = crop_image(image_gray, region)
         blurred_image = cv2.medianBlur(cropped_image, 5)
         threshold_image = cv2.adaptiveThreshold(blurred_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
-        contours = cv2.findContours(threshold_image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)[1]
+        conts_return = cv2.findContours(threshold_image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        if is_cv_version2():
+            contours = conts_return[0]
+        else:
+            contours = conts_return[1]
         # TODO: Fine tune this value or extract to constant
         contours = sorted(contours, key=cv2.contourArea, reverse=True)[:10]
 
