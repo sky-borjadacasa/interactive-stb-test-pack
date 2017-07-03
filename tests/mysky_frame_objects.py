@@ -9,7 +9,7 @@ import datetime
 import stbt
 from stbt import FrameObject, match, MatchParameters, ocr, Region
 import sky_plus_utils
-from sky_plus_utils import SkyPlusTestUtils
+from sky_plus_utils import SkyPlusTestUtils, get_utils_region
 
 # Regions:
 MY_SKY_REGION = Region(880, 0, width=400, height=720) # The 400 pixels to the right and the whole height of the screen
@@ -45,5 +45,5 @@ class MySkyMainMenu(FrameObject):
 
     @property
     def menu_items(self):
-        region = self._utils.get_utils_region(MY_SKY_REGION)
+        region = get_utils_region(MY_SKY_REGION)
         return self._utils.get_menu_items(region=region)
