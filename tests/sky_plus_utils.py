@@ -553,6 +553,7 @@ class SkyPlusTestUtils(object):
             contours = conts_return[1]
         # TODO: Fine tune this value or extract to constant
         contours = sorted(contours, key=cv2.contourArea, reverse=True)[:10]
+        print 'CONTOURS: {0}'.format(contours)
 
         # Move contours to absolute coordinates
         if region:
