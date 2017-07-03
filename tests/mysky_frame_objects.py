@@ -18,7 +18,13 @@ class MySkyMainMenu(object):
 
 	def __init__(self):
 		super(FrameObject, self).__init__()
-        self.utils = SkyPlusTestUtils(self._frame)
+
+    @property
+    def _utils(self):
+    	if self.utils is None:
+    		self.utils = SkyPlusTestUtils(self._frame)
+    	return self.utils
+
 
 	@property
 	def is_visible(self):
@@ -26,10 +32,12 @@ class MySkyMainMenu(object):
 
 	@property
 	def title(self):
-	    return ocr(region=Region(396, 249, 500, 50), frame=self._frame)
+	    text, _ = self.utils.find_text_in_box(sky_plus_utils.MY_SKY_GREETING_REGION)
+		return text
 
 	@property
 	def message(self):
+		# TODO: Return selected box text
 		text, _ = self.utils.find_text_in_box(sky_plus_utils.MY_SKY_GREETING_REGION)
 		return text
 
