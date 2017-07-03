@@ -16,12 +16,11 @@ MY_SKY_REGION = Region(880, 0, width=400, height=720) # The 400 pixels to the ri
 
 class MySkyMainMenu(FrameObject):
 
-    def __init__(self):
-        self.utils = None
-
     @property
     def _utils(self):
-        if self.utils is None:
+        try:
+            return self.utils
+        except AttributeError:
             self.utils = SkyPlusTestUtils(self._frame)
         return self.utils
 
