@@ -553,7 +553,6 @@ class SkyPlusTestUtils(object):
             contours = conts_return[1]
         # TODO: Fine tune this value or extract to constant
         contours = sorted(contours, key=cv2.contourArea, reverse=True)[:10]
-        print 'CONTOURS: {0}'.format(contours)
 
         # Move contours to absolute coordinates
         if region:
@@ -577,10 +576,14 @@ class SkyPlusTestUtils(object):
                 filtered_contours.append(approx)
                 continue
         self.debug('Found {0} contours'.format(len(filtered_contours)))
+        # XXX
+        print 'Found {0} contours'.format(len(filtered_contours))
 
         # Get bounding boxes for contours:
         boxes = [cv2.boundingRect(cont) for cont in filtered_contours]
         self.debug('boxes: {0}'.format(boxes))
+        # XXX
+        print 'boxes: {0}'.format(boxes)
 
         # Remove boxes close to region:
         if region and not include_region:
