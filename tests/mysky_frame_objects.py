@@ -16,8 +16,7 @@ MY_SKY_REGION = Region(880, 0, width=400, height=720) # The 400 pixels to the ri
 
 class MySkyMainMenu(FrameObject):
 
-    def __init__(self, frame):
-        super(FrameObject, self).__init__(frame)
+    def __init__(self):
         self.utils = None
 
     @property
