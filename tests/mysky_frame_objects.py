@@ -42,3 +42,7 @@ class MySkyMainMenu(FrameObject):
     @property
     def _info(self):
         return match('images/SkyTopLogo.png', frame=self._frame)
+
+    @property
+    def menu_items(self):
+        return self._utils.get_menu_items(region=MY_SKY_REGION)
