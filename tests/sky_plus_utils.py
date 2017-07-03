@@ -680,6 +680,10 @@ class SkyPlusTestUtils(object):
         Returns:
             List of menu items found orderer by vertical position
         """
+        # XXX
+        print 'REGION: {0}'.format(region)
+        print 'REGION_C: {0}'.format(MY_SKY_REGION)
+
         boxes = self.contour_detection(region=region)
 
         menu_items = []
