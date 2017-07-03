@@ -28,8 +28,7 @@ def test_open_mysky():
 
         menu_items = menu.menu_items
         for item in menu_items:
-            print item.text
-        print menu_items
+            print 'Item text: {0}'.format(item.text)
         print len(menu_items)
         assert len(menu_items) == 3
 

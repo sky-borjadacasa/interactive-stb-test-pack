@@ -13,6 +13,7 @@ from sky_plus_utils import SkyPlusTestUtils, get_utils_region
 
 # Regions:
 MY_SKY_REGION = Region(880, 0, width=400, height=720) # The 400 pixels to the right and the whole height of the screen
+MAIN_MENU_ITEM_RETION = Region(925, 130, width=300, height=450)
 
 class MySkyMainMenu(FrameObject):
 
@@ -45,5 +46,5 @@ class MySkyMainMenu(FrameObject):
 
     @property
     def menu_items(self):
-        region = get_utils_region(MY_SKY_REGION)
+        region = get_utils_region(MAIN_MENU_ITEM_RETION)
         return self._utils.get_menu_items(region=region)
