@@ -16,31 +16,30 @@ MY_SKY_REGION = Region(880, 0, width=400, height=720) # The 400 pixels to the ri
 
 class MySkyMainMenu(object):
 
-	def __init__(self):
-		super(FrameObject, self).__init__()
+    def __init__(self):
+        super(FrameObject, self).__init__()
 
     @property
     def _utils(self):
-    	if self.utils is None:
-    		self.utils = SkyPlusTestUtils(self._frame)
-    	return self.utils
+        if self.utils is None:
+            self.utils = SkyPlusTestUtils(self._frame)
+        return self.utils
 
+    @property
+    def is_visible(self):
+        return stbt.match('images/SkyTopLogo.png', region=MY_SKY_REGION)
 
-	@property
-	def is_visible(self):
-		return stbt.match('images/SkyTopLogo.png', region=MY_SKY_REGION)
+    @property
+    def title(self):
+        text, _ = self.utils.find_text_in_box(sky_plus_utils.MY_SKY_GREETING_REGION)
+        return text
 
-	@property
-	def title(self):
-	    text, _ = self.utils.find_text_in_box(sky_plus_utils.MY_SKY_GREETING_REGION)
-		return text
+    @property
+    def message(self):
+        # TODO: Return selected box text
+        text, _ = self.utils.find_text_in_box(sky_plus_utils.MY_SKY_GREETING_REGION)
+        return text
 
-	@property
-	def message(self):
-		# TODO: Return selected box text
-		text, _ = self.utils.find_text_in_box(sky_plus_utils.MY_SKY_GREETING_REGION)
-		return text
-
-	@property
-	def _info(self):
-	    return match('images/SkyTopLogo.png', frame=self._frame)
+    @property
+    def _info(self):
+        return match('images/SkyTopLogo.png', frame=self._frame)
