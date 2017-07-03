@@ -569,6 +569,8 @@ class SkyPlusTestUtils(object):
             perimeter = cv2.arcLength(cont, True)
             approximation = 0.01
             approx = cv2.approxPolyDP(cont, approximation * perimeter, True)
+            # XXX
+            print 'Contour points: {0}'.format(len(approx))
 
             # if our approximated contour has four points, then
             # we can assume that we have found our screen
