@@ -24,6 +24,7 @@ def test_open_mysky():
 
         greeting = menu.title
         print 'Greeting: {0}'.format(greeting)
+        print 'Greeting string: {0}'.format(greeting_string())
         assert greeting == greeting_string()
 
         menu_items = menu.menu_items
