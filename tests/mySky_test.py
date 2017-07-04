@@ -33,6 +33,10 @@ def test_open_mysky():
         print len(menu_items)
         assert len(menu_items) == 3
 
+        message = menu.message
+        print 'Item message: {0}'.format(message)
+        assert message == 'Find out more'
+
         return 0
 
 

@@ -108,7 +108,8 @@ def load_fuzzy_set():
         'No satelite signal', \
         'Forgotten PIN', \
         'Good Morning', \
-        'Good Afternoon']
+        'Good Afternoon',
+        'Find out more']
     return FuzzySet(lines)
 
 def crop_image(image, region):

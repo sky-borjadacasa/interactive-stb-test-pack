@@ -66,9 +66,8 @@ class MySkyMainMenu(FrameObject):
 
     @property
     def message(self):
-        # TODO: Return selected box text
-        text, _ = self._utils.find_text_in_box(sky_plus_utils.MY_SKY_GREETING_REGION)
-        return text
+        selected_list = [x for x in self.menu_items if x.selected == True]
+        return selected_list[0].text
 
     @property
     def _info(self):
