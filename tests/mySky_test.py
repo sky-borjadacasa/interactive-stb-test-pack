@@ -90,6 +90,7 @@ def clear_test():
 def greeting_string():
     """Get greeting string"""
     now = datetime.datetime.now()
+    print 'Datetime now: {0}'.format(now)
     mid_day_string = "12:00:00"
     mid_day = datetime.datetime.strptime(mid_day_string, "%H:%M:%S")
     mid_day = now.replace(hour=mid_day.time().hour, minute=mid_day.time().minute, \
