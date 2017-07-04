@@ -23,11 +23,11 @@ MAIN_MENU_ITEM_3_REGION = Region(925, 435, width=300, height=130)
 
 # Images:
 
-def stbt_to_utils_region(stbt_region):
-    x1 = stbt.x
-    y1 = stbt.y
-    x2 = stbt.right
-    y2 = stbt.bottom
+def stbt_to_utils_region(region):
+    x1 = region.x
+    y1 = region.y
+    x2 = region.right
+    y2 = region.bottom
     return ((x1, y1), (x2, y2))
 
 def get_bottom_region(region, pixels):
