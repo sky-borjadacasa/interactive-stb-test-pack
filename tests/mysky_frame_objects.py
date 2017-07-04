@@ -30,7 +30,7 @@ def stbt_to_utils_region(region):
     y2 = region.bottom
     return ((x1, y1), (x2, y2))
 
-def get_bottom_region(region, pixels):
+def bottom_region(region, pixels):
     bottom = Region(region.x, region.bottom - pixels, width=region.width, bottom=region.bottom)
     return bottom
 
@@ -84,6 +84,9 @@ class MySkyMainMenu(FrameObject):
         items.append(item)
 
         for item in items:
-            item.text, item.selected = self._utils.find_text_in_box(stbt_to_utils_region(get_bottom_region(item.region, BOTTOM_TEXT_SIZE)))
+            text_region = stbt_to_utils_region(bottom_region(item.region, BOTTOM_TEXT_SIZE))
+            # XXX
+            print 'REGION: {0}'.format(text_region)
+            item.text, item.selected = self._utils.find_text_in_box(text_region)
 
         return items
