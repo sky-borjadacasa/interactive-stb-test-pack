@@ -30,7 +30,7 @@ def stbt_to_utils_region(region):
     return ((x1, y1), (x2, y2))
 
 def get_text_region(region):
-    bottom = Region(region.x + 10, region.bottom - pixels, width=region.width - 20, bottom=region.bottom - 5)
+    bottom = Region(region.x + 10, region.bottom - 45, width=region.width - 20, bottom=region.bottom - 5)
     return bottom
 
 class MySkyMenuItem(object):
