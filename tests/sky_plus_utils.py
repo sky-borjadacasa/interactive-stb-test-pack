@@ -508,7 +508,9 @@ class SkyPlusTestUtils(object):
         # Find out if selected or not:
         palette, color_frequency = get_palette(self.image, region)
         # XXX
-        print 'Image shape: {0}'.format(self.image.shape)
+        cropped_image2 = crop_image(self.image, region)
+        print 'Image shape: {0}'.format(cropped_image2)
+        print 'IMAGE ### {0} ###'.format(cropped_image2)
         print 'Palette: {0}'.format(palette)
         print 'Color frequency: {0}'.format(color_frequency)
         selected = is_color_in_palette(palette, color_frequency, YELLOW_BACKGROUND_RGB)
