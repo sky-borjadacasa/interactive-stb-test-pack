@@ -11,7 +11,7 @@ from stbt import FrameObject, match, MatchParameters, ocr, Region
 import sky_plus_utils
 from sky_plus_utils import SkyPlusTestUtils, get_utils_region, MySkyMenuItem
 
-# Constants:
+# Constants:
 BOTTOM_TEXT_SIZE = 45
 
 # Regions:
