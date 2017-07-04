@@ -77,7 +77,7 @@ BLUE_BACKGROUND_RGB = np.array([30, 87, 161])
 BLACK_RGB = np.array([0, 0, 0])
 WHITE_RGB = np.array([255, 255, 255])
 COLOR_THRESHOLD = 10
-PALETTE_SIZE = e
+PALETTE_SIZE = 2
 
 class MySkyMenuItem(object):
     """Class to store the attributes of a MySky menu item"""
