@@ -22,7 +22,7 @@ def test_open_mysky():
         
         sleep(10)
 
-        greeting = menu.message
+        greeting = menu.title
         print 'Greeting: {0}'.format(greeting)
         assert greeting == greeting_string()
 
