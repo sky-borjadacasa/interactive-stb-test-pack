@@ -485,8 +485,12 @@ class SkyPlusTestUtils(object):
         text = ''
         if useStbtOcr:
             text = stbt.ocr(region=get_stbt_region(region)).strip().encode('utf-8')
+            # XXX
+            print 'Text found: {0}'.format(text)
             if text:
                 text = self.fuzzy_match(text)
+            # XXX
+            print 'Text matched: {0}'.format(text)
         else:
             pil_image = Image.fromarray(np.rollaxis(cropped_image, 0, 1))
             if self.debug_mode and self.show_images_results:
