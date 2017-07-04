@@ -509,7 +509,7 @@ class SkyPlusTestUtils(object):
         palette, color_frequency = get_palette(self.image, region)
         # XXX
         cropped_image2 = crop_image(self.image, region)
-        print 'Image shape: {0}'.format(cropped_image2)
+        print 'Image shape: {0}'.format(cropped_image2.shape)
         print 'IMAGE ### {0} ###'.format(cropped_image2)
         print 'Palette: {0}'.format(palette)
         print 'Color frequency: {0}'.format(color_frequency)
