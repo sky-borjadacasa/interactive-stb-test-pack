@@ -12,7 +12,6 @@ import sky_plus_utils
 from sky_plus_utils import SkyPlusTestUtils, get_utils_region, MySkyMenuItem
 
 # Constants:
-BOTTOM_TEXT_SIZE = 45
 
 # Regions:
 MY_SKY_REGION = Region(880, 0, width=400, height=720) # The 400 pixels to the right and the whole height of the screen
@@ -30,8 +29,8 @@ def stbt_to_utils_region(region):
     y2 = region.bottom
     return ((x1, y1), (x2, y2))
 
-def bottom_region(region, pixels):
-    bottom = Region(region.x, region.bottom - pixels, width=region.width, bottom=region.bottom)
+def text_region(region):
+    bottom = Region(region.x + 10, region.bottom - pixels, width=region.width - 20, bottom=region.bottom - 5)
     return bottom
 
 class MySkyMenuItem(object):
@@ -85,7 +84,7 @@ class MySkyMainMenu(FrameObject):
         items.append(item)
 
         for item in items:
-            text_region = stbt_to_utils_region(bottom_region(item.region, BOTTOM_TEXT_SIZE))
+            text_region = stbt_to_utils_region(text_region(item.region))
             # XXX
             print 'REGION: {0}'.format(text_region)
             item.text, item.selected = self._utils.find_text_in_box(text_region)
