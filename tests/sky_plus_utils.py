@@ -77,7 +77,7 @@ BLUE_BACKGROUND_RGB = np.array([30, 87, 161])
 BLACK_RGB = np.array([0, 0, 0])
 WHITE_RGB = np.array([255, 255, 255])
 COLOR_THRESHOLD = 10
-PALETTE_SIZE = 2
+PALETTE_SIZE = e
 
 class MySkyMenuItem(object):
     """Class to store the attributes of a MySky menu item"""
@@ -200,7 +200,7 @@ def get_palette(image, region):
 
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
     flags = cv2.KMEANS_RANDOM_CENTERS
-    _, labels, centroids = cv2.kmeans(pixels, K=PALETTE_SIZE, b2stLabels=None, criteria=criteria, attempts=10, flags=flags)
+    _, labels, centroids = cv2.kmeans(pixels, K=PALETTE_SIZE, bestLabels=None, criteria=criteria, attempts=10, flags=flags)
 
     palette = np.uint8(centroids)
     color_frequency = itemfreq(labels)
