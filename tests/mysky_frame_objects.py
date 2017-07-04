@@ -16,10 +16,10 @@ BOTTOM_TEXT_SIZE = 45
 
 # Regions:
 MY_SKY_REGION = Region(880, 0, width=400, height=720) # The 400 pixels to the right and the whole height of the screen
-MAIN_MENU_ITEM_REGION = Region(925, 130, width=300, height=450)
-MAIN_MENU_ITEM_1_REGION = Region(925, 135, width=300, height=150)
-MAIN_MENU_ITEM_2_REGION = Region(925, 135, width=300, height=130)
-MAIN_MENU_ITEM_3_REGION = Region(925, 435, width=300, height=130)
+MAIN_MENU_ITEM_REGION = Region(930, 130, width=300, height=450)
+MAIN_MENU_ITEM_1_REGION = Region(930, 135, width=300, height=150)
+MAIN_MENU_ITEM_2_REGION = Region(930, 135, width=300, height=130)
+MAIN_MENU_ITEM_3_REGION = Region(930, 435, width=300, height=130)
 
 # Images:
 
