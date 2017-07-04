@@ -31,7 +31,7 @@ def test_open_mysky():
             print 'Item text: {0}'.format(item.text)
             print 'Item selected: {0}'.format(item.selected)
         print len(menu_items)
-        assert len(menu_items) == 1
+        assert len(menu_items) == 3
 
         return 0
 
