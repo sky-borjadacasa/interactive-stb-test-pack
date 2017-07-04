@@ -507,6 +507,9 @@ class SkyPlusTestUtils(object):
 
         # Find out if selected or not:
         palette, color_frequency = get_palette(self.image, region)
+        # XXX
+        print 'Palette: {0}'.format(palette)
+        print 'Color frequency: {0}'.format(color_frequency)
         selected = is_color_in_palette(palette, color_frequency, YELLOW_BACKGROUND_RGB)
 
         self.debug('Found text: {0}, {1}'.format(text, selected))
