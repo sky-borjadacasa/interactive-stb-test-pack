@@ -485,7 +485,8 @@ class SkyPlusTestUtils(object):
 
         text = ''
         if useStbtOcr:
-            text = stbt.ocr(region=get_stbt_region(region)).strip().encode('utf-8')
+            ocr_options = {'tessedit_char_whitelist': OCR_CHAR_WHITELIST}
+            text = stbt.ocr(region=get_stbt_region(region), tesseract_config=ocr_options).strip().encode('utf-8')
             # XXX
             print 'Text found: [{0}] in region {1}'.format(text, region)
             if text:
