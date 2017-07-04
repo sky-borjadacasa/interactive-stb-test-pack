@@ -31,7 +31,8 @@ def stbt_to_utils_region(stbt_region):
     return ((x1, y1), (x2, y2))
 
 def get_bottom_region(region, pixels):
-    return Region(region.x, region.bottom - pixels, width=region.width, bottom=region.bottom)
+    bottom = Region(region.x, region.bottom - pixels, width=region.width, bottom=region.bottom)
+    return bottom
 
 class MySkyMenuItem(object):
     """Class to store the attributes of a MySky menu item"""
