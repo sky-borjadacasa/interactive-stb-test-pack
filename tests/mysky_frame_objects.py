@@ -76,14 +76,15 @@ class MySkyMainMenu(FrameObject):
 
     @property
     def menu_items(self):
+        items = []
         item1 = MySkyMenuItem(MAIN_MENU_ITEM_1_REGION)
-        text, selected = self._utils.find_text_in_box(stbt_to_utils_region(get_bottom_region(item1.region, BOTTOM_TEXT_SIZE)))
-        item1.text = text
-        item1.selected = selected
+        items.append(item1)
+        item1 = MySkyMenuItem(MAIN_MENU_ITEM_2_REGION)
+        items.append(item2)
+        item1 = MySkyMenuItem(MAIN_MENU_ITEM_3_REGION)
+        items.append(item3)
 
-        return [item1]
+        for item in items:
+            item.text, item.selected = self._utils.find_text_in_box(stbt_to_utils_region(get_bottom_region(item.region, BOTTOM_TEXT_SIZE)))
 
-
-
-        #region = get_utils_region(MAIN_MENU_ITEM_REGION)
-        #return self._utils.get_menu_items(region=region)
+        return items
