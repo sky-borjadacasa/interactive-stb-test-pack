@@ -49,6 +49,7 @@ class MySkyMainMenu(FrameObject):
         return match('images/SkyTopLogo.png', frame=self._frame)
 
 # Constants:
+MY_SKY_REGION = Region(880, 0, width=400, height=720) # The 400 pixels to the right and the whole height of the screen
 TEST_IMAGE_MYSKY_HOME = 'screenshots/MySkyHomeOld.png'
 YELLOW_BACKGROUND_RGB = np.array([235, 189, 0])
 COLOR_THRESHOLD = 10
