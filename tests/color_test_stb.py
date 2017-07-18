@@ -48,6 +48,10 @@ class MySkyMainMenu(FrameObject):
     def _info(self):
         return match('images/SkyTopLogo.png', frame=self._frame)
 
+    @property
+    def frame(self):
+        return self._frame
+
 # Constants:
 MY_SKY_REGION = Region(880, 0, width=400, height=720) # The 400 pixels to the right and the whole height of the screen
 TEST_IMAGE_MYSKY_HOME = 'screenshots/MySkyHomeOld.png'
