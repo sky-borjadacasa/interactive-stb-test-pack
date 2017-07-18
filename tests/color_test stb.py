@@ -2,12 +2,35 @@
 """
 Test cases for MySky
 """
+# Import util:
+def install_and_import(package, package_name=None):
+    """Function to install and import the needed packages.
 
-from time import sleep
+    Args:
+        pacakge (str): The name of the package to import
+        package_name (str): Name of the pip package when it's not the same as the package name
+    """
+    try:
+        importlib.import_module(package)
+    except ImportError:
+        import pip
+        if package_name is not None:
+            pip.main(['install', package_name])
+        else:
+            pip.main(['install', package])
+    finally:
+        globals()[package] = importlib.import_module(package)
 
+import os
+import importlib
 import datetime
 import stbt
 from stbt import FrameObject, match, MatchParameters, ocr, Region
+from time import sleep
+
+os.system('sudo apt-get -y install python-scipy')
+install_and_import('scipy.stats', 'scipy')
+from scipy.stats import itemfreq
 
 class MySkyMainMenu(FrameObject):
 
