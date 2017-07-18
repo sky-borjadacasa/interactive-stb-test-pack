@@ -33,6 +33,7 @@ install_and_import('scipy.stats', 'scipy')
 from scipy.stats import itemfreq
 install_and_import('numpy')
 import numpy as np
+install_and_import('cv2', 'opencv-python')
 
 class MySkyMainMenu(FrameObject):
 
