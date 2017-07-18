@@ -31,6 +31,8 @@ from time import sleep
 os.system('sudo apt-get -y install python-scipy')
 install_and_import('scipy.stats', 'scipy')
 from scipy.stats import itemfreq
+install_and_import('numpy')
+import numpy as np
 
 class MySkyMainMenu(FrameObject):
 
