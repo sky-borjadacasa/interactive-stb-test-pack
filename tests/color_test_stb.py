@@ -28,7 +28,7 @@ import stbt
 from stbt import FrameObject, match, MatchParameters, ocr, Region
 from time import sleep
 
-os.system('sudo apt-get -y install python-scipy')
+# os.system('sudo apt-get -y install python-scipy')
 install_and_import('scipy.stats', 'scipy')
 from scipy.stats import itemfreq
 install_and_import('numpy')

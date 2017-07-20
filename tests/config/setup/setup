@@ -1,6 +1,9 @@
 #!/bin/bash -ex
 
-echo "Setup running"
+export DEBIAN_FRONTEND=noninteractive
+
+# Debian packages
+sudo apt-get -y install python-scipy
 
 # Install Python packages
 sudo pip install opencv-python
