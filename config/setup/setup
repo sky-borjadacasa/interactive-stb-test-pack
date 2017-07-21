@@ -8,9 +8,5 @@ sudo apt-get -y install python-scipy
 
 # Install Python packages
 sudo pip install numpy
-#sudo pip install tesserocr
-#sudo pip install opencv-python
-#sudo pip install pillow
-#sudo pip install matplotlib
 sudo pip install scipy
-#sudo pip install fuzzyset
+sudo pip install fuzzywuzzy

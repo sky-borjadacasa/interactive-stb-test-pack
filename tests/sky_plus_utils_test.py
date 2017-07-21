@@ -11,12 +11,12 @@ TEST_IMAGE_MYSKY_MENU_1 = 'screenshots/MySkyMenu1.png'
 def test_function():
     """Test the functionality of this library with some screenshots
     """
-    testing_image = cv2.imread(TEST_IMAGE_MYSKY_HOME, cv2.IMREAD_COLOR)
-    instance = sky_plus_utils.SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
-    region = ((940, 240), (1220, 280))
-    text, selected = instance.find_text_in_box(region)
+    #testing_image = cv2.imread(TEST_IMAGE_MYSKY_HOME, cv2.IMREAD_COLOR)
+    #instance = sky_plus_utils.SkyPlusTestUtils(testing_image, debug_mode=True, show_images_results=True)
+    #region = ((940, 240), (1220, 280))
+    #text, selected = instance.find_text_in_box(region)
 
-    return 0
+    #return 0
 
 
     testing_image = cv2.imread(TEST_IMAGE_MYSKY_HOME, cv2.IMREAD_COLOR)

@@ -33,9 +33,9 @@ os.system('sudo apt-get -y install python-scipy')
 install_and_import('scipy.stats', 'scipy')
 from scipy.stats import itemfreq
 
-os.system('sudo pip install fuzzyset')
-install_and_import('fuzzyset')
-from fuzzyset import FuzzySet
+os.system('sudo pip install fuzzywuzzy')
+install_and_import('fuzzywuzzy')
+from fuzzywuzzy import process
 
 # Try to import testing libs:
 try:
@@ -110,7 +110,7 @@ def load_fuzzy_set():
         'Good Morning', \
         'Good Afternoon',
         'Find out more']
-    return FuzzySet(lines)
+    return lines
 
 def crop_image(image, region):
     """Crop the image
@@ -539,10 +539,11 @@ class SkyPlusTestUtils(object):
         Returns:
             Matched text
         """
-        matches = self.fuzzy_set.get(text)
+        #matches = self.fuzzy_set.get(text)
+        matches = process.extract(text, self.fuzzy_set, limit=3)
         self.debug('Matches for "{0}":\n{1}'.format(text, matches))
         # We get directly the most likely match
-        return matches[0][1]
+        return matches[0][0]
 
     def contour_detection(self, region=None, include_region=False):
         """Get contours found in the image or given region to find menu items later
