@@ -162,13 +162,8 @@ def test_get_yellow():
     sleep(10)
 
     testing_image = menu.frame
-    testing_image = cv2.imread(SKY_TOP_LOGO, cv2.IMREAD_COLOR)
-    os.system('pwd')
-    os.system('ls -alth')
-    os.system('tree')
-    print 'Image shape: {0}'.format(testing_image.shape)
-    print 'IMAGE ### {0} ###'.format(testing_image)
-    #region = ((960, 250), (964, 254))
-    #yellow = is_yellow(testing_image, region)
+    region = ((960, 250), (964, 254))
+    yellow = is_yellow(testing_image, region)
+    cv2.imwrite('captured_frame.jpg', testing_image)
 
     return 0
