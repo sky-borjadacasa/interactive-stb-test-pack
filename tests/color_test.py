@@ -7,6 +7,7 @@ from scipy.stats import itemfreq
 
 # Constants:
 TEST_IMAGE_MYSKY_HOME = 'screenshots/MySkyHomeOld.png'
+SKY_TOP_LOGO = 'images/SkyTopLogo.png'
 YELLOW_BACKGROUND_RGB = np.array([235, 189, 0])
 COLOR_THRESHOLD = 10
 PALETTE_SIZE = 2
@@ -123,10 +124,12 @@ def is_yellow(image, region):
 
 def test_function():
     """Test the functionality of this library with some screenshots
-    """
-    testing_image = cv2.imread(TEST_IMAGE_MYSKY_HOME, cv2.IMREAD_COLOR)
-    region = ((960, 250), (964, 254))
-    yellow = is_yellow(testing_image, region)
+    """    
+    testing_image = cv2.imread(SKY_TOP_LOGO, cv2.IMREAD_COLOR)
+    print 'Image shape: {0}'.format(testing_image.shape)
+    print 'IMAGE ### {0} ###'.format(testing_image)
+    #region = ((960, 250), (964, 254))
+    #yellow = is_yellow(testing_image, region)
 
     return 0
 

@@ -20,7 +20,7 @@ class MySkyMainMenu(FrameObject):
 
     @property
     def is_visible(self):
-        return stbt.match('images/SkyTopLogo.png', region=MY_SKY_REGION)
+        return stbt.match(SKY_TOP_LOGO, region=MY_SKY_REGION)
 
     @property
     def message(self):
@@ -28,7 +28,7 @@ class MySkyMainMenu(FrameObject):
 
     @property
     def _info(self):
-        return match('images/SkyTopLogo.png', frame=self._frame)
+        return match(SKY_TOP_LOGO, frame=self._frame)
 
     @property
     def frame(self):
@@ -37,6 +37,7 @@ class MySkyMainMenu(FrameObject):
 # Constants:
 MY_SKY_REGION = Region(880, 0, width=400, height=720) # The 400 pixels to the right and the whole height of the screen
 TEST_IMAGE_MYSKY_HOME = 'screenshots/MySkyHomeOld.png'
+SKY_TOP_LOGO = 'images/SkyTopLogo.png'
 YELLOW_BACKGROUND_RGB = np.array([235, 189, 0])
 COLOR_THRESHOLD = 10
 PALETTE_SIZE = 2
@@ -161,7 +162,10 @@ def test_get_yellow():
     sleep(10)
 
     testing_image = menu.frame
-    region = ((960, 250), (964, 254))
-    yellow = is_yellow(testing_image, region)
+    testing_image = cv2.imread(SKY_TOP_LOGO, cv2.IMREAD_COLOR)
+    print 'Image shape: {0}'.format(testing_image.shape)
+    print 'IMAGE ### {0} ###'.format(testing_image)
+    #region = ((960, 250), (964, 254))
+    #yellow = is_yellow(testing_image, region)
 
     return 0
