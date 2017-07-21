@@ -159,7 +159,7 @@ def test_get_yellow():
     assert menu.is_visible
     print 'MySky menu is visible'
     
-    sleep(10)
+    sleep(30)
 
     testing_image = menu.frame
     region = ((960, 250), (964, 254))
