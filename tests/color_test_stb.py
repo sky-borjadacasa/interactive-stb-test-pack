@@ -8,6 +8,7 @@ import importlib
 import datetime
 import stbt
 from stbt import FrameObject, match, MatchParameters, ocr, Region
+import time
 from time import sleep
 
 import cv2
@@ -158,12 +159,15 @@ def test_get_yellow():
     menu = stbt.wait_until(MySkyMainMenu)
     assert menu.is_visible
     print 'MySky menu is visible'
-    
-    sleep(30)
 
-    testing_image = menu.frame
-    region = ((960, 250), (964, 254))
-    yellow = is_yellow(testing_image, region)
-    cv2.imwrite('captured_frame.jpg', testing_image)
+    for x in range(0, 15):
+        print "Start : %s" % time.ctime()
+        sleep(10)
+        print "End : %s" % time.ctime()
+
+        testing_image = menu.frame
+        region = ((960, 250), (964, 254))
+        yellow = is_yellow(testing_image, region)
+        cv2.imwrite('captured_frame_{0}.jpg'.format(x), testing_image)
 
     return 0
