@@ -2,24 +2,6 @@
 """
 Test cases for MySky
 """
-# Import util:
-def install_and_import(package, package_name=None):
-    """Function to install and import the needed packages.
-
-    Args:
-        pacakge (str): The name of the package to import
-        package_name (str): Name of the pip package when it's not the same as the package name
-    """
-    try:
-        importlib.import_module(package)
-    except ImportError:
-        import pip
-        if package_name is not None:
-            pip.main(['install', package_name])
-        else:
-            pip.main(['install', package])
-    finally:
-        globals()[package] = importlib.import_module(package)
 
 import os
 import importlib
@@ -28,11 +10,13 @@ import stbt
 from stbt import FrameObject, match, MatchParameters, ocr, Region
 from time import sleep
 
+import cv2
 from scipy.stats import itemfreq
 import numpy as np
-install_and_import('cv2', 'opencv-python')
 
 class MySkyMainMenu(FrameObject):
+
+    AUTO_SELFTEST_TRY_SCREENSHOTS = ["MySky/*.png"]
 
     @property
     def is_visible(self):
