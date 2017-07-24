@@ -24,7 +24,7 @@ def test_open_mysky():
         sleep(10)
 
         # XXX
-        cv2.imwrite('captured_frame_{0}.jpg'.format(time.time()), menu.frame)
+        cv2.imwrite('captured_frame_{0}.jpg'.format(time.time()), menu._frame)
 
         greeting = menu.title
         print 'Greeting: {0}'.format(greeting)
