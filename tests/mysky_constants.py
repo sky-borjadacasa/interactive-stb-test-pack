@@ -3,6 +3,7 @@
 Contants for MySky testing
 """
 
+import string
 import numpy as np
 import stbt
 from stbt import Region
