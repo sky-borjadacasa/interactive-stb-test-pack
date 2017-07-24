@@ -70,8 +70,7 @@ class MySkyMainMenu(FrameObject):
     @property
     def message(self):
         selected_list = [x for x in self.menu_items if x.selected == True]
-        # XXX
-        return 'selected_list[0].text'
+        return selected_list[0].text
 
     @property
     def _info(self):
@@ -89,7 +88,6 @@ class MySkyMainMenu(FrameObject):
 
         for item in items:
             text_region = stbt_to_utils_region(get_text_region(item.region))
-            # XXX
             print 'REGION: {0}'.format(text_region)
             item.text, item.selected = self._utils.find_text_in_box(text_region)
 
