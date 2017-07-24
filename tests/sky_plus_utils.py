@@ -26,6 +26,10 @@ except ImportError:
     import tesserocr
 
 # Constants:
+# Regions:
+MY_SKY_REGION = ((880, 0), (1280 - 1, 720 - 1)) # The 400 pixels to the right and the whole height of the screen
+MY_SKY_GREETING_REGION = ((930, 90), (1230, 135))
+MY_SKY_TEXT_MENU_REGION = ((920, 125), (1240, 550))
 
 # Text recognition:
 OCR_CHAR_WHITELIST = string.ascii_letters + ' ' + string.digits
