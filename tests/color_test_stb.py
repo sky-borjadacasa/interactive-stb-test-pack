@@ -156,14 +156,14 @@ def is_yellow(image, region):
 def test_get_yellow():
     """Open MySky app"""
     stbt.press('KEY_YELLOW')
-    menu = stbt.wait_until(MySkyMainMenu)
-    assert menu.is_visible
-    print 'MySky menu is visible'
 
     for x in range(0, 15):
         print "Start : %s" % time.ctime()
         sleep(10)
         print "End : %s" % time.ctime()
+        menu = stbt.wait_until(MySkyMainMenu)
+        assert menu.is_visible
+        print 'MySky menu is visible'
 
         testing_image = menu.frame
         region = ((960, 250), (964, 254))
