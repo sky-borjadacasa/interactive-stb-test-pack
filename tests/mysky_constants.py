@@ -15,7 +15,7 @@ MAIN_MENU_ITEM_1_REGION = Region(930, 135, width=300, height=150)
 MAIN_MENU_ITEM_2_REGION = Region(930, 295, width=300, height=130)
 MAIN_MENU_ITEM_3_REGION = Region(930, 435, width=300, height=130)
 
-# Images:
+# Images:
 SKY_TOP_LOGO='images/SkyTopLogo.png'
 
 # Text recognition:
