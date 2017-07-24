@@ -3,8 +3,8 @@
 Test cases for MySky
 """
 
+import time
 from time import sleep
-
 import datetime
 import stbt
 from stbt import FrameObject, match, MatchParameters, ocr, Region
@@ -21,6 +21,9 @@ def test_open_mysky():
         print 'MySky menu is visible'
         
         sleep(10)
+
+        # XXX
+        cv2.imwrite('captured_frame_{0}.jpg'.format(time.time()), menu.frame)
 
         greeting = menu.title
         print 'Greeting: {0}'.format(greeting)
