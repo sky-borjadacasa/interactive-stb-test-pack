@@ -52,7 +52,7 @@ class MySkyMainMenu(FrameObject):
         try:
             return self.utils
         except AttributeError:
-            self.utils = SkyPlusTestUtils(self._frame)
+            self.utils = SkyPlusTestUtils(self._frame, debug=True)
         return self.utils
 
     @property

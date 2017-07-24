@@ -8,24 +8,12 @@ import cv2
 import numpy as np
 from scipy.stats import itemfreq
 from fuzzywuzzy import process
-
-# Try to import testing libs:
-try:
-    from PIL import Image
-    from matplotlib import pyplot as plt
-except ImportError:
-    print 'Couldn\'t import testing libs'
-
-# Switch between tesserocr for testing and stbt.ocr for running in the tester:
-useStbtOcr = False
-try:
-    import stbt
-    from stbt import Region
-    useStbtOcr = True
-except ImportError:
-    import tesserocr
+import stbt
+from stbt import Region
 
 # Constants:
+
+# TODO: Move to constants
 # Regions:
 MY_SKY_REGION = ((880, 0), (1280 - 1, 720 - 1)) # The 400 pixels to the right and the whole height of the screen
 MY_SKY_GREETING_REGION = ((930, 90), (1230, 135))
@@ -227,12 +215,11 @@ def get_utils_region(stbt_region):
 class SkyPlusTestUtils(object):
     """Class that contains the logic to analyse the contents of the MySky menu"""
 
-    def __init__(self, image, debug_mode=False, show_images_results=False):
+    def __init__(self, image, debug_mode=False):
         self.coiso = 'cena'
         self.fuzzy_set = load_fuzzy_set()
         self.image = image
         self.debug_mode = debug_mode
-        self.show_images_results = show_images_results
 
     def debug(self, text):
         """Print the given text if debug mode is on.
@@ -256,31 +243,17 @@ class SkyPlusTestUtils(object):
         cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
 
         text = ''
-        if useStbtOcr:
-            ocr_options = {'tessedit_char_whitelist': OCR_CHAR_WHITELIST}
-            text = stbt.ocr(region=get_stbt_region(region), tesseract_config=ocr_options).strip().encode('utf-8')
-            # XXX
-            print 'Text found: [{0}] in region {1}'.format(text, region)
-            if text:
-                text = self.fuzzy_match(text)
-            # XXX
-            print 'Text matched: [{0}] in region {1}'.format(text, region)
-        else:
-            pil_image = Image.fromarray(np.rollaxis(cropped_image, 0, 1))
-            if self.debug_mode and self.show_images_results:
-                pil_image.show()
-
-            with tesserocr.PyTessBaseAPI() as api:
-                api.SetImage(pil_image)
-                api.SetVariable('tessedit_char_whitelist', OCR_CHAR_WHITELIST)
-                text = api.GetUTF8Text().strip().encode('utf-8')
-                if text:
-                    text = self.fuzzy_match(text)
+        ocr_options = {'tessedit_char_whitelist': OCR_CHAR_WHITELIST}
+        text = stbt.ocr(region=get_stbt_region(region), tesseract_config=ocr_options).strip().encode('utf-8')
+        self.debug('Text found: [{0}] in region {1}'.format(text, region))
+        if text:
+            text = self.fuzzy_match(text)
+        self.debug('Text matched: [{0}] in region {1}'.format(text, region))
 
         # Find out if selected or not:
         palette, color_frequency = get_palette(self.image, region)
-        print 'Palette: {0}'.format(palette)
-        print 'Color frequency: {0}'.format(color_frequency)
+        self.debug('Palette: {0}'.format(palette))
+        self.debug('Color frequency: {0}'.format(color_frequency))
         selected = is_color_in_palette(palette, color_frequency, YELLOW_BACKGROUND_RGB)
 
         self.debug('Found text: {0}, {1}'.format(text, selected))
