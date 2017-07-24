@@ -3,44 +3,14 @@
 Library with utilities for navigating SkyPlusHD box menus
 """
 
-# Import util:
-def install_and_import(package, package_name=None):
-    """Function to install and import the needed packages.
-
-    Args:
-        pacakge (str): The name of the package to import
-        package_name (str): Name of the pip package when it's not the same as the package name
-    """
-    try:
-        importlib.import_module(package)
-    except ImportError:
-        import pip
-        if package_name is not None:
-            pip.main(['install', package_name])
-        else:
-            pip.main(['install', package])
-    finally:
-        globals()[package] = importlib.import_module(package)
-
-import os
-import importlib
 import string
-install_and_import('cv2', 'opencv-python')
-install_and_import('numpy')
+import cv2
 import numpy as np
-
-os.system('sudo apt-get -y install python-scipy')
-install_and_import('scipy.stats', 'scipy')
 from scipy.stats import itemfreq
-
-os.system('sudo pip install fuzzywuzzy')
-install_and_import('fuzzywuzzy')
 from fuzzywuzzy import process
 
 # Try to import testing libs:
 try:
-    install_and_import('PIL', 'pillow')
-    install_and_import('matplotlib')
     from PIL import Image
     from matplotlib import pyplot as plt
 except ImportError:
@@ -53,7 +23,7 @@ try:
     from stbt import Region
     useStbtOcr = True
 except ImportError:
-    install_and_import('tesserocr')
+    import tesserocr
 
 # Constants:
 TM_CCOEFF_THRESHOLD_BOX_ITEM = 250000000
@@ -109,7 +79,8 @@ def load_fuzzy_set():
         'Forgotten PIN', \
         'Good Morning', \
         'Good Afternoon',
-        'Find out more']
+        'Find out more',
+        'Loading...']
     return lines
 
 def crop_image(image, region):
