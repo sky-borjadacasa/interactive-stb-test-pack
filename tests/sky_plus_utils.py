@@ -3,32 +3,13 @@
 Library with utilities for navigating SkyPlusHD box menus
 """
 
-import string
+import mysky_constants
 import cv2
 import numpy as np
 from scipy.stats import itemfreq
 from fuzzywuzzy import process
 import stbt
 from stbt import Region
-
-# Constants:
-
-# TODO: Move to constants
-# Regions:
-MY_SKY_REGION = ((880, 0), (1280 - 1, 720 - 1)) # The 400 pixels to the right and the whole height of the screen
-MY_SKY_GREETING_REGION = ((930, 90), (1230, 135))
-MY_SKY_TEXT_MENU_REGION = ((920, 125), (1240, 550))
-
-# Text recognition:
-OCR_CHAR_WHITELIST = string.ascii_letters + ' ' + string.digits
-
-# Colors:
-YELLOW_BACKGROUND_RGB = np.array([235, 189, 0])
-BLUE_BACKGROUND_RGB = np.array([30, 87, 161])
-BLACK_RGB = np.array([0, 0, 0])
-WHITE_RGB = np.array([255, 255, 255])
-COLOR_THRESHOLD = 10
-PALETTE_SIZE = 2
 
 class MySkyMenuItem(object):
     """Class to store the attributes of a MySky menu item"""
@@ -41,28 +22,6 @@ class MySkyMenuItem(object):
         self.top_left = top_left
         self.bottom_right = bottom_right
         self.region = (top_left, bottom_right)
-
-def load_fuzzy_set():
-    """Function to load the fuzzy matching expression dictionary
-
-    Returns:
-        List of the expressions to match
-    """
-    lines = ['Sky Q', \
-        'Manage your account', \
-        'Fix a problem', \
-        'Bills and payments', \
-        'TV package and settings', \
-        'Broadband and Talk', \
-        'My details and messages', \
-        'TV picture problems', \
-        'No satelite signal', \
-        'Forgotten PIN', \
-        'Good Morning', \
-        'Good Afternoon',
-        'Find out more',
-        'Loading...']
-    return lines
 
 def crop_image(image, region):
     """Crop the image
@@ -115,7 +74,7 @@ def is_similar_color_rgb(color_a, color_b):
         True if colors distance is lower than defined threshold
     """
     distance = abs(rgb_luminance(color_a) - rgb_luminance(color_b))
-    return distance < COLOR_THRESHOLD
+    return distance < mysky_constants.COLOR_THRESHOLD
 
 def get_palette(image, region):
     """Get the dominant colors of a region
@@ -134,40 +93,13 @@ def get_palette(image, region):
 
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
     flags = cv2.KMEANS_RANDOM_CENTERS
-    _, labels, centroids = cv2.kmeans(pixels, K=PALETTE_SIZE, bestLabels=None, criteria=criteria, attempts=10, flags=flags)
+    _, labels, centroids = cv2.kmeans(pixels, K=mysky_constants.PALETTE_SIZE, bestLabels=None, criteria=criteria, attempts=10, flags=flags)
 
     palette = np.uint8(centroids)
     color_frequency = itemfreq(labels)
     color_frequency.sort(0)
 
     return palette, color_frequency
-
-def dominant_color(image, region, exclude_list=[]):
-    """Get the dominant color of a region
-
-    Args:
-        image (numpy.ndarray): Image to search
-        region (tuple(tuple(int))): Region of the image to search
-        exclude_list (list): List of colors to avoid searching for
-        include_list (list): List of colors to search for
-
-    Returns:
-        RGB color found
-    """
-    palette, color_frequency = get_palette(image, region)
-
-    for label in color_frequency[::-1]:
-        color = palette[label[0]]
-        rgb_color = bgr_to_rgb(color)
-        exclude = False
-        for exclude_color in exclude_list:
-            if is_similar_color_rgb(rgb_color, exclude_color):
-                exclude = True
-                break
-        if exclude:
-            continue
-        else:
-            return color
 
 def is_color_in_palette(palette, color_frequency, color_to_find):
     """Find the most common color in a palette that matches the wanted color
@@ -199,25 +131,11 @@ def get_stbt_region(region):
     stbt_region = Region(region[0][0], region[0][1], right=region[1][0], bottom=region[1][1])
     return stbt_region
 
-def get_utils_region(stbt_region):
-    """Convert a stbt.Region type to a region in ((x1, y1), (x2, y2)) format 
-
-    Args:
-        stbt.Region object representing the same area to convert
-
-    Returns:
-        Region in the (tuple(tuple(int))) format
-    """
-    region = ((stbt_region.x, stbt_region.y), (stbt_region.right, stbt_region.bottom))
-    stbt_region = Region(region[0][0], region[0][1], right=region[1][0], bottom=region[1][1])
-    return region
-
 class SkyPlusTestUtils(object):
     """Class that contains the logic to analyse the contents of the MySky menu"""
 
     def __init__(self, image, debug_mode=False):
-        self.coiso = 'cena'
-        self.fuzzy_set = load_fuzzy_set()
+        self.fuzzy_set = mysky_constants.load_fuzzy_set()
         self.image = image
         self.debug_mode = debug_mode
 
@@ -243,7 +161,7 @@ class SkyPlusTestUtils(object):
         cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
 
         text = ''
-        ocr_options = {'tessedit_char_whitelist': OCR_CHAR_WHITELIST}
+        ocr_options = {'tessedit_char_whitelist': mysky_constants.OCR_CHAR_WHITELIST}
         text = stbt.ocr(region=get_stbt_region(region), tesseract_config=ocr_options).strip().encode('utf-8')
         self.debug('Text found: [{0}] in region {1}'.format(text, region))
         if text:
@@ -254,7 +172,7 @@ class SkyPlusTestUtils(object):
         palette, color_frequency = get_palette(self.image, region)
         self.debug('Palette: {0}'.format(palette))
         self.debug('Color frequency: {0}'.format(color_frequency))
-        selected = is_color_in_palette(palette, color_frequency, YELLOW_BACKGROUND_RGB)
+        selected = is_color_in_palette(palette, color_frequency, mysky_constants.YELLOW_BACKGROUND_RGB)
 
         self.debug('Found text: {0}, {1}'.format(text, selected))
 

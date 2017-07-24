@@ -10,18 +10,7 @@ import stbt
 from stbt import FrameObject, match, MatchParameters, ocr, Region
 import sky_plus_utils
 from sky_plus_utils import SkyPlusTestUtils, get_utils_region, MySkyMenuItem
-
-# Constants:
-
-# Regions:
-MY_SKY_REGION = Region(880, 0, width=400, height=720) # The 400 pixels to the right and the whole height of the screen
-MAIN_MENU_ITEM_REGION = Region(930, 130, width=300, height=450)
-MAIN_MENU_LOADING_REGION = Region(1015, 280, width=140, height=50)
-MAIN_MENU_ITEM_1_REGION = Region(930, 135, width=300, height=150)
-MAIN_MENU_ITEM_2_REGION = Region(930, 295, width=300, height=130)
-MAIN_MENU_ITEM_3_REGION = Region(930, 435, width=300, height=130)
-
-# Images:
+import mysky_constants
 
 def stbt_to_utils_region(region):
     x1 = region.x
@@ -57,8 +46,8 @@ class MySkyMainMenu(FrameObject):
 
     @property
     def is_visible(self):
-        logo_visible = stbt.match('images/SkyTopLogo.png', region=MY_SKY_REGION)
-        text, _ = self._utils.find_text_in_box(stbt_to_utils_region(MAIN_MENU_LOADING_REGION))
+        logo_visible = stbt.match('images/SkyTopLogo.png', region=mysky_constants.MY_SKY_REGION)
+        text, _ = self._utils.find_text_in_box(stbt_to_utils_region(mysky_constants.MAIN_MENU_LOADING_REGION))
         loading_visible = (text == 'Loading...')
         return logo_visible and not loading_visible
 
@@ -79,11 +68,11 @@ class MySkyMainMenu(FrameObject):
     @property
     def menu_items(self):
         items = []
-        item = MySkyMenuItem(MAIN_MENU_ITEM_1_REGION)
+        item = MySkyMenuItem(mysky_constants.MAIN_MENU_ITEM_1_REGION)
         items.append(item)
-        item = MySkyMenuItem(MAIN_MENU_ITEM_2_REGION)
+        item = MySkyMenuItem(mysky_constants.MAIN_MENU_ITEM_2_REGION)
         items.append(item)
-        item = MySkyMenuItem(MAIN_MENU_ITEM_3_REGION)
+        item = MySkyMenuItem(mysky_constants.MAIN_MENU_ITEM_3_REGION)
         items.append(item)
 
         for item in items:

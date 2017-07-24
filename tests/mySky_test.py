@@ -11,7 +11,7 @@ from stbt import FrameObject, match, MatchParameters, ocr, Region
 import sky_plus_utils
 import mysky_frame_objects
 from mysky_frame_objects import MySkyMainMenu
-import cv2
+import mysky_constants
 
 def test_open_mysky():
     """Open MySky app"""
@@ -19,16 +19,8 @@ def test_open_mysky():
         stbt.press('KEY_YELLOW')
         menu = stbt.wait_until(MySkyMainMenu)
         assert menu.is_visible
-        print 'MySky menu is visible'
-        
-        sleep(10)
-
-        # XXX
-        cv2.imwrite('captured_frame_{0}.jpg'.format(time.time()), menu._frame)
 
         greeting = menu.title
-        print 'Greeting: {0}'.format(greeting)
-        print 'Greeting string: {0}'.format(greeting_string())
         assert greeting == greeting_string()
 
         menu_items = menu.menu_items
@@ -50,7 +42,7 @@ def clear_test():
     """Close MySky app"""
     sleep(2)
     try:
-        while stbt.wait_for_match('images/SkyTopLogo.png'):
+        while stbt.wait_for_match(mysky_constants.SKY_TOP_LOGO):
             sleep(2)
             stbt.press('KEY_BACKUP')
     except:
@@ -66,6 +58,6 @@ def greeting_string():
         second=mid_day.time().second, microsecond=0)
 
     if now > mid_day:
-        return 'Good Afternoon'
+        return mysky_constants.STRING_GOOD_AFTERNOON
     else:
-        return 'Good Morning'
+        return mysky_constants.STRING_GOOD_MORNING
