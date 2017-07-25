@@ -35,7 +35,7 @@ def test_open_mysky():
         assert message == mysky_constants.STRING_FIND_OUT_MORE
 
         # XXX
-        press('KEY_DOWN')
+        stbt.press('KEY_DOWN')
         assert wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_MANAGE_YOUR_ACCOUNT)
 
         return 0
