@@ -9,7 +9,7 @@ import stbt
 from stbt import Region
 
 # Channels:
-CHANNEL_SKY_ONE = '101'
+CHANNEL_SKY_ONE = '106'
 
 # Regions:
 MY_SKY_REGION = Region(880, 0, width=400, height=720) # The 400 pixels to the right and the whole height of the screen
