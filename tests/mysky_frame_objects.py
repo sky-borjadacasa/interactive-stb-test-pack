@@ -9,7 +9,7 @@ import datetime
 import stbt
 from stbt import FrameObject, match, MatchParameters, ocr, Region
 import sky_plus_utils
-from sky_plus_utils import SkyPlusTestUtils, get_utils_region, MySkyMenuItem
+from sky_plus_utils import SkyPlusTestUtils, MySkyMenuItem
 import mysky_constants
 
 def stbt_to_utils_region(region):

@@ -11,34 +11,22 @@ from fuzzywuzzy import process
 import stbt
 from stbt import Region
 
-class MySkyMenuItem(object):
-    """Class to store the attributes of a MySky menu item"""
-
-    text = ''
-    selected = False
-    region = None
-
-    def __init__(self, top_left, bottom_right):
-        self.top_left = top_left
-        self.bottom_right = bottom_right
-        self.region = (top_left, bottom_right)
-
 def crop_image(image, region):
     """Crop the image
 
     Args:
         image (numpy.ndarray): Image to crop
-        region (tuple(tuple(int))): Region to crop
+        region (stbt.Region): Region to crop
 
     Returns:
         Cropped image
     """
     if region is None:
         return image.copy()
-    x1 = region[0][0]
-    x2 = region[1][0]
-    y1 = region[0][1]
-    y2 = region[1][1]
+    x1 = region.x
+    x2 = region.right
+    y1 = region.y
+    y2 = region.bottom
     return image[y1:y2, x1:x2].copy()
 
 def rgb_luminance(color):
@@ -81,7 +69,7 @@ def get_palette(image, region):
 
     Args:
         image (numpy.ndarray): Image to search
-        region (tuple(tuple(int))): Region of the image to search
+        region (stbt.Region): Region of the image to search
 
     Returns:
         Palette of colors
@@ -107,7 +95,7 @@ def is_color_in_palette(palette, color_frequency, color_to_find):
     Args:
         palette (numpy.ndarray): Palette of colors
         color_frequency (numpy.ndarray): Color frequency of image
-        color_to_find (tuple(int)): Region of the image to search
+        color_to_find (tuple(int)): Color to find
 
     Returns:
         The most common color in a palette that matches the wanted color
@@ -118,18 +106,6 @@ def is_color_in_palette(palette, color_frequency, color_to_find):
         if is_similar_color_rgb(rgb_color, color_to_find):
             return True
     return False
-
-def get_stbt_region(region):
-    """Convert a region in ((x1, y1), (x2, y2)) format to a stbt.Region type
-
-    Args:
-        region (tuple(tuple(int))): Region to convert
-
-    Returns:
-        stbt.Region object representing the same area
-    """
-    stbt_region = Region(region[0][0], region[0][1], right=region[1][0], bottom=region[1][1])
-    return stbt_region
 
 class SkyPlusTestUtils(object):
     """Class that contains the logic to analyse the contents of the MySky menu"""
@@ -152,7 +128,7 @@ class SkyPlusTestUtils(object):
         """Read the text in the given region
 
         Args:
-            region (tuple(tuple(int))): Region of the image to search defined by the top-left and bottom-right coordinates
+            region (stbt.Region): Region of the image to search defined by the top-left and bottom-right coordinates
 
         Returns:
             Text of the given item
@@ -162,7 +138,7 @@ class SkyPlusTestUtils(object):
 
         text = ''
         ocr_options = {'tessedit_char_whitelist': mysky_constants.OCR_CHAR_WHITELIST}
-        text = stbt.ocr(region=get_stbt_region(region), tesseract_config=ocr_options).strip().encode('utf-8')
+        text = stbt.ocr(region=region, tesseract_config=ocr_options).strip().encode('utf-8')
         self.debug('Text found: [{0}] in region {1}'.format(text, region))
         if text:
             text = self.fuzzy_match(text)
