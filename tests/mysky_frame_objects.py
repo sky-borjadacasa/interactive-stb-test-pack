@@ -46,7 +46,7 @@ class MySkyMainMenu(FrameObject):
 
     @property
     def title(self):
-        text, _ = self._utils.find_text_in_box(sky_plus_utils.MY_SKY_GREETING_REGION)
+        text, _ = self._utils.find_text_in_box(mysky_constants.MY_SKY_GREETING_REGION)
         return text
 
     @property
