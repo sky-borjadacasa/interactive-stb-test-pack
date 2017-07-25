@@ -16,13 +16,18 @@ import mysky_constants
 def test_open_mysky():
     """Open MySky app"""
     try:
+        go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
         open_and_check_mysky()
 
-        # XXX
+        # Navigate menus:
         stbt.press('KEY_DOWN')
         assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_MANAGE_YOUR_ACCOUNT)
-
-        return 0
+        stbt.press('KEY_DOWN')
+        assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_FIX_A_PROBLEM)
+        stbt.press('KEY_UP')
+        assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_MANAGE_YOUR_ACCOUNT)
+        stbt.press('KEY_UP')
+        assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_FIND_OUT_MORE)
     finally:
         clear_test()
 
@@ -68,3 +73,9 @@ def open_and_check_mysky():
     message = menu.message
     print 'Item message: {0}'.format(message)
     assert message == mysky_constants.STRING_FIND_OUT_MORE
+
+def go_to_channel(channel):
+    assert len(channel) == 3
+    for c in channel:
+        button = 'KEY_{0}'.format(c)
+        stbt.press(button)

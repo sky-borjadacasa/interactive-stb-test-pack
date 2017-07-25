@@ -8,6 +8,9 @@ import numpy as np
 import stbt
 from stbt import Region
 
+# Channels:
+CHANNEL_SKY_ONE = '101'
+
 # Regions:
 MY_SKY_REGION = Region(880, 0, width=400, height=720) # The 400 pixels to the right and the whole height of the screen
 MY_SKY_GREETING_REGION = Region(930, 90, width=300, height=45)
@@ -45,19 +48,6 @@ STRING_GOOD_MORNING='Good Morning'
 STRING_GOOD_AFTERNOON='Good Afternoon'
 STRING_FIND_OUT_MORE='Find out more'
 STRING_LOADING='Loading...'
-
-
-class MySkyMenuItem(object):
-    """Class to store the attributes of a MySky menu item"""
-
-    text = ''
-    selected = False
-    region = None
-
-    def __init__(self, top_left, bottom_right):
-        self.top_left = top_left
-        self.bottom_right = bottom_right
-        self.region = (top_left, bottom_right)
 
 def load_fuzzy_set():
     """Function to load the fuzzy matching expression dictionary
