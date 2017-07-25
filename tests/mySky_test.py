@@ -16,23 +16,7 @@ import mysky_constants
 def test_open_mysky():
     """Open MySky app"""
     try:
-        stbt.press('KEY_YELLOW')
-        menu = stbt.wait_until(MySkyMainMenu)
-        assert menu.is_visible
-
-        greeting = menu.title
-        assert greeting == greeting_string()
-
-        menu_items = menu.menu_items
-        for item in menu_items:
-            print 'Item text: {0}'.format(item.text)
-            print 'Item selected: {0}'.format(item.selected)
-        print len(menu_items)
-        assert len(menu_items) == 3
-
-        message = menu.message
-        print 'Item message: {0}'.format(message)
-        assert message == mysky_constants.STRING_FIND_OUT_MORE
+        open_and_check_mysky()
 
         # XXX
         stbt.press('KEY_DOWN')
@@ -65,3 +49,22 @@ def greeting_string():
         return mysky_constants.STRING_GOOD_AFTERNOON
     else:
         return mysky_constants.STRING_GOOD_MORNING
+
+def open_and_check_mysky():
+    stbt.press('KEY_YELLOW')
+    menu = stbt.wait_until(MySkyMainMenu)
+    assert menu.is_visible
+
+    greeting = menu.title
+    assert greeting == greeting_string()
+
+    menu_items = menu.menu_items
+    for item in menu_items:
+        print 'Item text: {0}'.format(item.text)
+        print 'Item selected: {0}'.format(item.selected)
+    print len(menu_items)
+    assert len(menu_items) == 3
+
+    message = menu.message
+    print 'Item message: {0}'.format(message)
+    assert message == mysky_constants.STRING_FIND_OUT_MORE
