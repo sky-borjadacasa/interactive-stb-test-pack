@@ -31,7 +31,7 @@ SKY_TOP_LOGO='images/SkyTopLogo.png'
 
 # Text recognition:
 OCR_CHAR_WHITELIST = string.ascii_letters + ' ' + string.digits
-OCR_CHAR_WHITELIST_TEMP = string.digits + 'º-'
+OCR_CHAR_WHITELIST_TEMP = string.digits + '-ºc'
 
 # Colors:
 YELLOW_BACKGROUND_RGB = np.array([235, 189, 0])

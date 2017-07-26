@@ -70,8 +70,11 @@ class MySkyMainMenu(FrameObject):
         # Check if temperatures are ok:
         temp = self._utils.find_text(mysky_constants.WEATHER_TEMP_REGION, fuzzy=False, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST_TEMP)
         print 'Temperature: {0}'.format(temp)
-        match = re.search(r'^[-]?\d+º', temp)
-        print 'Temperature match: {0} -> {1}'.format(match, match.group())
+        match = re.search(r'^[-]?\d+ºc', temp)
+        if match:
+            print 'Temperature match: {0} -> {1}'.format(match, match.group())
+        else:
+            print 'No match'
 
 
     @property
