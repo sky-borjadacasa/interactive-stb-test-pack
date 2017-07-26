@@ -59,7 +59,6 @@ class MySkyMainMenu(FrameObject):
     def _info(self):
         return match('images/SkyTopLogo.png', frame=self._frame)
 
-    @property
     def weather_loaded(self):
         # TODO: Check icon:
 
