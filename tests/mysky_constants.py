@@ -30,7 +30,8 @@ WEATHER_TEMP_MIN_REGION = Region(1180, 660, width=55, height=30)
 SKY_TOP_LOGO='images/SkyTopLogo.png'
 
 # Text recognition:
-OCR_CHAR_WHITELIST = string.ascii_letters + ' ' + string.digits + 'º'
+OCR_CHAR_WHITELIST = string.ascii_letters + ' ' + string.digits
+OCR_CHAR_WHITELIST_TEMP = string.digits + 'º-'
 
 # Colors:
 YELLOW_BACKGROUND_RGB = np.array([235, 189, 0])

@@ -126,7 +126,7 @@ class SkyPlusTestUtils(object):
         if self.debug_mode:
             print text
 
-    def find_text(self, region, fuzzy=True):
+    def find_text(self, region, fuzzy=True, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST):
         """Read the text in the given region
 
         Args:
@@ -139,7 +139,7 @@ class SkyPlusTestUtils(object):
         cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
 
         text = ''
-        ocr_options = {'tessedit_char_whitelist': mysky_constants.OCR_CHAR_WHITELIST}
+        ocr_options = {'tessedit_char_whitelist': char_whitelist}
         text = stbt.ocr(region=region, tesseract_config=ocr_options).strip().encode('utf-8')
         self.debug('Text found: [{0}] in region {1}'.format(text, region))
         if text and fuzzy:
