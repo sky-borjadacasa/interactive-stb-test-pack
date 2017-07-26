@@ -11,6 +11,7 @@ from scipy.stats import itemfreq
 from fuzzywuzzy import process
 import stbt
 from stbt import Region
+import time
 
 def crop_image(image, region):
     """Crop the image
@@ -152,6 +153,9 @@ class SkyPlusTestUtils(object):
         self.debug('Palette: {0}'.format(palette))
         self.debug('Color frequency: {0}'.format(color_frequency))
         selected = is_color_in_palette(palette, color_frequency, color)
+
+        # Debugging:
+        cv2.imwrite('matching_color_{0}.jpg'.format(time.time()), crop_image(self.image, region))
 
         self.debug('Color matched: {0}, {1}'.format(selected, color))
 
