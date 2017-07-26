@@ -124,7 +124,7 @@ class SkyPlusTestUtils(object):
         if self.debug_mode:
             print text
 
-    def find_text_in_box(self, region):
+    def find_text(self, region, fuzzy=True):
         """Read the text in the given region
 
         Args:
@@ -140,19 +140,22 @@ class SkyPlusTestUtils(object):
         ocr_options = {'tessedit_char_whitelist': mysky_constants.OCR_CHAR_WHITELIST}
         text = stbt.ocr(region=region, tesseract_config=ocr_options).strip().encode('utf-8')
         self.debug('Text found: [{0}] in region {1}'.format(text, region))
-        if text:
+        if text and fuzzy:
             text = self.fuzzy_match(text)
         self.debug('Text matched: [{0}] in region {1}'.format(text, region))
 
-        # Find out if selected or not:
+        return text
+
+    def match_color(self, region, color):
         palette, color_frequency = get_palette(self.image, region)
         self.debug('Palette: {0}'.format(palette))
         self.debug('Color frequency: {0}'.format(color_frequency))
-        selected = is_color_in_palette(palette, color_frequency, mysky_constants.YELLOW_BACKGROUND_RGB)
+        selected = is_color_in_palette(palette, color_frequency, color)
 
-        self.debug('Found text: {0}, {1}'.format(text, selected))
+        self.debug('Color matched: {0}, {1}'.format(selected, color))
 
-        return text, selected
+        return selected
+
 
     def fuzzy_match(self, text):
         """Get the text fuzzy matched against our dictionary

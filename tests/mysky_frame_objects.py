@@ -40,13 +40,13 @@ class MySkyMainMenu(FrameObject):
     @property
     def is_visible(self):
         logo_visible = stbt.match('images/SkyTopLogo.png', region=mysky_constants.MY_SKY_REGION)
-        text, _ = self._utils.find_text_in_box(mysky_constants.MAIN_MENU_LOADING_REGION)
+        text = self._utils.find_text(mysky_constants.MAIN_MENU_LOADING_REGION)
         loading_visible = (text == 'Loading...')
         return logo_visible and not loading_visible
 
     @property
     def title(self):
-        text, _ = self._utils.find_text_in_box(mysky_constants.MY_SKY_GREETING_REGION)
+        text = self._utils.find_text(mysky_constants.MY_SKY_GREETING_REGION)
         return text
 
     @property
@@ -71,6 +71,7 @@ class MySkyMainMenu(FrameObject):
         for item in items:
             text_region = get_text_region(item.region)
             print 'REGION: {0}'.format(text_region)
-            item.text, item.selected = self._utils.find_text_in_box(text_region)
+            item.text = self._utils.find_text(text_region)
+            item.selected = self._utils.match_color(text_region, mysky_constants.YELLOW_BACKGROUND_RGB)
 
         return items
