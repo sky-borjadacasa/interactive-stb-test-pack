@@ -31,6 +31,18 @@ def test_open_mysky():
     finally:
         clear_test()
 
+def test_mysky_weather():
+    """Open MySky app"""
+    try:
+        go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
+        menu = open_and_check_mysky()
+
+        # Check weather loaded correctly:
+        menu.weather_loaded()
+
+    finally:
+        clear_test()
+
 def clear_test():
     """Close MySky app"""
     sleep(2)
@@ -73,6 +85,8 @@ def open_and_check_mysky():
     message = menu.message
     print 'Item message: {0}'.format(message)
     assert message == mysky_constants.STRING_FIND_OUT_MORE
+
+    return menu
 
 def go_to_channel(channel):
     assert len(channel) == 3

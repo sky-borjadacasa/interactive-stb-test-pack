@@ -59,6 +59,16 @@ class MySkyMainMenu(FrameObject):
         return match('images/SkyTopLogo.png', frame=self._frame)
 
     @property
+    def weather_loaded(self):
+        # TODO: Check icon:
+
+        # Check city name:
+        city = self._utils.find_text(mysky_constants.WEATHER_CITY_NAME_REGION)
+        assert len(city) > 0
+        print 'Weather city name: {0}'.format(city)
+
+
+    @property
     def menu_items(self):
         items = []
         item = MySkyMenuItem(mysky_constants.MAIN_MENU_ITEM_1_REGION)

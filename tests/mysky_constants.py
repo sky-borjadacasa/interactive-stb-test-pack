@@ -19,11 +19,17 @@ MAIN_MENU_ITEM_1_REGION = Region(930, 135, width=300, height=150)
 MAIN_MENU_ITEM_2_REGION = Region(930, 295, width=300, height=130)
 MAIN_MENU_ITEM_3_REGION = Region(930, 435, width=300, height=130)
 
+WEATHER_CITY_NAME_REGION = Region(930, 590, width=200, height=45)
+WEATHER_ICON_REGION = Region(1100, 625, width=70, height=55)
+WEATHER_TEMP_REGION = Region(930, 630, width=115, height=60)
+WEATHER_TEMP_MAX_REGION = Region(1180, 630, width=55, height=30)
+WEATHER_TEMP_MIN_REGION = Region(1180, 660, width=55, height=30)
+
 # Images:
 SKY_TOP_LOGO='images/SkyTopLogo.png'
 
 # Text recognition:
-OCR_CHAR_WHITELIST = string.ascii_letters + ' ' + string.digits
+OCR_CHAR_WHITELIST = string.ascii_letters + ' ' + string.digits + 'º'
 
 # Colors:
 YELLOW_BACKGROUND_RGB = np.array([235, 189, 0])
