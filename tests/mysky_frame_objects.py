@@ -65,8 +65,8 @@ class MySkyMainMenu(FrameObject):
 
         # Check city name:
         city = self._utils.find_text(mysky_constants.WEATHER_CITY_NAME_REGION)
-        assert len(city) > 0
         print 'Weather city name: {0}'.format(city)
+        assert len(city) > 0
 
 
     @property
