@@ -44,6 +44,20 @@ def test_mysky_weather():
     finally:
         clear_test()
 
+def test_yellow_button_exits():
+    """Open MySky app"""
+    try:
+        go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
+        menu = open_and_check_mysky()
+
+        # Press yellow button:
+        stbt.press('KEY_YELLOW')
+        assert stbt.wait_until(lambda: not MySkyMainMenu().is_visible)
+
+    finally:
+        clear_test()
+
+
 def clear_test():
     """Close MySky app"""
     sleep(2)
