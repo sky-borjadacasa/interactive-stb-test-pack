@@ -40,7 +40,7 @@ class MySkyMainMenu(FrameObject):
 
     @property
     def is_visible(self):
-        logo_visible = stbt.match('images/SkyTopLogo.png', region=mysky_constants.MY_SKY_REGION)
+        logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=mysky_constants.MY_SKY_REGION)
         text = self._utils.find_text(mysky_constants.MAIN_MENU_LOADING_REGION)
         loading_visible = (text == 'Loading...')
         return logo_visible and not loading_visible
@@ -57,11 +57,9 @@ class MySkyMainMenu(FrameObject):
 
     @property
     def _info(self):
-        return match('images/SkyTopLogo.png', frame=self._frame)
+        return match(mysky_constants.SKY_TOP_LOGO, frame=self._frame)
 
     def weather_loaded(self):
-        # TODO: Check icon:
-
         # Check city name:
         city = self._utils.find_text(mysky_constants.WEATHER_CITY_NAME_REGION, fuzzy=False)
         print 'Weather city name: {0}'.format(city)
@@ -77,6 +75,8 @@ class MySkyMainMenu(FrameObject):
         temp = self._utils.find_text(mysky_constants.WEATHER_TEMP_MIN_REGION, fuzzy=False, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST_TEMP)
         print 'Temperature: {0}'.format(temp)
         match = re.search(r'^[-]?\d+[º]?[c]?', temp) # Do it like this thanks to poor font quality
+
+        # TODO: Check icon:
 
 
     @property

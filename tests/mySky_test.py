@@ -83,6 +83,12 @@ def open_and_check_mysky():
     print len(menu_items)
     assert len(menu_items) == 3
 
+    # Check images inside menu items:
+    item = [x for x in menu_items if x.text == mysky_constants.STRING_FIND_OUT_MORE][0]
+    match_result = match(mysky_constants.MENU_FIND_OUT_MORE, frame=menu._frame, region=item.region)
+    print '## match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result)
+
+
     message = menu.message
     print 'Item message: {0}'.format(message)
     assert message == mysky_constants.STRING_FIND_OUT_MORE

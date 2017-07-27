@@ -28,6 +28,9 @@ WEATHER_TEMP_MIN_REGION = Region(1180, 660, width=55, height=30)
 
 # Images:
 SKY_TOP_LOGO='images/SkyTopLogo.png'
+MENU_FIND_OUT_MORE='images/SkyQ.png'
+MENU_MANAGE_YOUR_ACCOUNT='images/ManageYourAccount.png'
+MENU_FIX_A_PROBLEM='images/FixAProblem.png'
 
 # Text recognition:
 OCR_CHAR_WHITELIST = string.ascii_letters + ' ' + string.digits
