@@ -64,6 +64,7 @@ def test_sky_q_screen():
         menu = open_and_check_mysky()
 
         stbt.press('KEY_SELECT')
+        sleep(2)
 
         # Check Sky Q page loaded correctly:
         skyq_screen = stbt.wait_until(MySkySkyQMenu)
