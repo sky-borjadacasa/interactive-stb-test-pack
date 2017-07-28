@@ -14,6 +14,19 @@ import mysky_frame_objects
 from mysky_frame_objects import MySkyMainMenu
 import mysky_constants
 
+def test_yellow_button_exits():
+    """Open MySky app"""
+    try:
+        go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
+        menu = open_and_check_mysky()
+
+        # Press yellow button:
+        stbt.press('KEY_YELLOW')
+        assert stbt.wait_until(lambda: not MySkyMainMenu().is_visible)
+
+    finally:
+        clear_test()
+
 def test_open_mysky():
     """Open MySky app"""
     try:
@@ -44,19 +57,21 @@ def test_mysky_weather():
     finally:
         clear_test()
 
-def test_yellow_button_exits():
+def test_sky_q_screen():
     """Open MySky app"""
     try:
         go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
         menu = open_and_check_mysky()
 
-        # Press yellow button:
-        stbt.press('KEY_YELLOW')
-        assert stbt.wait_until(lambda: not MySkyMainMenu().is_visible)
+        stbt.press('KEY_SELECT')
+
+        # Check Sky Q page loaded correctly:
+        skyq_screen = stbt.wait_until(MySkySkyQMenu)
 
     finally:
         clear_test()
 
+# Utils:
 
 def clear_test():
     """Close MySky app"""

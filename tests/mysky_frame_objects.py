@@ -42,7 +42,7 @@ class MySkyMainMenu(FrameObject):
     def is_visible(self):
         logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=mysky_constants.MY_SKY_REGION)
         text = self._utils.find_text(mysky_constants.MAIN_MENU_LOADING_REGION)
-        loading_visible = (text == 'Loading...')
+        loading_visible = (text == mysky_constants.STRING_LOADING)
         return logo_visible and not loading_visible
 
     @property
@@ -96,3 +96,54 @@ class MySkyMainMenu(FrameObject):
             item.selected = self._utils.match_color(text_region, mysky_constants.YELLOW_BACKGROUND_RGB)
 
         return items
+
+class MySkySkyQMenu(FrameObject):
+
+    @property
+    def _utils(self):
+        try:
+            return self.utils
+        except AttributeError:
+            self.utils = SkyPlusTestUtils(self._frame, debug_mode=True)
+        return self.utils
+
+    @property
+    def is_visible(self):
+        logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=mysky_constants.MY_SKY_REGION)
+        text = self._utils.find_text(mysky_constants.SKY_Q_NEXT_GENERATION)
+        print 'SkyQ Screen text: {0}'.format(text)
+        text_visible = (text == mysky_constants.STRING_LOADING)
+        return logo_visible and not text_visible
+
+    @property
+    def title(self):
+        text = self._utils.find_text(mysky_constants.MY_SKY_GREETING_REGION)
+        return text
+
+    @property
+    def message(self):
+        selected_list = [x for x in self.menu_items if x.selected == True]
+        return selected_list[0].text
+
+    @property
+    def _info(self):
+        return match(mysky_constants.SKY_TOP_LOGO, frame=self._frame)
+
+    def weather_loaded(self):
+        # Check city name:
+        city = self._utils.find_text(mysky_constants.WEATHER_CITY_NAME_REGION, fuzzy=False)
+        print 'Weather city name: {0}'.format(city)
+        assert len(city) > 0
+
+        # Check if temperatures are ok:
+        temp = self._utils.find_text(mysky_constants.WEATHER_TEMP_REGION, fuzzy=False, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST_TEMP)
+        print 'Temperature: {0}'.format(temp)
+        match = re.search(r'^[-]?\d+[ºc]?[cc]?', temp) # Do it like this thanks to poor font quality
+        temp = self._utils.find_text(mysky_constants.WEATHER_TEMP_MAX_REGION, fuzzy=False, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST_TEMP)
+        print 'Temperature: {0}'.format(temp)
+        match = re.search(r'^[-]?\d+[º]?[c]?', temp) # Do it like this thanks to poor font quality
+        temp = self._utils.find_text(mysky_constants.WEATHER_TEMP_MIN_REGION, fuzzy=False, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST_TEMP)
+        print 'Temperature: {0}'.format(temp)
+        match = re.search(r'^[-]?\d+[º]?[c]?', temp) # Do it like this thanks to poor font quality
+
+        # TODO: Check icon:

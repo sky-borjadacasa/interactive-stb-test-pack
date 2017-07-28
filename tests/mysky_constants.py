@@ -26,6 +26,9 @@ WEATHER_TEMP_REGION = Region(930, 630, width=115, height=60)
 WEATHER_TEMP_MAX_REGION = Region(1180, 630, width=55, height=30)
 WEATHER_TEMP_MIN_REGION = Region(1180, 660, width=55, height=30)
 
+SKY_Q_NEXT_GENERATION = Region(940, 115, width=285, height=30)
+SKY_Q_LONG_TEXT = Region(900, 435, width=350, height=140)
+
 # Images:
 SKY_TOP_LOGO='images/SkyTopLogo.png'
 MENU_FIND_OUT_MORE='images/SkyQ.png'
@@ -59,6 +62,8 @@ STRING_GOOD_MORNING='Good Morning'
 STRING_GOOD_AFTERNOON='Good Afternoon'
 STRING_FIND_OUT_MORE='Find out more'
 STRING_LOADING='Loading...'
+STRING_NEXT_GENERATION='The next generation box'
+STRING_SKY_Q_LONG_TEXT='Sky Q, our best TV viewing\nexperience ever. Record and\nstore way more than before and\nenjoy Sky on TVs and tablets\naournd your home.'
 
 def load_fuzzy_set():
     """Function to load the fuzzy matching expression dictionary
