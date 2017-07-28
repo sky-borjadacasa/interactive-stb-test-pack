@@ -145,6 +145,8 @@ class SkyPlusTestUtils(object):
         if text and fuzzy:
             text = self.fuzzy_match(text)
         self.debug('Text matched: [{0}] in region {1}'.format(text, region))
+        # Debugging:
+        cv2.imwrite('finding_text_{0}.jpg'.format(time.time()), crop_image(self.image, region))
 
         return text
 
