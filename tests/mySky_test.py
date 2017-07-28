@@ -11,7 +11,7 @@ import stbt
 from stbt import FrameObject, match, MatchParameters, ocr, Region
 import sky_plus_utils
 import mysky_frame_objects
-from mysky_frame_objects import MySkyMainMenu
+from mysky_frame_objects import MySkyMainMenu, MySkySkyQMenu
 import mysky_constants
 
 def test_yellow_button_exits():
