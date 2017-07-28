@@ -110,6 +110,8 @@ class MySkySkyQMenu(FrameObject):
     @property
     def is_visible(self):
         logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=mysky_constants.MY_SKY_REGION)
+        text = self._utils.find_text(mysky_constants.SKY_Q_NEXT_GENERATION, fuzzy=False)
+        print 'SkyQ Screen text: {0}'.format(text)
         text = self._utils.find_text(mysky_constants.SKY_Q_NEXT_GENERATION)
         print 'SkyQ Screen text: {0}'.format(text)
         text_visible = (text == mysky_constants.STRING_LOADING)

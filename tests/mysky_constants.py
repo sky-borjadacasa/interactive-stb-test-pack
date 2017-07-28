@@ -84,5 +84,7 @@ def load_fuzzy_set():
         STRING_GOOD_MORNING,
         STRING_GOOD_AFTERNOON,
         STRING_FIND_OUT_MORE,
-        STRING_LOADING]
+        STRING_LOADING,
+        STRING_NEXT_GENERATION,
+        STRING_SKY_Q_LONG_TEXT]
     return lines
