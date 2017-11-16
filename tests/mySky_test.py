@@ -27,6 +27,23 @@ def test_yellow_button_exits():
     finally:
         clear_test()
 
+def test_smoke_open_mysky():
+    """Open MySky app"""
+    try:
+        go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
+
+        # Navigate menus:
+        stbt.press('KEY_DOWN')
+        assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_MANAGE_YOUR_ACCOUNT)
+        stbt.press('KEY_DOWN')
+        assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_FIX_A_PROBLEM)
+        stbt.press('KEY_UP')
+        assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_MANAGE_YOUR_ACCOUNT)
+        stbt.press('KEY_UP')
+        assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_FIND_OUT_MORE)
+    finally:
+        clear_test()
+
 def test_open_mysky():
     """Open MySky app"""
     try:
