@@ -6,7 +6,6 @@ Contants for MySky testing
 
 import string
 import numpy as np
-import stbt
 from stbt import Region
 
 # Channels:
@@ -30,10 +29,10 @@ SKY_Q_NEXT_GENERATION = Region(940, 115, width=285, height=30)
 SKY_Q_LONG_TEXT = Region(900, 435, width=350, height=140)
 
 # Images:
-SKY_TOP_LOGO='images/SkyTopLogo.png'
-MENU_FIND_OUT_MORE='images/SkyQ.png'
-MENU_MANAGE_YOUR_ACCOUNT='images/ManageYourAccount.png'
-MENU_FIX_A_PROBLEM='images/FixAProblem.png'
+SKY_TOP_LOGO = 'images/SkyTopLogo.png'
+MENU_FIND_OUT_MORE = 'images/SkyQ.png'
+MENU_MANAGE_YOUR_ACCOUNT = 'images/ManageYourAccount.png'
+MENU_FIX_A_PROBLEM = 'images/FixAProblem.png'
 
 # Text recognition:
 OCR_CHAR_WHITELIST = string.ascii_letters + ' ' + string.digits
@@ -48,22 +47,22 @@ COLOR_THRESHOLD = 10
 PALETTE_SIZE = 2
 
 # Strings:
-STRING_SKY_Q='Sky Q'
-STRING_MANAGE_YOUR_ACCOUNT='Manage your account'
-STRING_FIX_A_PROBLEM='Fix a problem'
-STRING_BILLS_AND_PAYMENTS='Bills and payments'
-STRING_PACKAGE_AND_SETTINGS='TV package and settings'
-STRING_BROADBAND_AND_TALK='Broadband and Talk'
-STRING_DETAILS_AND_MESSAGES='My details and messages'
-STRING_PICTURE_PROBLEMS='TV picture problems'
-STRING_NO_SATELITE_SIGNAL='No satelite signal'
-STRING_FORGOTTEN_PIN='Forgotten PIN'
-STRING_GOOD_MORNING='Good Morning'
-STRING_GOOD_AFTERNOON='Good Afternoon'
-STRING_FIND_OUT_MORE='Find out more'
-STRING_LOADING='Loading...'
-STRING_NEXT_GENERATION='The next generation box'
-STRING_SKY_Q_LONG_TEXT='Sky Q, our best TV viewing\nexperience ever. Record and\nstore way more than before and\nenjoy Sky on TVs and tablets\naournd your home.'
+STRING_SKY_Q = 'Sky Q'
+STRING_MANAGE_YOUR_ACCOUNT = 'Manage your account'
+STRING_FIX_A_PROBLEM = 'Fix a problem'
+STRING_BILLS_AND_PAYMENTS = 'Bills and payments'
+STRING_PACKAGE_AND_SETTINGS = 'TV package and settings'
+STRING_BROADBAND_AND_TALK = 'Broadband and Talk'
+STRING_DETAILS_AND_MESSAGES = 'My details and messages'
+STRING_PICTURE_PROBLEMS = 'TV picture problems'
+STRING_NO_SATELITE_SIGNAL = 'No satelite signal'
+STRING_FORGOTTEN_PIN = 'Forgotten PIN'
+STRING_GOOD_MORNING = 'Good Morning'
+STRING_GOOD_AFTERNOON = 'Good Afternoon'
+STRING_FIND_OUT_MORE = 'Find out more'
+STRING_LOADING = 'Loading...'
+STRING_NEXT_GENERATION = 'The next generation box'
+STRING_SKY_Q_LONG_TEXT = 'Sky Q, our best TV viewing\nexperience ever. Record and\nstore way more than before and\nenjoy Sky on TVs and tablets\naournd your home.'
 
 def load_fuzzy_set():
     """Function to load the fuzzy matching expression dictionary
@@ -72,19 +71,19 @@ def load_fuzzy_set():
         List of the expressions to match
     """
     lines = [STRING_SKY_Q,
-        STRING_MANAGE_YOUR_ACCOUNT,
-        STRING_FIX_A_PROBLEM,
-        STRING_BILLS_AND_PAYMENTS,
-        STRING_PACKAGE_AND_SETTINGS,
-        STRING_BROADBAND_AND_TALK,
-        STRING_DETAILS_AND_MESSAGES,
-        STRING_PICTURE_PROBLEMS,
-        STRING_NO_SATELITE_SIGNAL,
-        STRING_FORGOTTEN_PIN,
-        STRING_GOOD_MORNING,
-        STRING_GOOD_AFTERNOON,
-        STRING_FIND_OUT_MORE,
-        STRING_LOADING,
-        STRING_NEXT_GENERATION,
-        STRING_SKY_Q_LONG_TEXT]
+             STRING_MANAGE_YOUR_ACCOUNT,
+             STRING_FIX_A_PROBLEM,
+             STRING_BILLS_AND_PAYMENTS,
+             STRING_PACKAGE_AND_SETTINGS,
+             STRING_BROADBAND_AND_TALK,
+             STRING_DETAILS_AND_MESSAGES,
+             STRING_PICTURE_PROBLEMS,
+             STRING_NO_SATELITE_SIGNAL,
+             STRING_FORGOTTEN_PIN,
+             STRING_GOOD_MORNING,
+             STRING_GOOD_AFTERNOON,
+             STRING_FIND_OUT_MORE,
+             STRING_LOADING,
+             STRING_NEXT_GENERATION,
+             STRING_SKY_Q_LONG_TEXT]
     return lines
