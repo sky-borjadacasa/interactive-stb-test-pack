@@ -4,14 +4,13 @@
 Library with utilities for navigating SkyPlusHD box menus
 """
 
+import time
 import mysky_constants
 import cv2
 import numpy as np
 from scipy.stats import itemfreq
 from fuzzywuzzy import process
 import stbt
-from stbt import Region
-import time
 
 def crop_image(image, region):
     """Crop the image
@@ -25,11 +24,7 @@ def crop_image(image, region):
     """
     if region is None:
         return image.copy()
-    x1 = region.x
-    x2 = region.right
-    y1 = region.y
-    y2 = region.bottom
-    return image[y1:y2, x1:x2].copy()
+    return image[region.y:region.bottom, region.x:region.right].copy()
 
 def rgb_luminance(color):
     """Calculate luminance of RGB color
@@ -100,7 +95,7 @@ def is_color_in_palette(palette, color_frequency, color_to_find):
         color_to_find (tuple(int)): Color to find
 
     Returns:
-        The most common color in a palette that matches the wanted color
+        True if if the color is in the palete
     """
     for label in color_frequency[::-1]:
         color = palette[label[0]]
@@ -151,6 +146,15 @@ class SkyPlusTestUtils(object):
         return text
 
     def match_color(self, region, color):
+        """Tell if the region dominant color matches (aprox.) the given color
+
+        Args:
+            region (stbt.Region): Region of the image to search defined by the top-left and bottom-right coordinates
+            color (numpy.ndarray): Color to match in RGB format
+
+        Returns:
+            True if if the dominant color matches the given color
+        """
         palette, color_frequency = get_palette(self.image, region)
         self.debug('Palette: {0}'.format(palette))
         self.debug('Color frequency: {0}'.format(color_frequency))
