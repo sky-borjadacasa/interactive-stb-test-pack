@@ -31,16 +31,7 @@ def test_smoke_open_mysky():
     """Open MySky app"""
     try:
         go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
-
-        # Navigate menus:
-        stbt.press('KEY_DOWN')
-        assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_MANAGE_YOUR_ACCOUNT)
-        stbt.press('KEY_DOWN')
-        assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_FIX_A_PROBLEM)
-        stbt.press('KEY_UP')
-        assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_MANAGE_YOUR_ACCOUNT)
-        stbt.press('KEY_UP')
-        assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_FIND_OUT_MORE)
+        menu = open_and_basic_check_mysky()
     finally:
         clear_test()
 
@@ -115,7 +106,7 @@ def greeting_string():
     else:
         return mysky_constants.STRING_GOOD_MORNING
 
-def open_and_check_mysky():
+def open_and_basic_check_mysky():
     stbt.press('KEY_YELLOW')
     menu = stbt.wait_until(MySkyMainMenu)
     assert menu.is_visible
@@ -129,6 +120,9 @@ def open_and_check_mysky():
         print 'Item selected: {0}'.format(item.selected)
     print len(menu_items)
     assert len(menu_items) == 3
+
+def open_and_check_mysky():
+    open_and_basic_check_mysky()
 
     # Check images inside menu items:
     item = [x for x in menu_items if x.text == mysky_constants.STRING_FIND_OUT_MORE][0]
