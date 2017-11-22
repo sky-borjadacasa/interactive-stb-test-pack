@@ -5,15 +5,20 @@ Test cases for MySky
 """
 
 import re
-from time import sleep
-import datetime
 import stbt
-from stbt import FrameObject, match, MatchParameters, ocr, Region
-import sky_plus_utils
+from stbt import FrameObject, match, Region
 from sky_plus_utils import SkyPlusTestUtils
 import mysky_constants
 
 def get_text_region(region):
+    """Get region of item where text should be located
+
+    Args:
+        region (stbt.Region): Region to crop
+
+    Returns:
+        Region of the text
+    """
     bottom = Region(region.x + 10, region.bottom - 45, width=region.width - 20, bottom=region.bottom - 5)
     return bottom
 
@@ -29,6 +34,7 @@ class MySkyMenuItem(object):
 
 
 class MySkyMainMenu(FrameObject):
+    """FrameObject class to analyze MySky main menu."""
 
     @property
     def _utils(self):
@@ -52,7 +58,7 @@ class MySkyMainMenu(FrameObject):
 
     @property
     def message(self):
-        selected_list = [x for x in self.menu_items if x.selected == True]
+        selected_list = [x for x in self.menu_items if x.selected]
         return selected_list[0].text
 
     @property
@@ -68,13 +74,13 @@ class MySkyMainMenu(FrameObject):
         # Check if temperatures are ok:
         temp = self._utils.find_text(mysky_constants.WEATHER_TEMP_REGION, fuzzy=False, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST_TEMP)
         print 'Temperature: {0}'.format(temp)
-        match = re.search(r'^[-]?\d+[ºc]?[cc]?', temp) # Do it like this thanks to poor font quality
+        regex_match = re.search(r'^[-]?\d+[ºc]?[cc]?', temp) # Do it like this thanks to poor font quality
         temp = self._utils.find_text(mysky_constants.WEATHER_TEMP_MAX_REGION, fuzzy=False, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST_TEMP)
         print 'Temperature: {0}'.format(temp)
-        match = re.search(r'^[-]?\d+[º]?[c]?', temp) # Do it like this thanks to poor font quality
+        regex_match = re.search(r'^[-]?\d+[º]?[c]?', temp) # Do it like this thanks to poor font quality
         temp = self._utils.find_text(mysky_constants.WEATHER_TEMP_MIN_REGION, fuzzy=False, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST_TEMP)
         print 'Temperature: {0}'.format(temp)
-        match = re.search(r'^[-]?\d+[º]?[c]?', temp) # Do it like this thanks to poor font quality
+        regex_match = re.search(r'^[-]?\d+[º]?[c]?', temp) # Do it like this thanks to poor font quality
 
         # TODO: Check icon:
 
@@ -96,56 +102,3 @@ class MySkyMainMenu(FrameObject):
             item.selected = self._utils.match_color(text_region, mysky_constants.YELLOW_BACKGROUND_RGB)
 
         return items
-
-class MySkySkyQMenu(FrameObject):
-
-    @property
-    def _utils(self):
-        try:
-            return self.utils
-        except AttributeError:
-            self.utils = SkyPlusTestUtils(self._frame, debug_mode=True)
-        return self.utils
-
-    @property
-    def is_visible(self):
-        logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=mysky_constants.MY_SKY_REGION)
-        text = self._utils.find_text(mysky_constants.SKY_Q_NEXT_GENERATION, fuzzy=False)
-        print 'SkyQ Screen text: {0}'.format(text)
-        text = self._utils.find_text(mysky_constants.SKY_Q_NEXT_GENERATION)
-        print 'SkyQ Screen text: {0}'.format(text)
-        text_visible = (text == mysky_constants.STRING_LOADING)
-        return logo_visible and not text_visible
-
-    @property
-    def title(self):
-        text = self._utils.find_text(mysky_constants.MY_SKY_GREETING_REGION)
-        return text
-
-    @property
-    def message(self):
-        selected_list = [x for x in self.menu_items if x.selected == True]
-        return selected_list[0].text
-
-    @property
-    def _info(self):
-        return match(mysky_constants.SKY_TOP_LOGO, frame=self._frame)
-
-    def weather_loaded(self):
-        # Check city name:
-        city = self._utils.find_text(mysky_constants.WEATHER_CITY_NAME_REGION, fuzzy=False)
-        print 'Weather city name: {0}'.format(city)
-        assert len(city) > 0
-
-        # Check if temperatures are ok:
-        temp = self._utils.find_text(mysky_constants.WEATHER_TEMP_REGION, fuzzy=False, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST_TEMP)
-        print 'Temperature: {0}'.format(temp)
-        match = re.search(r'^[-]?\d+[ºc]?[cc]?', temp) # Do it like this thanks to poor font quality
-        temp = self._utils.find_text(mysky_constants.WEATHER_TEMP_MAX_REGION, fuzzy=False, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST_TEMP)
-        print 'Temperature: {0}'.format(temp)
-        match = re.search(r'^[-]?\d+[º]?[c]?', temp) # Do it like this thanks to poor font quality
-        temp = self._utils.find_text(mysky_constants.WEATHER_TEMP_MIN_REGION, fuzzy=False, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST_TEMP)
-        print 'Temperature: {0}'.format(temp)
-        match = re.search(r'^[-]?\d+[º]?[c]?', temp) # Do it like this thanks to poor font quality
-
-        # TODO: Check icon:
