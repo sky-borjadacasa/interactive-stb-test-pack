@@ -8,30 +8,30 @@ import time
 from time import sleep
 import datetime
 import stbt
-from stbt import FrameObject, match, MatchParameters, ocr, Region
+from stbt import FrameObject, match, MatchParameters, ocr, Region, MatchTimeout
 import sky_plus_utils
 import mysky_frame_objects
-from mysky_frame_objects import MySkyMainMenu, MySkySkyQMenu
+from mysky_frame_objects import MySkyMainMenu
 import mysky_constants
-
-def test_yellow_button_exits():
-    """Open MySky app"""
-    try:
-        go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
-        menu = open_and_check_mysky()
-
-        # Press yellow button:
-        stbt.press('KEY_YELLOW')
-        assert stbt.wait_until(lambda: not MySkyMainMenu().is_visible)
-
-    finally:
-        clear_test()
 
 def test_smoke_open_mysky():
     """Open MySky app"""
     try:
         go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
-        menu = open_and_basic_check_mysky()
+        open_and_basic_check_mysky()
+    finally:
+        clear_test()
+
+def test_yellow_button_exits():
+    """Open MySky app"""
+    try:
+        go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
+        open_and_check_mysky()
+
+        # Press yellow button:
+        stbt.press('KEY_YELLOW')
+        assert stbt.wait_until(lambda: not MySkyMainMenu().is_visible)
+
     finally:
         clear_test()
 
@@ -65,21 +65,6 @@ def test_mysky_weather():
     finally:
         clear_test()
 
-def test_sky_q_screen():
-    """Open MySky app"""
-    try:
-        go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
-        menu = open_and_check_mysky()
-
-        stbt.press('KEY_SELECT')
-        sleep(2)
-
-        # Check Sky Q page loaded correctly:
-        skyq_screen = stbt.wait_until(MySkySkyQMenu)
-
-    finally:
-        clear_test()
-
 # Utils:
 
 def clear_test():
@@ -89,7 +74,7 @@ def clear_test():
         while stbt.wait_for_match(mysky_constants.SKY_TOP_LOGO):
             sleep(2)
             stbt.press('KEY_BACKUP')
-    except:
+    except MatchTimeout:
         print 'Nothing to see here'
 
 def greeting_string():
@@ -107,6 +92,7 @@ def greeting_string():
         return mysky_constants.STRING_GOOD_MORNING
 
 def open_and_basic_check_mysky():
+    """Open the MySky app and make basic checks"""
     stbt.press('KEY_YELLOW')
     menu = stbt.wait_until(MySkyMainMenu)
     assert menu.is_visible
@@ -120,9 +106,12 @@ def open_and_basic_check_mysky():
         print 'Item selected: {0}'.format(item.selected)
     print len(menu_items)
     assert len(menu_items) == 3
+    return menu
 
 def open_and_check_mysky():
-    open_and_basic_check_mysky()
+    """Open the MySky app and make some checks"""
+    menu = open_and_basic_check_mysky()
+    menu_items = menu.menu_items
 
     # Check images inside menu items:
     item = [x for x in menu_items if x.text == mysky_constants.STRING_FIND_OUT_MORE][0]
@@ -145,7 +134,12 @@ def open_and_check_mysky():
     return menu
 
 def go_to_channel(channel):
+    """Got to the given channel
+
+    Args:
+        channel (string): Channel to input
+    """
     assert len(channel) == 3
-    for c in channel:
-        button = 'KEY_{0}'.format(c)
+    for digit in channel:
+        button = 'KEY_{0}'.format(digit)
         stbt.press(button)
