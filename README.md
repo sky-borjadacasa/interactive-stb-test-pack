@@ -1,38 +1,33 @@
-Test-pack
-=========
+# Test-pack
 
-This is an stb-tester test-pack suitable for running on the stb-tester
-appliances.
+This is the project with the python code that will run the set-top-box tests.
 
-Writing tests
--------------
+## Writing tests
 
-Tests should be put in the `tests/` directory where they will be found by the
-test-runner.  There is an example in there which may be deleted once you have
-written your own tests.
+Tests should be put in the `tests` directory where they will be found by the
+test-runner. The file `sky_plus_utils.py` has most of the needed utils to easily write more tests.
 
-See the [stb-tester ONE manual][write-a-new-test-case] for more help.
+For more info go to:
 
-[write-a-new-test-case]: http://stb-tester.com/manual/getting-started#write-a-new-test-case
+* [stb-tester ONE manual](https://stb-tester.com/manual-stb-tester-one)
+* [Python API](https://stb-tester.com/manual-stb-tester-one/python-api)
+* [Using FrameObjects](https://stb-tester.com/tutorials/using-frame-objects-to-extract-information-from-the-screen)
 
-Remote-control configuration
-----------------------------
+## Remote-control configuration
 
 Infrared remote control configuration belongs in the `config/remote-control/`
-directory. See the [stb-tester ONE manual][configuration-files] for details.
+directory. See [configuration-files](https://stb-tester.com/manual-stb-tester-one/advanced-configuration#configuration-files) for details.
 
-Once you have added your own remote control configurations you can delete the
-examples from the `config/remote-control` directory.
+The **Sky Plus** remote was already added.
 
-[configuration-files]: http://stb-tester.com/manual/advanced-configuration#configuration-files
+## Developing for the STB-Tester
 
-Choosing the stb-tester version to use
---------------------------------------
+**STB-Tester** software only works on Linux, so we need to use the `stbt-docker` command line util to check and debug our test code.
 
-stb-tester test-packs put you in control of which version of the stb-tester
-libraries and runner your tests run against. When a new version of stb-tester
-is available and you want to upgrade update the configuration key
-`test_pack.stbt_version` in `config/stbt.conf`. See the
-[stb-tester ONE manual][stbt-conf] for details.
+### Using `pylint`
 
-[stbt-conf]: http://stb-tester.com/manual/advanced-configuration#stbt-conf
+`pylint` is used to check Python code. The way to call it through `stbt-docker` is:
+
+```
+./stbt-docker stbt lint tests/*.py
+```
