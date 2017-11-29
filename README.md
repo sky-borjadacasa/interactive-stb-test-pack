@@ -1,4 +1,4 @@
-# Test-pack
+# Test-pack
 
 This is the project with the python code that will run the set-top-box tests.
 
@@ -13,14 +13,14 @@ For more info go to:
 * [Python API](https://stb-tester.com/manual-stb-tester-one/python-api)
 * [Using FrameObjects](https://stb-tester.com/tutorials/using-frame-objects-to-extract-information-from-the-screen)
 
-## Remote-control configuration
+## Remote-control configuration
 
 Infrared remote control configuration belongs in the `config/remote-control/`
 directory. See [configuration-files](https://stb-tester.com/manual-stb-tester-one/advanced-configuration#configuration-files) for details.
 
 The **Sky Plus** remote was already added.
 
-## Developing for the STB-Tester
+## Developing for the STB-Tester
 
 **STB-Tester** software only works on Linux, so we need to use the `stbt-docker` command line util to check and debug our test code.
 
