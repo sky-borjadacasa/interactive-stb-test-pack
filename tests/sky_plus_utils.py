@@ -104,6 +104,30 @@ def is_color_in_palette(palette, color_frequency, color_to_find):
             return True
     return False
 
+def press_digits(digits):
+    """Press a sequence of digits
+
+    Args:
+        digits (string): digits to input
+    """
+    for digit in digits:
+        button = 'KEY_{0}'.format(digit)
+        stbt.press(button)
+
+def go_to_channel(channel):
+    """Got to the given channel
+
+    Args:
+        channel (string): Channel to input
+    """
+    assert len(channel) == 3
+    press_digits(channel)
+
+def open_secret_scene():
+    """Open secret scene menu
+    """
+    press_digits('062840')
+
 class SkyPlusTestUtils(object):
     """Class that contains the logic to analyse the contents of the MySky menu"""
 
@@ -177,7 +201,6 @@ class SkyPlusTestUtils(object):
         Returns:
             Matched text
         """
-        #matches = self.fuzzy_set.get(text)
         matches = process.extract(text, self.fuzzy_set, limit=3)
         self.debug('Matches for "{0}":\n{1}'.format(text, matches))
         # We get directly the most likely match
