@@ -60,10 +60,11 @@ def open_and_check_mysky():
     menu_items = menu.menu_items
 
     # Check images inside menu items:
-    item = [x for x in menu_items if x.text == mysky_constants.STRING_FIND_OUT_MORE][0]
-    match_result = match(mysky_constants.MENU_FIND_OUT_MORE, frame=menu._frame, region=item.region)
-    print '## match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result)
-    assert match_result.match
+    # This check is disabled for now, until we can know which image is going to be there for sure
+    # item = [x for x in menu_items if x.text == mysky_constants.STRING_FIND_OUT_MORE][0]
+    # match_result = match(mysky_constants.MENU_FIND_OUT_MORE, frame=menu._frame, region=item.region)
+    # print '## match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result)
+    # assert match_result.match
     item = [x for x in menu_items if x.text == mysky_constants.STRING_MANAGE_YOUR_ACCOUNT][0]
     match_result = match(mysky_constants.MENU_MANAGE_YOUR_ACCOUNT, frame=menu._frame, region=item.region)
     print '## match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result)
