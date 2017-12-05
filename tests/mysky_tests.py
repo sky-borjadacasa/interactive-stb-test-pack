@@ -13,33 +13,37 @@ import sky_plus_utils
 import mysky_frame_objects
 from mysky_frame_objects import MySkyMainMenu
 import mysky_constants
+import mysky_test_utils
 
 def test_smoke_open_mysky():
     """Open MySky app"""
+    mysky_test_utils.clear_test()
     try:
-        go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
-        open_and_basic_check_mysky()
+        sky_plus_utils.go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
+        mysky_test_utils.open_and_basic_check_mysky()
     finally:
-        clear_test()
+        mysky_test_utils.clear_test()
 
 def test_yellow_button_exits():
     """Open MySky app"""
+    mysky_test_utils.clear_test()
     try:
-        go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
-        open_and_check_mysky()
+        sky_plus_utils.go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
+        mysky_test_utils.open_and_check_mysky()
 
         # Press yellow button:
         stbt.press('KEY_YELLOW')
         assert stbt.wait_until(lambda: not MySkyMainMenu().is_visible)
 
     finally:
-        clear_test()
+        mysky_test_utils.clear_test()
 
 def test_open_mysky():
     """Open MySky app"""
+    mysky_test_utils.clear_test()
     try:
-        go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
-        open_and_check_mysky()
+        sky_plus_utils.go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
+        mysky_test_utils.open_and_check_mysky()
 
         # Navigate menus:
         stbt.press('KEY_DOWN')
@@ -51,95 +55,17 @@ def test_open_mysky():
         stbt.press('KEY_UP')
         assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_FIND_OUT_MORE)
     finally:
-        clear_test()
+        mysky_test_utils.clear_test()
 
 def test_mysky_weather():
     """Open MySky app"""
+    mysky_test_utils.clear_test()
     try:
-        go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
-        menu = open_and_check_mysky()
+        sky_plus_utils.go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
+        menu = mysky_test_utils.open_and_check_mysky()
 
         # Check weather loaded correctly:
         menu.weather_loaded()
 
     finally:
-        clear_test()
-
-# Utils:
-
-def clear_test():
-    """Close MySky app"""
-    sleep(2)
-    try:
-        while stbt.wait_for_match(mysky_constants.SKY_TOP_LOGO):
-            sleep(2)
-            stbt.press('KEY_BACKUP')
-    except MatchTimeout:
-        print 'Nothing to see here'
-
-def greeting_string():
-    """Get greeting string"""
-    now = datetime.datetime.now()
-    print 'Datetime now: {0}'.format(now)
-    mid_day_string = "12:00:00"
-    mid_day = datetime.datetime.strptime(mid_day_string, "%H:%M:%S")
-    mid_day = now.replace(hour=mid_day.time().hour, minute=mid_day.time().minute, \
-        second=mid_day.time().second, microsecond=0)
-
-    if now > mid_day:
-        return mysky_constants.STRING_GOOD_AFTERNOON
-    else:
-        return mysky_constants.STRING_GOOD_MORNING
-
-def open_and_basic_check_mysky():
-    """Open the MySky app and make basic checks"""
-    stbt.press('KEY_YELLOW')
-    menu = stbt.wait_until(MySkyMainMenu)
-    assert menu.is_visible
-
-    greeting = menu.title
-    assert greeting == greeting_string()
-
-    menu_items = menu.menu_items
-    for item in menu_items:
-        print 'Item text: {0}'.format(item.text)
-        print 'Item selected: {0}'.format(item.selected)
-    print len(menu_items)
-    assert len(menu_items) == 3
-    return menu
-
-def open_and_check_mysky():
-    """Open the MySky app and make some checks"""
-    menu = open_and_basic_check_mysky()
-    menu_items = menu.menu_items
-
-    # Check images inside menu items:
-    item = [x for x in menu_items if x.text == mysky_constants.STRING_FIND_OUT_MORE][0]
-    match_result = match(mysky_constants.MENU_FIND_OUT_MORE, frame=menu._frame, region=item.region)
-    print '## match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result)
-    assert match_result.match
-    item = [x for x in menu_items if x.text == mysky_constants.STRING_MANAGE_YOUR_ACCOUNT][0]
-    match_result = match(mysky_constants.MENU_MANAGE_YOUR_ACCOUNT, frame=menu._frame, region=item.region)
-    print '## match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result)
-    assert match_result.match
-    item = [x for x in menu_items if x.text == mysky_constants.STRING_FIX_A_PROBLEM][0]
-    match_result = match(mysky_constants.MENU_FIX_A_PROBLEM, frame=menu._frame, region=item.region)
-    print '## match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result)
-    assert match_result.match
-
-    message = menu.message
-    print 'Item message: {0}'.format(message)
-    assert message == mysky_constants.STRING_FIND_OUT_MORE
-
-    return menu
-
-def go_to_channel(channel):
-    """Got to the given channel
-
-    Args:
-        channel (string): Channel to input
-    """
-    assert len(channel) == 3
-    for digit in channel:
-        button = 'KEY_{0}'.format(digit)
-        stbt.press(button)
+        mysky_test_utils.clear_test()
