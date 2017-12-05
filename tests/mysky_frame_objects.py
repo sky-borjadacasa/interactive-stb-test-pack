@@ -71,20 +71,6 @@ class MySkyMainMenu(FrameObject):
         print 'Weather city name: {0}'.format(city)
         assert len(city) > 0
 
-        # Check if temperatures are ok:
-        temp = self._utils.find_text(mysky_constants.WEATHER_TEMP_REGION, fuzzy=False, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST_TEMP)
-        print 'Temperature: {0}'.format(temp)
-        regex_match = re.search(r'^[-]?\d+[ºc]?[cc]?', temp) # Do it like this thanks to poor font quality
-        temp = self._utils.find_text(mysky_constants.WEATHER_TEMP_MAX_REGION, fuzzy=False, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST_TEMP)
-        print 'Temperature: {0}'.format(temp)
-        regex_match = re.search(r'^[-]?\d+[º]?[c]?', temp) # Do it like this thanks to poor font quality
-        temp = self._utils.find_text(mysky_constants.WEATHER_TEMP_MIN_REGION, fuzzy=False, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST_TEMP)
-        print 'Temperature: {0}'.format(temp)
-        regex_match = re.search(r'^[-]?\d+[º]?[c]?', temp) # Do it like this thanks to poor font quality
-
-        # TODO: Check icon:
-
-
     @property
     def menu_items(self):
         items = []
