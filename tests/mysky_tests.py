@@ -24,7 +24,7 @@ def test_smoke_open_mysky():
     finally:
         mysky_test_utils.clear_test()
 
-def test_yellow_button_exits():
+def test_acceptance_yellow_button_exits():
     """Open MySky app"""
     mysky_test_utils.clear_test()
     try:
@@ -38,7 +38,7 @@ def test_yellow_button_exits():
     finally:
         mysky_test_utils.clear_test()
 
-def test_open_mysky():
+def test_acceptance_open_mysky():
     """Open MySky app"""
     mysky_test_utils.clear_test()
     try:
@@ -57,7 +57,7 @@ def test_open_mysky():
     finally:
         mysky_test_utils.clear_test()
 
-def test_mysky_weather():
+def test_acceptance_mysky_weather():
     """Open MySky app"""
     mysky_test_utils.clear_test()
     try:
