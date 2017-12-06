@@ -58,7 +58,11 @@ def is_similar_color_rgb(color_a, color_b):
     Returns:
         True if colors distance is lower than defined threshold
     """
+    # XXX
+    print 'SIMILAR_COLOR_1 A: {0} B: {1}'.format(color_a, color_b)
+    print 'SIMILAR_COLOR_2 A: {0} B: {1}'.format(rgb_luminance(color_a), rgb_luminance(color_b))
     distance = abs(rgb_luminance(color_a) - rgb_luminance(color_b))
+    print 'SIMILAR_COLOR_3 A: {0} B: {1}'.format(distance, mysky_constants.COLOR_THRESHOLD)
     return distance < mysky_constants.COLOR_THRESHOLD
 
 def get_palette(image, region):
