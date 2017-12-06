@@ -59,6 +59,8 @@ class MySkyMainMenu(FrameObject):
     @property
     def message(self):
         selected_list = [x for x in self.menu_items if x.selected]
+        # XXX
+        print 'SELECTED_LIST_SIZE: {0}'.format(len(selected_list))
         return selected_list[0].text
 
     @property
