@@ -38,7 +38,7 @@ def greeting_string():
 
     if now < mid_day:
         return mysky_constants.STRING_GOOD_MORNING
-    else if now < six_pm:
+    elif now < six_pm:
         return mysky_constants.STRING_GOOD_AFTERNOON
     else:
         return mysky_constants.STRING_GOOD_EVENING
