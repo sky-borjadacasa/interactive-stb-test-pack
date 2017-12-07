@@ -31,11 +31,17 @@ def greeting_string():
     mid_day = datetime.datetime.strptime(mid_day_string, "%H:%M:%S")
     mid_day = now.replace(hour=mid_day.time().hour, minute=mid_day.time().minute, \
         second=mid_day.time().second, microsecond=0)
+    six_pm_string = "18.00.00"
+    six_pm = datetime.datetime.strptime(six_pm_string, "%H:%M:%S")
+    six_pm = now.replace(hour=six_pm.time().hour, minute=six_pm.time().minute, \
+        second=six_pm.time().second, microsecond=0)
 
-    if now > mid_day:
+    if now < mid_day:
+        return mysky_constants.STRING_GOOD_MORNING
+    else if now < six_pm:
         return mysky_constants.STRING_GOOD_AFTERNOON
     else:
-        return mysky_constants.STRING_GOOD_MORNING
+        return mysky_constants.STRING_GOOD_EVENING
 
 def open_and_basic_check_mysky():
     """Open the MySky app and make basic checks"""
