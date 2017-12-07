@@ -48,12 +48,27 @@ def bgr_to_rgb(color):
     """
     return color[::-1]
 
+def color_distance(color_a, color_b):
+    """Tell if two colors are close
+
+    Args:
+        color_a (numpy.ndarray): First color in RGB format
+        color_b (numpy.ndarray): Second color in RGB format
+
+    Returns:
+        Color distance between the two colors
+    """
+    r_distance = abs(color_a[0] - color_b[0])
+    g_distance = abs(color_a[1] - color_b[1])
+    b_distance = abs(color_a[2] - color_b[2])
+    return r_distance + g_distance + b_distance
+
 def is_similar_color_rgb(color_a, color_b):
     """Tell if two colors are similar
 
     Args:
-        color_a (numpy.ndarray): Color to search in RGB format
-        color_b (numpy.ndarray): Color to search in RGB format
+        color_a (numpy.ndarray): First color in RGB format
+        color_b (numpy.ndarray): Second color in RGB format
 
     Returns:
         True if colors distance is lower than defined threshold
@@ -61,9 +76,11 @@ def is_similar_color_rgb(color_a, color_b):
     # XXX
     print 'SIMILAR_COLOR_1 A: {0} B: {1}'.format(color_a, color_b)
     print 'SIMILAR_COLOR_2 A: {0} B: {1}'.format(rgb_luminance(color_a), rgb_luminance(color_b))
-    distance = abs(rgb_luminance(color_a) - rgb_luminance(color_b))
-    print 'SIMILAR_COLOR_3 A: {0} B: {1}'.format(distance, mysky_constants.COLOR_THRESHOLD)
-    return distance < mysky_constants.COLOR_THRESHOLD
+    difference = abs(rgb_luminance(color_a) - rgb_luminance(color_b))
+    print 'SIMILAR_COLOR_3 A: {0} B: {1}'.format(difference, mysky_constants.COLOR_THRESHOLD)
+    color_distance = color_distance(color_a, color_b)
+    print 'SIMILAR_COLOR_4 A: {0} B: {1}'.format(color_distance, mysky_constants.COLOR_THRESHOLD)
+    return difference < mysky_constants.COLOR_THRESHOLD and color_distance < mysky_constants.COLOR_THRESHOLD
 
 def get_palette(image, region):
     """Get the dominant colors of a region
