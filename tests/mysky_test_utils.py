@@ -31,7 +31,7 @@ def greeting_string():
     mid_day = datetime.datetime.strptime(mid_day_string, "%H:%M:%S")
     mid_day = now.replace(hour=mid_day.time().hour, minute=mid_day.time().minute, \
         second=mid_day.time().second, microsecond=0)
-    six_pm_string = "18.00.00"
+    six_pm_string = "18:00:00"
     six_pm = datetime.datetime.strptime(six_pm_string, "%H:%M:%S")
     six_pm = now.replace(hour=six_pm.time().hour, minute=six_pm.time().minute, \
         second=six_pm.time().second, microsecond=0)
