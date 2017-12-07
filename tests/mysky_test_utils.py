@@ -40,6 +40,7 @@ def greeting_string():
 def open_and_basic_check_mysky():
     """Open the MySky app and make basic checks"""
     stbt.press('KEY_YELLOW')
+    sleep(5) # The menu can be quite slow opening
     menu = stbt.wait_until(MySkyMainMenu)
     assert menu.is_visible
 
