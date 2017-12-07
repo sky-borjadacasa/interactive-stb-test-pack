@@ -84,6 +84,7 @@ def load_fuzzy_set():
              STRING_FORGOTTEN_PIN,
              STRING_GOOD_MORNING,
              STRING_GOOD_AFTERNOON,
+             STRING_GOOD_EVENING,
              STRING_FIND_OUT_MORE,
              STRING_LOADING,
              STRING_NEXT_GENERATION,
