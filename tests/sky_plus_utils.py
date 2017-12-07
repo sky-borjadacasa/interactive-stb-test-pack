@@ -80,7 +80,7 @@ def is_similar_color_rgb(color_a, color_b):
     print 'SIMILAR_COLOR_3 A: {0} B: {1}'.format(difference, mysky_constants.COLOR_THRESHOLD)
     distance = color_distance(color_a, color_b)
     print 'SIMILAR_COLOR_4 A: {0} B: {1}'.format(distance, mysky_constants.COLOR_THRESHOLD)
-    return difference < mysky_constants.COLOR_THRESHOLD and distance < mysky_constants.COLOR_THRESHOLD
+    return difference < mysky_constants.COLOR_LUMINANCE_THRESHOLD and distance < mysky_constants.COLOR_DISTANCE_THRESHOLD
 
 def get_palette(image, region):
     """Get the dominant colors of a region
