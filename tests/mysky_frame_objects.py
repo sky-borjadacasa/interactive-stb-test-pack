@@ -4,10 +4,9 @@
 Test cases for MySky
 """
 
-import re
 import stbt
 from stbt import FrameObject, match, Region
-from sky_plus_utils import SkyPlusTestUtils
+from sky_plus_utils import SkyPlusTestUtils, debug
 import mysky_constants
 
 def get_text_region(region):
@@ -41,7 +40,7 @@ class MySkyMainMenu(FrameObject):
         try:
             return self.utils
         except AttributeError:
-            self.utils = SkyPlusTestUtils(self._frame, debug_mode=True)
+            self.utils = SkyPlusTestUtils(self._frame)
         return self.utils
 
     @property
@@ -68,7 +67,7 @@ class MySkyMainMenu(FrameObject):
     def weather_loaded(self):
         # Check city name:
         city = self._utils.find_text(mysky_constants.WEATHER_CITY_NAME_REGION, fuzzy=False)
-        print 'Weather city name: {0}'.format(city)
+        debug('Weather city name: {0}'.format(city))
         assert len(city) > 0
 
     @property
@@ -83,7 +82,7 @@ class MySkyMainMenu(FrameObject):
 
         for item in items:
             text_region = get_text_region(item.region)
-            print 'REGION: {0}'.format(text_region)
+            debug('REGION: {0}'.format(text_region))
             item.text = self._utils.find_text(text_region)
             item.selected = self._utils.match_color(text_region, mysky_constants.YELLOW_BACKGROUND_RGB)
 

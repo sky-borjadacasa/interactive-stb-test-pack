@@ -4,13 +4,8 @@
 Test cases for MySky
 """
 
-import time
-from time import sleep
-import datetime
 import stbt
-from stbt import FrameObject, match, MatchParameters, ocr, Region, MatchTimeout
 import sky_plus_utils
-import mysky_frame_objects
 from mysky_frame_objects import MySkyMainMenu
 import mysky_constants
 import mysky_test_utils
@@ -24,6 +19,7 @@ def test_smoke_open_mysky():
     finally:
         mysky_test_utils.clear_test()
 
+#def test_acceptance_yellow_button_exits():
 def test_acceptance_yellow_button_exits():
     """Open MySky app"""
     mysky_test_utils.clear_test()

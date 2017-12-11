@@ -4,13 +4,11 @@
 Test cases for MySky
 """
 
-import time
 from time import sleep
 import datetime
 import stbt
-from stbt import FrameObject, match, MatchParameters, ocr, Region, MatchTimeout
-import sky_plus_utils
-import mysky_frame_objects
+from stbt import match
+from sky_plus_utils import debug
 from mysky_frame_objects import MySkyMainMenu
 import mysky_constants
 
@@ -26,7 +24,7 @@ def clear_test():
 def greeting_string():
     """Get greeting string"""
     now = datetime.datetime.now()
-    print 'Datetime now: {0}'.format(now)
+    debug('Datetime now: {0}'.format(now))
     mid_day_string = "12:00:00"
     mid_day = datetime.datetime.strptime(mid_day_string, "%H:%M:%S")
     mid_day = now.replace(hour=mid_day.time().hour, minute=mid_day.time().minute, \
@@ -55,9 +53,9 @@ def open_and_basic_check_mysky():
 
     menu_items = menu.menu_items
     for item in menu_items:
-        print 'Item text: {0}'.format(item.text)
-        print 'Item selected: {0}'.format(item.selected)
-    print len(menu_items)
+        debug('Item text: {0}'.format(item.text))
+        debug('Item selected: {0}'.format(item.selected))
+    debug(len(menu_items))
     assert len(menu_items) == 3
     return menu
 
@@ -70,19 +68,19 @@ def open_and_check_mysky():
     # This check is disabled for now, until we can know which image is going to be there for sure
     # item = [x for x in menu_items if x.text == mysky_constants.STRING_FIND_OUT_MORE][0]
     # match_result = match(mysky_constants.MENU_FIND_OUT_MORE, frame=menu._frame, region=item.region)
-    # print '## match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result)
+    # debug('## match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
     # assert match_result.match
     item = [x for x in menu_items if x.text == mysky_constants.STRING_MANAGE_YOUR_ACCOUNT][0]
     match_result = match(mysky_constants.MENU_MANAGE_YOUR_ACCOUNT, frame=menu._frame, region=item.region)
-    print '## match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result)
+    debug('## match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
     assert match_result.match
     item = [x for x in menu_items if x.text == mysky_constants.STRING_FIX_A_PROBLEM][0]
     match_result = match(mysky_constants.MENU_FIX_A_PROBLEM, frame=menu._frame, region=item.region)
-    print '## match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result)
+    debug('## match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
     assert match_result.match
 
     message = menu.message
-    print 'Item message: {0}'.format(message)
+    debug('Item message: {0}'.format(message))
     assert message == mysky_constants.STRING_FIND_OUT_MORE
 
     return menu

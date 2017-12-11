@@ -12,6 +12,17 @@ from scipy.stats import itemfreq
 from fuzzywuzzy import process
 import stbt
 
+DEBUG_MODE = True
+
+def debug(text):
+    """Print the given text if debug mode is on.
+
+    Args:
+        text (str): The text to print
+    """
+    if DEBUG_MODE:
+        print '[DEBUG] {0}'.format(text)
+
 def crop_image(image, region):
     """Crop the image
 
@@ -157,15 +168,6 @@ class SkyPlusTestUtils(object):
         self.image = image
         self.debug_mode = debug_mode
 
-    def debug(self, text):
-        """Print the given text if debug mode is on.
-
-        Args:
-            text (str): The text to print
-        """
-        if self.debug_mode:
-            print text
-
     def find_text(self, region, fuzzy=True, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST):
         """Read the text in the given region
 
@@ -181,10 +183,10 @@ class SkyPlusTestUtils(object):
         text = ''
         ocr_options = {'tessedit_char_whitelist': char_whitelist}
         text = stbt.ocr(region=region, tesseract_config=ocr_options).strip().encode('utf-8')
-        self.debug('Text found: [{0}] in region {1}'.format(text, region))
+        debug('Text found: [{0}] in region {1}'.format(text, region))
         if text and fuzzy:
             text = self.fuzzy_match(text)
-        self.debug('Text matched: [{0}] in region {1}'.format(text, region))
+        debug('Text matched: [{0}] in region {1}'.format(text, region))
         # Debugging:
         cv2.imwrite('finding_text_{0}.jpg'.format(time.time()), crop_image(self.image, region))
 
@@ -201,14 +203,14 @@ class SkyPlusTestUtils(object):
             True if if the dominant color matches the given color
         """
         palette, color_frequency = get_palette(self.image, region)
-        self.debug('Palette: {0}'.format(palette))
-        self.debug('Color frequency: {0}'.format(color_frequency))
+        debug('Palette: {0}'.format(palette))
+        debug('Color frequency: {0}'.format(color_frequency))
         selected = is_color_in_palette(palette, color_frequency, color)
 
         # Debugging:
         cv2.imwrite('matching_color_{0}.jpg'.format(time.time()), crop_image(self.image, region))
 
-        self.debug('Color matched: {0}, {1}'.format(selected, color))
+        debug('Color matched: {0}, {1}'.format(selected, color))
 
         return selected
 
@@ -223,6 +225,6 @@ class SkyPlusTestUtils(object):
             Matched text
         """
         matches = process.extract(text, self.fuzzy_set, limit=3)
-        self.debug('Matches for "{0}":\n{1}'.format(text, matches))
+        debug('Matches for "{0}":\n{1}'.format(text, matches))
         # We get directly the most likely match
         return matches[0][0]
