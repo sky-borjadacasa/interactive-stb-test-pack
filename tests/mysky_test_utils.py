@@ -11,10 +11,8 @@ from stbt import match
 from sky_plus_utils import debug
 from mysky_frame_objects import MySkyMainMenu
 import mysky_constants
+from mysky_constants import MY_SKY_OPEN_TIMEOUT
 
-#####################
-# Utility functions #
-#####################
 def clear_test():
     """Close any app"""
     sleep(2)
@@ -44,8 +42,7 @@ def greeting_string():
 def open_and_basic_check_mysky():
     """Open the MySky app and make basic checks"""
     stbt.press('KEY_YELLOW')
-    sleep(5) # The menu can be quite slow opening
-    menu = stbt.wait_until(MySkyMainMenu)
+    menu = stbt.wait_until(MySkyMainMenu, timeout_secs=MY_SKY_OPEN_TIMEOUT)
     assert menu.is_visible
 
     greeting = menu.title

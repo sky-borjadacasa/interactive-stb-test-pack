@@ -8,6 +8,9 @@ import string
 import numpy as np
 from stbt import Region
 
+# Misc:
+MY_SKY_OPEN_TIMEOUT = 25
+
 # Channels:
 CHANNEL_SKY_ONE = '106'
 
