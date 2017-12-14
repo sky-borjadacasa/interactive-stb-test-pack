@@ -59,7 +59,7 @@ def test_acceptance_backup_button_exits():
     """
     mysky_test_utils.clear_test()
     try:
-        mysky_test_utils.button_exits_test('KEY_BACK')
+        mysky_test_utils.button_exits_test('KEY_BACKUP')
     finally:
         mysky_test_utils.clear_test()
 
