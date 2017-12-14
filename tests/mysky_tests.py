@@ -49,7 +49,7 @@ def test_acceptance_yellow_button_exits():
     """Open MySky app and close it with the yellow button"""
     mysky_test_utils.clear_test()
     try:
-        sky_plus_utils.button_exits_test('KEY_YELLOW')
+        mysky_test_utils.button_exits_test('KEY_YELLOW')
     finally:
         mysky_test_utils.clear_test()
 
@@ -59,7 +59,7 @@ def test_acceptance_backup_button_exits():
     """
     mysky_test_utils.clear_test()
     try:
-        sky_plus_utils.button_exits_test('KEY_BACK')
+        mysky_test_utils.button_exits_test('KEY_BACK')
     finally:
         mysky_test_utils.clear_test()
 
