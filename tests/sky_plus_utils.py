@@ -13,6 +13,7 @@ from fuzzywuzzy import process
 import stbt
 
 DEBUG_MODE = True
+IMAGE_DEBUG_MODE = False
 
 def debug(text):
     """Print the given text if debug mode is on.
@@ -84,13 +85,8 @@ def is_similar_color_rgb(color_a, color_b):
     Returns:
         True if colors distance is lower than defined threshold
     """
-    # XXX
-    print 'SIMILAR_COLOR_1 A: {0} B: {1}'.format(color_a, color_b)
-    print 'SIMILAR_COLOR_2 A: {0} B: {1}'.format(rgb_luminance(color_a), rgb_luminance(color_b))
     difference = abs(rgb_luminance(color_a) - rgb_luminance(color_b))
-    print 'SIMILAR_COLOR_3 A: {0} B: {1}'.format(difference, mysky_constants.COLOR_LUMINANCE_THRESHOLD)
     distance = color_distance(color_a, color_b)
-    print 'SIMILAR_COLOR_4 A: {0} B: {1}'.format(distance, mysky_constants.COLOR_DISTANCE_THRESHOLD)
     return difference < mysky_constants.COLOR_LUMINANCE_THRESHOLD and distance < mysky_constants.COLOR_DISTANCE_THRESHOLD
 
 def get_palette(image, region):
@@ -163,10 +159,9 @@ def open_secret_scene():
 class SkyPlusTestUtils(object):
     """Class that contains the logic to analyse the contents of the MySky menu"""
 
-    def __init__(self, image, debug_mode=False):
+    def __init__(self, image):
         self.fuzzy_set = mysky_constants.load_fuzzy_set()
         self.image = image
-        self.debug_mode = debug_mode
 
     def find_text(self, region, fuzzy=True, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST):
         """Read the text in the given region
@@ -188,7 +183,8 @@ class SkyPlusTestUtils(object):
             text = self.fuzzy_match(text)
         debug('Text matched: [{0}] in region {1}'.format(text, region))
         # Debugging:
-        cv2.imwrite('finding_text_{0}.jpg'.format(time.time()), crop_image(self.image, region))
+        if IMAGE_DEBUG_MODE:
+            cv2.imwrite('finding_text_{0}.jpg'.format(time.time()), crop_image(self.image, region))
 
         return text
 
@@ -208,7 +204,8 @@ class SkyPlusTestUtils(object):
         selected = is_color_in_palette(palette, color_frequency, color)
 
         # Debugging:
-        cv2.imwrite('matching_color_{0}.jpg'.format(time.time()), crop_image(self.image, region))
+        if IMAGE_DEBUG_MODE:
+            cv2.imwrite('matching_color_{0}.jpg'.format(time.time()), crop_image(self.image, region))
 
         debug('Color matched: {0}, {1}'.format(selected, color))
 
