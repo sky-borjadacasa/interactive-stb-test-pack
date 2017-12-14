@@ -53,7 +53,8 @@ def test_acceptance_yellow_button_exits():
 
         # Press yellow button:
         stbt.press('KEY_YELLOW')
-        assert stbt.wait_until(lambda: not MySkyMainMenu().is_visible)
+        assert stbt.wait_until(lambda: not MySkyMainMenu().is_visible), \
+            '[MySky] MySky menu did not close'
 
     finally:
         mysky_test_utils.clear_test()

@@ -65,10 +65,9 @@ class MySkyMainMenu(FrameObject):
         return match(mysky_constants.SKY_TOP_LOGO, frame=self._frame)
 
     def weather_loaded(self):
-        # Check city name:
-        city = self._utils.find_text(mysky_constants.WEATHER_CITY_NAME_REGION, fuzzy=False)
-        debug('Weather city name: {0}'.format(city))
-        assert len(city) > 0, '[Weather] City name not found'
+        string = self._utils.find_text(mysky_constants.WEATHER_CITY_NAME_REGION, fuzzy=True)
+        assert string == mysky_constants.STRING_YOUR_LOCAL_WEATHER, \
+            '[Weather] Message should be [{0}], but is [{1}]'.format(mysky_constants.STRING_YOUR_LOCAL_WEATHER, string)
 
     @property
     def menu_items(self):
