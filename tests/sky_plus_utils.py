@@ -148,7 +148,7 @@ def go_to_channel(channel):
     Args:
         channel (string): Channel to input
     """
-    assert len(channel) == 3
+    assert len(channel) == 3, '[Go to channel] Channel should have 3 digits, but has {0}'.format(len(channel))
     press_digits(channel)
 
 def open_secret_scene():

@@ -43,17 +43,17 @@ def open_and_basic_check_mysky():
     """Open the MySky app and make basic checks"""
     stbt.press('KEY_YELLOW')
     menu = stbt.wait_until(MySkyMainMenu, timeout_secs=MY_SKY_OPEN_TIMEOUT)
-    assert menu.is_visible
+    assert menu.is_visible, '[MySky] Main menu is not visible'
 
     greeting = menu.title
-    assert greeting == greeting_string()
+    assert greeting == greeting_string(), '[MySky] Greeting is [{0}], but should be [{1}]'.format(greeting, greeting_string())
 
     menu_items = menu.menu_items
     for item in menu_items:
         debug('Item text: {0}'.format(item.text))
         debug('Item selected: {0}'.format(item.selected))
     debug(len(menu_items))
-    assert len(menu_items) == 3
+    assert len(menu_items) == 3, '[MySky] Main menu should have 3 items, but has {0}'.format(len(menu_items))
     return menu
 
 def open_and_check_mysky():
@@ -70,15 +70,16 @@ def open_and_check_mysky():
     item = [x for x in menu_items if x.text == mysky_constants.STRING_MANAGE_YOUR_ACCOUNT][0]
     match_result = match(mysky_constants.MENU_MANAGE_YOUR_ACCOUNT, frame=menu._frame, region=item.region)
     debug('## match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
-    assert match_result.match
+    assert match_result.match, '[MySky] Could not find {0} menu'.format(mysky_constants.MENU_MANAGE_YOUR_ACCOUNT)
     item = [x for x in menu_items if x.text == mysky_constants.STRING_FIX_A_PROBLEM][0]
     match_result = match(mysky_constants.MENU_FIX_A_PROBLEM, frame=menu._frame, region=item.region)
     debug('## match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
-    assert match_result.match
+    assert match_result.match, '[MySky] Could not find {0} menu'.format(mysky_constants.STRING_FIX_A_PROBLEM)
 
     message = menu.message
     debug('Item message: {0}'.format(message))
-    assert message == mysky_constants.STRING_FIND_OUT_MORE
+    assert message == mysky_constants.STRING_FIND_OUT_MORE, \
+        '[MySky] Selected item should be [{0}], but is [{1}]'.format(mysky_constants.STRING_FIND_OUT_MORE, message)
 
     return menu
 

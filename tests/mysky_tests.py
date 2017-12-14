@@ -30,17 +30,20 @@ def test_acceptance_open_mysky():
 
         # Navigate menus:
         stbt.press('KEY_DOWN')
-        assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_MANAGE_YOUR_ACCOUNT)
+        assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_MANAGE_YOUR_ACCOUNT), \
+            '[MySky] Selected item is not [{0}]'.format(mysky_constants.STRING_MANAGE_YOUR_ACCOUNT)
         stbt.press('KEY_DOWN')
-        assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_FIX_A_PROBLEM)
+        assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_FIX_A_PROBLEM), \
+            '[MySky] Selected item is not [{0}]'.format(mysky_constants.STRING_FIX_A_PROBLEM)
         stbt.press('KEY_UP')
-        assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_MANAGE_YOUR_ACCOUNT)
+        assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_MANAGE_YOUR_ACCOUNT), \
+            '[MySky] Selected item is not [{0}]'.format(mysky_constants.STRING_MANAGE_YOUR_ACCOUNT)
         stbt.press('KEY_UP')
-        assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_FIND_OUT_MORE)
+        assert stbt.wait_until(lambda: MySkyMainMenu().message == mysky_constants.STRING_FIND_OUT_MORE), \
+            '[MySky] Selected item is not [{0}]'.format(mysky_constants.STRING_FIND_OUT_MORE)
     finally:
         mysky_test_utils.clear_test()
 
-#def test_acceptance_yellow_button_exits():
 def test_acceptance_yellow_button_exits():
     """Open MySky app"""
     mysky_test_utils.clear_test()
