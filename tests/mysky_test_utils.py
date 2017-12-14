@@ -83,6 +83,16 @@ def open_and_check_mysky():
 
     return menu
 
+def button_exits_test(button):
+    """Open MySky app and close it with the given button"""
+    sky_plus_utils.go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
+    mysky_test_utils.open_and_check_mysky()
+
+    # Press the button:
+    stbt.press(button)
+    assert stbt.wait_until(lambda: not MySkyMainMenu().is_visible), \
+        '[MySky] MySky menu did not close'
+
 def set_up_backend(backend_env):
     """Get the text fuzzy matched against our dictionary
 
