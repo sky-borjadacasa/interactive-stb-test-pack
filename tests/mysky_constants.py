@@ -67,7 +67,6 @@ STRING_GOOD_EVENING = 'Good Evening'
 STRING_FIND_OUT_MORE = 'Find out more'
 STRING_LOADING = 'Loading...'
 STRING_NEXT_GENERATION = 'The next generation box'
-STRING_SKY_Q_LONG_TEXT = 'Sky Q, our best TV viewing\nexperience ever. Record and\nstore way more than before and\nenjoy Sky on TVs and tablets\naournd your home.'
 STRING_YOUR_LOCAL_WEATHER = 'Your local weather'
 
 def load_fuzzy_set():
@@ -92,6 +91,5 @@ def load_fuzzy_set():
              STRING_FIND_OUT_MORE,
              STRING_LOADING,
              STRING_NEXT_GENERATION,
-             STRING_SKY_Q_LONG_TEXT,
              STRING_YOUR_LOCAL_WEATHER]
     return lines
