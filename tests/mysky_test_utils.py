@@ -8,6 +8,7 @@ from time import sleep
 import datetime
 import stbt
 from stbt import match
+import sky_plus_utils
 from sky_plus_utils import debug
 from mysky_frame_objects import MySkyMainMenu
 import mysky_constants
@@ -86,7 +87,7 @@ def open_and_check_mysky():
 def button_exits_test(button):
     """Open MySky app and close it with the given button"""
     sky_plus_utils.go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
-    mysky_test_utils.open_and_check_mysky()
+    open_and_check_mysky()
 
     # Press the button:
     stbt.press(button)
