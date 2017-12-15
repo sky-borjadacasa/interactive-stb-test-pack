@@ -19,7 +19,7 @@ def test_smoke_open_mysky():
     finally:
         mysky_test_utils.clear_test()
 
-def test_acceptance_open_mysky():
+def test_acceptance_simple_open_mysky():
     """Open MySky app and navigate
     Automates: https://interactiveqa.testrail.net/index.php?/cases/view/20
     Automates: https://interactiveqa.testrail.net/index.php?/cases/view/22
@@ -45,7 +45,7 @@ def test_acceptance_open_mysky():
     finally:
         mysky_test_utils.clear_test()
 
-def test_acceptance_yellow_button_exits():
+def test_acceptance_simple_yellow_button_exits():
     """Open MySky app and close it with the yellow button"""
     mysky_test_utils.clear_test()
     try:
@@ -53,7 +53,7 @@ def test_acceptance_yellow_button_exits():
     finally:
         mysky_test_utils.clear_test()
 
-def test_acceptance_backup_button_exits():
+def test_acceptance_simple_backup_button_exits():
     """Open MySky app and close it with the back up button
     Automates: https://interactiveqa.testrail.net/index.php?/cases/view/23
     """
@@ -63,8 +63,10 @@ def test_acceptance_backup_button_exits():
     finally:
         mysky_test_utils.clear_test()
 
-def test_acceptance_mysky_weather():
-    """Open MySky app"""
+# TODO: Use for UK and ROI clients
+def test_acceptance_simple_mysky_weather():
+    """Open MySky app
+    """
     mysky_test_utils.clear_test()
     try:
         sky_plus_utils.go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
