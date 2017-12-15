@@ -4,7 +4,9 @@
 Test cases for MySky
 """
 
+import time
 from time import sleep
+import cv2
 import datetime
 import stbt
 from stbt import match
@@ -68,9 +70,11 @@ def open_and_check_mysky():
     # debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
     # assert match_result.match, '[MySky] Could not find {0} menu'.format(mysky_constants.STRING_FIND_OUT_MORE)
     item = [x for x in menu_items if x.text == mysky_constants.STRING_MANAGE_YOUR_ACCOUNT][0]
-    # match_result = match(mysky_constants.MENU_MANAGE_YOUR_ACCOUNT, frame=menu._frame, region=item.region)
-    # debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
-    # assert match_result.match, '[MySky] Could not find {0} menu'.format(mysky_constants.MENU_MANAGE_YOUR_ACCOUNT)
+    match_result = match(mysky_constants.MENU_MANAGE_YOUR_ACCOUNT, frame=menu._frame, region=item.region)
+    debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
+    if sky_plus_utils.IMAGE_DEBUG_MODE:
+        cv2.imwrite('matching_menu_{0}.jpg'.format(time.time()), sky_plus_utils.crop_image(menu._frame, item.region))
+    assert match_result.match, '[MySky] Could not find {0} menu'.format(mysky_constants.MENU_MANAGE_YOUR_ACCOUNT)
     item = [x for x in menu_items if x.text == mysky_constants.STRING_FIX_A_PROBLEM][0]
     match_result = match(mysky_constants.MENU_FIX_A_PROBLEM, frame=menu._frame, region=item.region)
     debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))

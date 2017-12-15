@@ -182,7 +182,6 @@ class SkyPlusTestUtils(object):
         if text and fuzzy:
             text = self.fuzzy_match(text)
         debug('Text matched: [{0}] in region {1}'.format(text, region))
-        # Debugging:
         if IMAGE_DEBUG_MODE:
             cv2.imwrite('finding_text_{0}.jpg'.format(time.time()), crop_image(self.image, region))
 
@@ -203,7 +202,6 @@ class SkyPlusTestUtils(object):
         debug('Color frequency: {0}'.format(color_frequency))
         selected = is_color_in_palette(palette, color_frequency, color)
 
-        # Debugging:
         if IMAGE_DEBUG_MODE:
             cv2.imwrite('matching_color_{0}.jpg'.format(time.time()), crop_image(self.image, region))
 
