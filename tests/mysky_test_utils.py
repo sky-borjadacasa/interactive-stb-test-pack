@@ -86,7 +86,7 @@ def open_and_check_mysky():
 def button_exits_test(button):
     """Open MySky app and close it with the given button"""
     sky_plus_utils.go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
-    open_and_check_mysky()
+    open_and_basic_check_mysky()
 
     # Press the button:
     stbt.press(button)

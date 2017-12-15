@@ -70,7 +70,7 @@ def test_acceptance_simple_mysky_weather():
     mysky_test_utils.clear_test()
     try:
         sky_plus_utils.go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
-        menu = mysky_test_utils.open_and_check_mysky()
+        menu = mysky_test_utils.open_and_basic_check_mysky()
 
         # Check weather loaded correctly:
         menu.weather_loaded()
