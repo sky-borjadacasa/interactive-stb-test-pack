@@ -4,6 +4,7 @@
 Test cases for MySky
 """
 
+from time import sleep
 import stbt
 from stbt import FrameObject, match, Region
 from sky_plus_utils import SkyPlusTestUtils, debug
