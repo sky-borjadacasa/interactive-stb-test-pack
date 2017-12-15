@@ -13,7 +13,7 @@ from fuzzywuzzy import process
 import stbt
 
 DEBUG_MODE = True
-IMAGE_DEBUG_MODE = False
+IMAGE_DEBUG_MODE = True
 
 def debug(text):
     """Print the given text if debug mode is on.
