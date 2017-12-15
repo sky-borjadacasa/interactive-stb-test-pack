@@ -47,11 +47,13 @@ class MySkyMainMenu(FrameObject):
     @property
     def is_visible(self):
         logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=mysky_constants.MY_SKY_REGION)
-        sleep(0.5)
-        text = self._utils.find_text(mysky_constants.MAIN_MENU_LOADING_REGION)
-        debug('[FIND LOADING] Text found: {0}'.format(text))
-        loading_visible = (text == mysky_constants.STRING_LOADING)
-        return logo_visible and not loading_visible
+        if logo_visible:
+            sleep(0.5)
+            text = self._utils.find_text(mysky_constants.MAIN_MENU_LOADING_REGION)
+            debug('[FIND LOADING] Text found: {0}'.format(text))
+            loading_visible = (text == mysky_constants.STRING_LOADING)
+            return not loading_visible
+        return False
 
     @property
     def title(self):
