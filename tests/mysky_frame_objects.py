@@ -84,12 +84,6 @@ class MySkyMainMenu(FrameObject):
         item = MySkyMenuItem(self._frame, mysky_constants.MAIN_MENU_ITEM_3_REGION)
         items.append(item)
 
-        for item in items:
-            text_region = get_text_region(item.region)
-            debug('REGION: {0}'.format(text_region))
-            item.text = sky_plus_utils.find_text(self._frame, text_region)
-            item.selected = sky_plus_utils.match_color(self._frame, text_region, mysky_constants.YELLOW_BACKGROUND_RGB)
-
         return items
 
 class SecretSceneMainMenu(FrameObject):
