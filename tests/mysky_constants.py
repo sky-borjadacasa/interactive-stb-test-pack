@@ -52,12 +52,6 @@ COLOR_LUMINANCE_THRESHOLD = 10
 COLOR_DISTANCE_THRESHOLD = 25
 PALETTE_SIZE = 2
 
-# Secret scene environment codes:
-SS_ENV_CODE_DEV = '0'
-SS_ENV_CODE_SIT = '1'
-SS_ENV_CODE_STAGE = '2'
-SS_ENV_CODE_PROD = '3'
-
 # Text recognition:
 OCR_CHAR_WHITELIST = string.ascii_letters + ' ' + string.digits
 OCR_CHAR_WHITELIST_TEMP = string.digits + '-ºc'
