@@ -69,13 +69,8 @@ STRING_LOADING = 'Loading...'
 STRING_NEXT_GENERATION = 'The next generation box'
 STRING_YOUR_LOCAL_WEATHER = 'Your local weather'
 
-def load_fuzzy_set():
-    """Function to load the fuzzy matching expression dictionary
-
-    Returns:
-        List of the expressions to match
-    """
-    lines = [STRING_SKY_Q,
+# Fuzzy set:
+FUZZY_SET = [STRING_SKY_Q,
              STRING_MANAGE_YOUR_ACCOUNT,
              STRING_FIX_A_PROBLEM,
              STRING_BILLS_AND_PAYMENTS,
@@ -92,4 +87,3 @@ def load_fuzzy_set():
              STRING_LOADING,
              STRING_NEXT_GENERATION,
              STRING_YOUR_LOCAL_WEATHER]
-    return lines

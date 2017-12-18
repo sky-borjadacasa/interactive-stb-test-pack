@@ -6,8 +6,8 @@ Test cases for MySky
 
 import time
 from time import sleep
-import cv2
 import datetime
+import cv2
 import stbt
 from stbt import match
 import sky_plus_utils

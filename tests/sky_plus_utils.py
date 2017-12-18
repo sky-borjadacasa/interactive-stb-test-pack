@@ -6,6 +6,7 @@ Library with utilities for navigating SkyPlusHD box menus
 
 import time
 import mysky_constants
+from mysky_constants import FUZZY_SET
 import cv2
 import numpy as np
 from scipy.stats import itemfreq
@@ -132,6 +133,69 @@ def is_color_in_palette(palette, color_frequency, color_to_find):
             return True
     return False
 
+def find_text(image, region, fuzzy=True, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST):
+    """Read the text in the given region
+
+    Args:
+        image (stbt.Frame): Frame to search
+        region (stbt.Region): Region of the image to search defined by the top-left and bottom-right coordinates
+        fuzzy (boolean): Use fuzzy matching based on a dictionary
+        char_whitelist (str): String with the list of chars to look for
+
+    Returns:
+        Text of the given item
+    """
+    cropped_image = crop_image(image, region)
+    cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
+
+    text = ''
+    ocr_options = {'tessedit_char_whitelist': char_whitelist}
+    text = stbt.ocr(region=region, tesseract_config=ocr_options).strip().encode('utf-8')
+    debug('Text found: [{0}] in region {1}'.format(text, region))
+    if text and fuzzy:
+        text = fuzzy_match(text)
+    debug('Text matched: [{0}] in region {1}'.format(text, region))
+    if IMAGE_DEBUG_MODE:
+        cv2.imwrite('finding_text_{0}_{1}.jpg'.format(text, time.time()), crop_image(image, region))
+
+    return text
+
+def match_color(image, region, color):
+    """Tell if the region dominant color matches (aprox.) the given color
+
+    Args:
+        region (stbt.Region): Region of the image to search defined by the top-left and bottom-right coordinates
+        color (numpy.ndarray): Color to match in RGB format
+
+    Returns:
+        True if if the dominant color matches the given color
+    """
+    palette, color_frequency = get_palette(image, region)
+    debug('Palette: {0}'.format(palette))
+    debug('Color frequency: {0}'.format(color_frequency))
+    selected = is_color_in_palette(palette, color_frequency, color)
+
+    # if IMAGE_DEBUG_MODE:
+    #     cv2.imwrite('matching_color_{0}.jpg'.format(time.time()), crop_image(image, region))
+
+    debug('Color matched: {0}, {1}'.format(selected, color))
+
+    return selected
+
+def fuzzy_match(text):
+    """Get the text fuzzy matched against our dictionary
+
+    Args:
+        text (str): Text to match
+
+    Returns:
+        Matched text
+    """
+    matches = process.extract(text, FUZZY_SET, limit=3)
+    debug('Matches for "{0}":\n{1}'.format(text, matches))
+    # We get directly the most likely match
+    return matches[0][0]
+
 def press_digits(digits):
     """Press a sequence of digits
 
@@ -155,71 +219,3 @@ def open_secret_scene():
     """Open secret scene menu
     """
     press_digits('062840')
-
-class SkyPlusTestUtils(object):
-    """Class that contains the logic to analyse the contents of the MySky menu"""
-
-    def __init__(self, image):
-        self.fuzzy_set = mysky_constants.load_fuzzy_set()
-        self.image = image
-
-    def find_text(self, region, fuzzy=True, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST):
-        """Read the text in the given region
-
-        Args:
-            region (stbt.Region): Region of the image to search defined by the top-left and bottom-right coordinates
-
-        Returns:
-            Text of the given item
-        """
-        cropped_image = crop_image(self.image, region)
-        cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
-
-        text = ''
-        ocr_options = {'tessedit_char_whitelist': char_whitelist}
-        text = stbt.ocr(region=region, tesseract_config=ocr_options).strip().encode('utf-8')
-        debug('Text found: [{0}] in region {1}'.format(text, region))
-        if text and fuzzy:
-            text = self.fuzzy_match(text)
-        debug('Text matched: [{0}] in region {1}'.format(text, region))
-        if IMAGE_DEBUG_MODE:
-            cv2.imwrite('finding_text_{0}_{1}.jpg'.format(text, time.time()), crop_image(self.image, region))
-
-        return text
-
-    def match_color(self, region, color):
-        """Tell if the region dominant color matches (aprox.) the given color
-
-        Args:
-            region (stbt.Region): Region of the image to search defined by the top-left and bottom-right coordinates
-            color (numpy.ndarray): Color to match in RGB format
-
-        Returns:
-            True if if the dominant color matches the given color
-        """
-        palette, color_frequency = get_palette(self.image, region)
-        debug('Palette: {0}'.format(palette))
-        debug('Color frequency: {0}'.format(color_frequency))
-        selected = is_color_in_palette(palette, color_frequency, color)
-
-        # if IMAGE_DEBUG_MODE:
-        #     cv2.imwrite('matching_color_{0}.jpg'.format(time.time()), crop_image(self.image, region))
-
-        debug('Color matched: {0}, {1}'.format(selected, color))
-
-        return selected
-
-
-    def fuzzy_match(self, text):
-        """Get the text fuzzy matched against our dictionary
-
-        Args:
-            text (str): Text to match
-
-        Returns:
-            Matched text
-        """
-        matches = process.extract(text, self.fuzzy_set, limit=3)
-        debug('Matches for "{0}":\n{1}'.format(text, matches))
-        # We get directly the most likely match
-        return matches[0][0]
