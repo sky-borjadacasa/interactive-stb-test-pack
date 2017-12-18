@@ -140,11 +140,7 @@ class DeveloperMenuMenu(FrameObject):
             text = sky_plus_utils.find_text(self._frame, mysky_constants.SS_DEV_MODE_TITLE_REGION)
             debug('[FIND VCN] Text found: {0}'.format(text))
             title_visible = (text == mysky_constants.STRING_SS_VCN)
-
-            subtext = sky_plus_utils.find_text(self._frame, mysky_constants.SS_DEV_MODE_SUBTITLE_REGION)
-            debug('[FIND Developer mode] Text found: {0}'.format(subtext))
-            sub_title_visible = (subtext == mysky_constants.STRING_SS_DEVELOPER_MODE)
-            return title_visible and sub_title_visible
+            return title_visible
         return False
 
     @property
