@@ -52,7 +52,7 @@ def open_and_basic_check_mysky():
     menu = stbt.wait_until(MySkyMainMenu, timeout_secs=MY_SKY_OPEN_TIMEOUT)
     assert menu.is_visible, '[MySky] Main menu is not visible'
 
-    greeting = menu.title
+    greeting = menu.greeting
     assert greeting == greeting_string(), '[MySky] Greeting is [{0}], but should be [{1}]'.format(greeting, greeting_string())
 
     menu_items = menu.menu_items

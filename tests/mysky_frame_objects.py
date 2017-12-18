@@ -5,7 +5,7 @@ Test cases for MySky
 """
 
 import stbt
-from stbt import FrameObject, match, Region
+from stbt import FrameObject, Region
 import sky_plus_utils
 from sky_plus_utils import debug
 import mysky_constants
@@ -55,26 +55,27 @@ class MySkyMainMenu(FrameObject):
         return False
 
     @property
-    def title(self):
+    def greeting(self):
+        """Get greeting from top of the menu"""
         text = sky_plus_utils.find_text(self._frame, mysky_constants.MY_SKY_GREETING_REGION)
         return text
 
     @property
     def message(self):
+        """Get selected item text"""
         selected_list = [x for x in self.menu_items if x.selected]
         return selected_list[0].text
 
-    @property
-    def _info(self):
-        return match(mysky_constants.SKY_TOP_LOGO, frame=self._frame)
-
     def weather_loaded(self):
+        """Check if weather section is loaded"""
+        # TODO: Check icons and temperature
         string = sky_plus_utils.find_text(self._frame, mysky_constants.WEATHER_CITY_NAME_REGION)
         assert string == mysky_constants.STRING_YOUR_LOCAL_WEATHER, \
             '[Weather] Message should be [{0}], but is [{1}]'.format(mysky_constants.STRING_YOUR_LOCAL_WEATHER, string)
 
     @property
     def menu_items(self):
+        """Get menu items list"""
         items = []
         item = MySkyMenuItem(self._frame, mysky_constants.MAIN_MENU_ITEM_1_REGION)
         items.append(item)
