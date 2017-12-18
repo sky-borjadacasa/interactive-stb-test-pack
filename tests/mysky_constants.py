@@ -35,7 +35,7 @@ SECRET_SCENE_TITLE_REGION = Region(970, 120, width=230, height=40)
 SS_MAIN_ITEM_1_REGION = Region(940, 425, width=280, height=40)
 SS_MAIN_ITEM_2_REGION = Region(940, 475, width=280, height=40)
 SS_DEV_MODE_TITLE_REGION = Region(1050, 125, width=60, height=40)
-SS_DEV_MODE_SUBTITLE_REGION = Region(985, 235, width=195, height=40)
+SS_DEV_MODE_SUBTITLE_REGION = Region(980, 235, width=205, height=40)
 
 # Images:
 SKY_TOP_LOGO = 'images/SkyTopLogo.png'
