@@ -91,3 +91,46 @@ class MySkyMainMenu(FrameObject):
             item.selected = sky_plus_utils.match_color(self._frame, text_region, mysky_constants.YELLOW_BACKGROUND_RGB)
 
         return items
+
+class SecretSceneMainMenu(FrameObject):
+    """FrameObject class to analyze MySky main menu."""
+
+    @property
+    def is_visible(self):
+        # pylint: disable=stbt-frame-object-missing-frame
+        logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=mysky_constants.MY_SKY_REGION)
+        if logo_visible:
+            text = sky_plus_utils.find_text(self._frame, mysky_constants.SECRET_SCENE_TITLE_REGION)
+            debug('[FIND LOADING] Text found: {0}'.format(text))
+            title_visible = (text == mysky_constants.STRING_INTERACTIVE_MY_SKY)
+            return title_visible
+        return False
+
+    @property
+    def title(self):
+        """Get title from top of the menu"""
+        text = sky_plus_utils.find_text(self._frame, mysky_constants.SECRET_SCENE_TITLE_REGION)
+        return text
+
+    @property
+    def message(self):
+        """Get selected item text"""
+        selected_list = [x for x in self.menu_items if x.selected]
+        return selected_list[0].text
+
+    @property
+    def menu_items(self):
+        """Get menu items list"""
+        items = []
+        item = MySkyMenuItem(self._frame, mysky_constants.SS_MAIN_ITEM_1_REGION)
+        items.append(item)
+        item = MySkyMenuItem(self._frame, mysky_constants.SS_MAIN_ITEM_2_REGION)
+        items.append(item)
+
+        for item in items:
+            text_region = get_text_region(item.region)
+            debug('REGION: {0}'.format(text_region))
+            item.text = sky_plus_utils.find_text(self._frame, text_region)
+            item.selected = sky_plus_utils.match_color(self._frame, text_region, mysky_constants.YELLOW_BACKGROUND_RGB)
+
+        return items

@@ -31,6 +31,10 @@ WEATHER_TEMP_MIN_REGION = Region(1180, 660, width=55, height=30)
 SKY_Q_NEXT_GENERATION = Region(940, 115, width=285, height=30)
 SKY_Q_LONG_TEXT = Region(900, 435, width=350, height=140)
 
+SECRET_SCENE_TITLE_REGION = Region(970, 120, width=230, height=40)
+SS_MAIN_ITEM_1_REGION = Region(940, 425, width=280, height=40)
+SS_MAIN_ITEM_2_REGION = Region(940, 475, width=280, height=40)
+
 # Images:
 SKY_TOP_LOGO = 'images/SkyTopLogo.png'
 MENU_FIND_OUT_MORE = 'images/SkyQ.png'
@@ -68,6 +72,9 @@ STRING_FIND_OUT_MORE = 'Find out more'
 STRING_LOADING = 'Loading...'
 STRING_NEXT_GENERATION = 'The next generation box'
 STRING_YOUR_LOCAL_WEATHER = 'Your local weather'
+STRING_INTERACTIVE_MY_SKY = 'Interactive My Sky'
+STRING_SS_CLOSE_POPUP = 'Close this popup'
+STRING_SS_DEVELOPER_MODE = 'Developer mode'
 
 # Fuzzy set:
 FUZZY_SET = [STRING_SKY_Q,
@@ -86,4 +93,7 @@ FUZZY_SET = [STRING_SKY_Q,
              STRING_FIND_OUT_MORE,
              STRING_LOADING,
              STRING_NEXT_GENERATION,
-             STRING_YOUR_LOCAL_WEATHER]
+             STRING_YOUR_LOCAL_WEATHER,
+             STRING_INTERACTIVE_MY_SKY,
+             STRING_SS_CLOSE_POPUP,
+             STRING_SS_DEVELOPER_MODE]

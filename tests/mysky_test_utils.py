@@ -68,7 +68,7 @@ def open_and_check_mysky():
     menu = open_and_basic_check_mysky()
     menu_items = menu.menu_items
 
-    # We can not know for sure which image to expect here
+    # TODO: We can not know for sure which image to expect here
     # item = [x for x in menu_items if x.text == mysky_constants.STRING_FIND_OUT_MORE][0]
     # match_result = match(mysky_constants.MENU_FIND_OUT_MORE, frame=menu._frame, region=item.region)
     # debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
@@ -102,11 +102,7 @@ def button_exits_test(button):
         '[MySky] MySky menu did not close'
 
 def set_up_backend(backend_env):
-    """Get the text fuzzy matched against our dictionary
-
-    Args:
-        text (str): Text to match
-
-    Returns:
-        Matched text
-    """
+    """Set up backend environment"""
+    sky_plus_utils.go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
+    open_and_basic_check_mysky()
+    sky_plus_utils.open_secret_scene()
