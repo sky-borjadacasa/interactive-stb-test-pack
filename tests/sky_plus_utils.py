@@ -156,7 +156,7 @@ def find_text(image, region, fuzzy=True, char_whitelist=mysky_constants.OCR_CHAR
         text = fuzzy_match(text)
     debug('Text matched: [{0}] in region {1}'.format(text, region))
     if IMAGE_DEBUG_MODE:
-        cv2.imwrite('finding_text_{0}_{1}.jpg'.format(text, time.time()), crop_image(image, region))
+        cv2.imwrite('finding_text_{0}_{1}.jpg'.format(time.time(), text), crop_image(image, region))
 
     return text
 

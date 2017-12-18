@@ -34,16 +34,14 @@ SKY_Q_LONG_TEXT = Region(900, 435, width=350, height=140)
 SECRET_SCENE_TITLE_REGION = Region(970, 120, width=230, height=40)
 SS_MAIN_ITEM_1_REGION = Region(940, 425, width=280, height=40)
 SS_MAIN_ITEM_2_REGION = Region(940, 475, width=280, height=40)
+SS_DEV_MODE_TITLE_REGION = Region(1050, 125, width=60, height=40)
+SS_DEV_MODE_SUBTITLE_REGION = Region(985, 235, width=95, height=40)
 
 # Images:
 SKY_TOP_LOGO = 'images/SkyTopLogo.png'
 MENU_FIND_OUT_MORE = 'images/SkyQ.png'
 MENU_MANAGE_YOUR_ACCOUNT = 'images/ManageYourAccount.png'
 MENU_FIX_A_PROBLEM = 'images/FixAProblem.png'
-
-# Text recognition:
-OCR_CHAR_WHITELIST = string.ascii_letters + ' ' + string.digits
-OCR_CHAR_WHITELIST_TEMP = string.digits + '-ºc'
 
 # Colors:
 YELLOW_BACKGROUND_RGB = np.array([235, 189, 0])
@@ -54,8 +52,17 @@ COLOR_LUMINANCE_THRESHOLD = 10
 COLOR_DISTANCE_THRESHOLD = 25
 PALETTE_SIZE = 2
 
+# Secret scene environment codes:
+SS_ENV_CODE_DEV = '0'
+SS_ENV_CODE_SIT = '1'
+SS_ENV_CODE_STAGE = '2'
+SS_ENV_CODE_PROD = '3'
+
+# Text recognition:
+OCR_CHAR_WHITELIST = string.ascii_letters + ' ' + string.digits
+OCR_CHAR_WHITELIST_TEMP = string.digits + '-ºc'
+
 # Strings:
-STRING_SKY_Q = 'Sky Q'
 STRING_MANAGE_YOUR_ACCOUNT = 'Manage your account'
 STRING_FIX_A_PROBLEM = 'Fix a problem'
 STRING_BILLS_AND_PAYMENTS = 'Bills and payments'
@@ -75,10 +82,10 @@ STRING_YOUR_LOCAL_WEATHER = 'Your local weather'
 STRING_INTERACTIVE_MY_SKY = 'Interactive My Sky'
 STRING_SS_CLOSE_POPUP = 'Close this popup'
 STRING_SS_DEVELOPER_MODE = 'Developer mode'
+STRING_SS_VCN = 'VCN'
 
 # Fuzzy set:
-FUZZY_SET = [STRING_SKY_Q,
-             STRING_MANAGE_YOUR_ACCOUNT,
+FUZZY_SET = [STRING_MANAGE_YOUR_ACCOUNT,
              STRING_FIX_A_PROBLEM,
              STRING_BILLS_AND_PAYMENTS,
              STRING_PACKAGE_AND_SETTINGS,
@@ -96,4 +103,5 @@ FUZZY_SET = [STRING_SKY_Q,
              STRING_YOUR_LOCAL_WEATHER,
              STRING_INTERACTIVE_MY_SKY,
              STRING_SS_CLOSE_POPUP,
-             STRING_SS_DEVELOPER_MODE]
+             STRING_SS_DEVELOPER_MODE,
+             STRING_SS_VCN]

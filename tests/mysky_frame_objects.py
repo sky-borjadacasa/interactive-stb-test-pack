@@ -87,7 +87,7 @@ class MySkyMainMenu(FrameObject):
         return items
 
 class SecretSceneMainMenu(FrameObject):
-    """FrameObject class to analyze MySky main menu."""
+    """FrameObject class to analyze Secret Scene main menu."""
 
     @property
     def is_visible(self):
@@ -128,3 +128,27 @@ class SecretSceneMainMenu(FrameObject):
             item.selected = sky_plus_utils.match_color(self._frame, text_region, mysky_constants.YELLOW_BACKGROUND_RGB)
 
         return items
+
+class DeveloperMenuMenu(FrameObject):
+    """FrameObject class to analyze Secret Scene Developer mode menu."""
+
+    @property
+    def is_visible(self):
+        # pylint: disable=stbt-frame-object-missing-frame
+        logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=mysky_constants.MY_SKY_REGION)
+        if logo_visible:
+            text = sky_plus_utils.find_text(self._frame, mysky_constants.SS_DEV_MODE_TITLE_REGION)
+            debug('[FIND LOADING] Text found: {0}'.format(text))
+            title_visible = (text == mysky_constants.STRING_SS_VCN)
+
+            subtext = sky_plus_utils.find_text(self._frame, mysky_constants.SS_DEV_MODE_SUBTITLE_REGION)
+            debug('[FIND LOADING] Text found: {0}'.format(subtext))
+            sub_title_visible = (subtext == mysky_constants.STRING_SS_DEVELOPER_MODE)
+            return title_visible and sub_title_visible
+        return False
+
+    @property
+    def title(self):
+        """Get title from top of the menu"""
+        text = sky_plus_utils.find_text(self._frame, mysky_constants.SS_DEV_MODE_TITLE_REGION)
+        return text

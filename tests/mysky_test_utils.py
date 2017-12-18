@@ -100,9 +100,3 @@ def button_exits_test(button):
     stbt.press(button)
     assert stbt.wait_until(lambda: not MySkyMainMenu().is_visible), \
         '[MySky] MySky menu did not close'
-
-def set_up_backend(backend_env):
-    """Set up backend environment"""
-    sky_plus_utils.go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
-    open_and_basic_check_mysky()
-    sky_plus_utils.open_secret_scene()
