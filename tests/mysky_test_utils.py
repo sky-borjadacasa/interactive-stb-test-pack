@@ -46,6 +46,10 @@ def open_and_basic_check_mysky():
     """Open the MySky app and make basic checks"""
     stbt.press('KEY_YELLOW')
     menu = stbt.wait_until(MySkyMainMenu, timeout_secs=MY_SKY_OPEN_TIMEOUT)
+    # TODO: Check if we can improve this
+    # This is a hack because of issue #INTCORE-892
+    sleep(0.2)
+    menu = stbt.wait_until(MySkyMainMenu, timeout_secs=MY_SKY_OPEN_TIMEOUT)
     assert menu.is_visible, '[MySky] Main menu is not visible'
 
     greeting = menu.title
