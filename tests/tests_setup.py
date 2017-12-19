@@ -3,6 +3,7 @@
 """Test cases for MySky
 """
 
+import time
 from time import sleep
 import cv2
 import stbt
