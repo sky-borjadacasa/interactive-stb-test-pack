@@ -32,7 +32,9 @@ def detect_moving_balls(frame):
         True if moving balls are found, False otherwise
     """
     for i in range(1, 4):
-        moving_balls = stbt.match(mysky_constants.MOVING_BALLS.format(i), region=mysky_constants.MY_SKY_MOVING_BALLS_REGION, frame=frame)
+        file = mysky_constants.MOVING_BALLS.format(i)
+        debug('[MOVING BALLS] Using file: {0}'.format(file))
+        moving_balls = stbt.match(file, region=mysky_constants.MY_SKY_MOVING_BALLS_REGION, frame=frame)
         if moving_balls:
             return True
     return False
