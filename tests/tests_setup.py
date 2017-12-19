@@ -22,6 +22,11 @@ def open_developer_mode(env_code):
     try:
         sky_plus_utils.go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
         mysky_test_utils.open_and_basic_check_mysky()
+        # XXX - Just for testing:
+        for i in range(0, 25):
+            frame = stbt.get_frame()
+            cv2.imwrite('moving_balls_{0}.jpg'.format(time.time()), frame)
+        # XXX
         sky_plus_utils.open_secret_scene()
 
         # pylint: disable=stbt-unused-return-value
