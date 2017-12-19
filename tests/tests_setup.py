@@ -6,7 +6,7 @@
 from time import sleep
 import stbt
 import sky_plus_utils
-from mysky_frame_objects import SecretSceneMainMenu, DeveloperMenuMenu, detect_moving_balls
+from mysky_frame_objects import SecretSceneMainMenu, DeveloperMenuMenu
 import mysky_constants
 import mysky_test_utils
 
@@ -22,10 +22,7 @@ def open_developer_mode(env_code):
     try:
         sky_plus_utils.go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
         mysky_test_utils.open_and_basic_check_mysky()
-        # XXX
-        assert stbt.wait_until(lambda: not detect_moving_balls(stbt.get_frame())), \
-            '[MOVING BALLS] Moving balls didn\'t disappear'
-        # XXX
+        sleep(0.5)
         sky_plus_utils.open_secret_scene()
 
         # pylint: disable=stbt-unused-return-value
