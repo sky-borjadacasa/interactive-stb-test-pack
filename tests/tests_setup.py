@@ -4,6 +4,7 @@
 """
 
 from time import sleep
+import cv2
 import stbt
 import sky_plus_utils
 from mysky_frame_objects import SecretSceneMainMenu, DeveloperMenuMenu
