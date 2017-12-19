@@ -22,6 +22,21 @@ def get_text_region(region):
     bottom = Region(region.x + 10, region.bottom - 45, width=region.width - 20, bottom=region.bottom - 5)
     return bottom
 
+def detect_moving_balls(frame):
+    """Detect moving balls in the given frame
+
+    Args:
+        frame (stbt.Frame): Frame to search
+
+    Returns:
+        True if moving balls are found, False otherwise
+    """
+    for i in range(1, 4):
+        moving_balls = stbt.match(mysky_constants.MOVING_BALLS.format(i), region=mysky_constants.MY_SKY_MOVING_BALLS_REGION, frame=frame)
+        if moving_balls:
+            return True
+    return False
+
 # pylint: disable=too-few-public-methods
 class MySkyMenuItem(object):
     """Class to store the attributes of a MySky menu item"""

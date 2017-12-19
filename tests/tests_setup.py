@@ -3,12 +3,10 @@
 """Test cases for MySky
 """
 
-import time
 from time import sleep
-import cv2
 import stbt
 import sky_plus_utils
-from mysky_frame_objects import SecretSceneMainMenu, DeveloperMenuMenu
+from mysky_frame_objects import SecretSceneMainMenu, DeveloperMenuMenu, detect_moving_balls
 import mysky_constants
 import mysky_test_utils
 
@@ -24,10 +22,9 @@ def open_developer_mode(env_code):
     try:
         sky_plus_utils.go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
         mysky_test_utils.open_and_basic_check_mysky()
-        # XXX - Just for testing:
-        for i in range(0, 25):
-            frame = stbt.get_frame()
-            cv2.imwrite('moving_balls_{0}.jpg'.format(time.time()), frame)
+        # XXX
+        assert stbt.wait_until(lambda: not detect_moving_balls(stbt.Frame)), \
+            '[MOVING BALLS] Moving balls didn\'t disappear'
         # XXX
         sky_plus_utils.open_secret_scene()
 

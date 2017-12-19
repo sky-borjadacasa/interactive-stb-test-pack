@@ -16,6 +16,7 @@ CHANNEL_SKY_ONE = '106'
 
 # Regions:
 MY_SKY_REGION = Region(880, 0, width=400, height=720) # The 400 pixels to the right and the whole height of the screen
+MY_SKY_MOVING_BALLS_REGION = Region(1170, 0, width=110, height=75)
 MY_SKY_GREETING_REGION = Region(930, 90, width=300, height=45)
 MAIN_MENU_LOADING_REGION = Region(1015, 280, width=140, height=50)
 MAIN_MENU_ITEM_1_REGION = Region(930, 135, width=300, height=150)
@@ -42,6 +43,8 @@ SKY_TOP_LOGO = 'images/SkyTopLogo.png'
 MENU_FIND_OUT_MORE = 'images/SkyQ.png'
 MENU_MANAGE_YOUR_ACCOUNT = 'images/ManageYourAccount.png'
 MENU_FIX_A_PROBLEM = 'images/FixAProblem.png'
+# pylint:disable=stbt-missing-image
+MOVING_BALLS = 'images/MovingBalls{0}.png'
 
 # Colors:
 YELLOW_BACKGROUND_RGB = np.array([235, 189, 0])
