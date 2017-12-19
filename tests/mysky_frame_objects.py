@@ -4,6 +4,8 @@
 Test cases for MySky
 """
 
+import time
+import cv2
 import stbt
 from stbt import FrameObject, Region
 import sky_plus_utils
@@ -22,6 +24,7 @@ def get_text_region(region):
     bottom = Region(region.x + 10, region.bottom - 45, width=region.width - 20, bottom=region.bottom - 5)
     return bottom
 
+# TODO: Does this belong here?
 def detect_moving_balls(frame):
     """Detect moving balls in the given frame
 
@@ -31,11 +34,12 @@ def detect_moving_balls(frame):
     Returns:
         True if moving balls are found, False otherwise
     """
-    for i in range(1, 4):
-        file = mysky_constants.MOVING_BALLS.format(i)
-        debug('[MOVING BALLS] Using file: {0}({1}) with frame of type {2}'.format(file, type(file), type(frame)))
-        #moving_balls = stbt.match(file, frame=frame, region=mysky_constants.MY_SKY_MOVING_BALLS_REGION)
-        moving_balls = stbt.match(file, frame=frame)
+    for i in range(1, 5):
+        filename = mysky_constants.MOVING_BALLS.format(i)
+        debug('[MOVING BALLS] Using file: {0}'.format(filename))
+        if sky_plus_utils.IMAGE_DEBUG_MODE:
+            cv2.imwrite('moving_balls_frame_{0}.jpg'.format(time.time()), sky_plus_utils.crop_image(frame, mysky_constants.MY_SKY_MOVING_BALLS_REGION))
+        moving_balls = stbt.match(filename, frame=frame, region=mysky_constants.MY_SKY_MOVING_BALLS_REGION)
         if moving_balls:
             return True
     return False
