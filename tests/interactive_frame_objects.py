@@ -59,10 +59,6 @@ class InteractiveMainMenu(FrameObject):
     @property
     def menu_items(self):
         """Get menu items list"""
-        # TODO: Delete this:
-        if IMAGE_DEBUG_MODE:
-            cv2.imwrite('FULL_FRAME_{0}.jpg'.format(time.time()), self._frame)
-        # XXX
         items = []
         for region in interactive_constants.MAIN_MENU_ITEM_REGIONS:
             item = MenuItem(self._frame, region)
