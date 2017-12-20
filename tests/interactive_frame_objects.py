@@ -58,7 +58,9 @@ class InteractiveMainMenu(FrameObject):
     def menu_items(self):
         """Get menu items list"""
         items = []
-        # item = MenuItem(self._frame, interactive_constants.MAIN_MENU_ITEM_1_REGION)
-        # items.append(item)
+        for i in range(0, 9):
+            region = interactive_constants.MAIN_MENU_ITEM_REGIONS[i]
+            item = MenuItem(self._frame, region)
+            items.append(item)
 
         return items
