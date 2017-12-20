@@ -4,10 +4,12 @@
 Test cases for Interactive menu
 """
 
+import time
+import cv2
 import stbt
 from stbt import FrameObject, Region
 import sky_plus_utils
-from sky_plus_utils import debug, find_text, match_color
+from sky_plus_utils import debug, find_text, match_color, IMAGE_DEBUG_MODE
 import interactive_constants
 import sky_plus_strings
 
@@ -57,9 +59,12 @@ class InteractiveMainMenu(FrameObject):
     @property
     def menu_items(self):
         """Get menu items list"""
+        # TODO: Delete this:
+        if IMAGE_DEBUG_MODE:
+            cv2.imwrite('FULL_FRAME_{0}.jpg'.format(time.time()), self._frame)
+        # XXX
         items = []
-        for i in range(0, 9):
-            region = interactive_constants.MAIN_MENU_ITEM_REGIONS[i]
+        for region in interactive_constants.MAIN_MENU_ITEM_REGIONS:
             item = MenuItem(self._frame, region)
             items.append(item)
 
