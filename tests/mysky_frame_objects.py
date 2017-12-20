@@ -11,6 +11,8 @@ from stbt import FrameObject, Region
 import sky_plus_utils
 from sky_plus_utils import debug, IMAGE_DEBUG_MODE
 import mysky_constants
+import interactive_constants
+import sky_plus_strings
 
 def get_text_region(region):
     """Get region of item where text should be located
@@ -58,7 +60,7 @@ class MySkyMenuItem(object):
         text_region = get_text_region(region)
         debug('REGION: {0}'.format(text_region))
         self.text = sky_plus_utils.find_text(image, text_region)
-        self.selected = sky_plus_utils.match_color(image, text_region, mysky_constants.YELLOW_BACKGROUND_RGB)
+        self.selected = sky_plus_utils.match_color(image, text_region, interactive_constants.YELLOW_BACKGROUND_RGB)
 
 
 class MySkyMainMenu(FrameObject):
@@ -71,7 +73,7 @@ class MySkyMainMenu(FrameObject):
         if logo_visible:
             text = sky_plus_utils.find_text(self._frame, mysky_constants.MAIN_MENU_LOADING_REGION)
             debug('[FIND LOADING] Text found: {0}'.format(text))
-            loading_visible = (text == mysky_constants.STRING_LOADING)
+            loading_visible = (text == sky_plus_strings.LOADING)
             moving_balls = detect_moving_balls(self._frame)
             return not loading_visible and not moving_balls
         return False
@@ -92,8 +94,8 @@ class MySkyMainMenu(FrameObject):
         """Check if weather section is loaded"""
         # TODO: Check icons and temperature
         string = sky_plus_utils.find_text(self._frame, mysky_constants.WEATHER_CITY_NAME_REGION)
-        assert string == mysky_constants.STRING_YOUR_LOCAL_WEATHER, \
-            '[Weather] Message should be [{0}], but is [{1}]'.format(mysky_constants.STRING_YOUR_LOCAL_WEATHER, string)
+        assert string == sky_plus_strings.YOUR_LOCAL_WEATHER, \
+            '[Weather] Message should be [{0}], but is [{1}]'.format(sky_plus_strings.YOUR_LOCAL_WEATHER, string)
 
     @property
     def menu_items(self):
@@ -118,7 +120,7 @@ class SecretSceneMainMenu(FrameObject):
         if logo_visible:
             text = sky_plus_utils.find_text(self._frame, mysky_constants.SECRET_SCENE_TITLE_REGION)
             debug('[FIND Interactive My Sky] Text found: {0}'.format(text))
-            title_visible = (text == mysky_constants.STRING_INTERACTIVE_MY_SKY)
+            title_visible = (text == sky_plus_strings.INTERACTIVE_MY_SKY)
             return title_visible
         return False
 
@@ -147,7 +149,7 @@ class SecretSceneMainMenu(FrameObject):
             text_region = get_text_region(item.region)
             debug('REGION: {0}'.format(text_region))
             item.text = sky_plus_utils.find_text(self._frame, text_region)
-            item.selected = sky_plus_utils.match_color(self._frame, text_region, mysky_constants.YELLOW_BACKGROUND_RGB)
+            item.selected = sky_plus_utils.match_color(self._frame, text_region, interactive_constants.YELLOW_BACKGROUND_RGB)
 
         return items
 
@@ -161,7 +163,7 @@ class DeveloperMenuMenu(FrameObject):
         if logo_visible:
             text = sky_plus_utils.find_text(self._frame, mysky_constants.SS_DEV_MODE_TITLE_REGION)
             debug('[FIND VCN] Text found: {0}'.format(text))
-            title_visible = (text == mysky_constants.STRING_SS_VCN)
+            title_visible = (text == sky_plus_strings.SS_VCN)
             return title_visible
         return False
 

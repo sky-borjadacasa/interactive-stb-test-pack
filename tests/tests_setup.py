@@ -6,8 +6,10 @@
 from time import sleep
 import stbt
 import sky_plus_utils
+from sky_plus_utils import clear_test
 from mysky_frame_objects import SecretSceneMainMenu, DeveloperMenuMenu
-import mysky_constants
+import interactive_constants
+import sky_plus_strings
 import mysky_test_utils
 
 # Secret scene environment codes:
@@ -18,9 +20,9 @@ ENV_CODE_PROD = 'KEY_3'
 
 def open_developer_mode(env_code):
     """Open Developer mode"""
-    mysky_test_utils.clear_test()
+    clear_test()
     try:
-        sky_plus_utils.go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
+        sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
         mysky_test_utils.open_and_basic_check_mysky()
         sleep(0.5)
         sky_plus_utils.open_secret_scene()
@@ -28,16 +30,16 @@ def open_developer_mode(env_code):
         # pylint: disable=stbt-unused-return-value
         stbt.wait_until(SecretSceneMainMenu)
         stbt.press('KEY_DOWN')
-        assert stbt.wait_until(lambda: SecretSceneMainMenu().message == mysky_constants.STRING_SS_DEVELOPER_MODE), \
-            '[Secret Scene] Selected item is not [{0}]'.format(mysky_constants.STRING_SS_DEVELOPER_MODE)
+        assert stbt.wait_until(lambda: SecretSceneMainMenu().message == sky_plus_strings.SS_DEVELOPER_MODE), \
+            '[Secret Scene] Selected item is not [{0}]'.format(sky_plus_strings.SS_DEVELOPER_MODE)
         stbt.press('KEY_SELECT')
         dev_mode_menu = stbt.wait_until(DeveloperMenuMenu)
-        assert dev_mode_menu.title == mysky_constants.STRING_SS_VCN, \
-            '[Developer Mode] Selected item is not [{0}]'.format(mysky_constants.STRING_SS_VCN)
+        assert dev_mode_menu.title == sky_plus_strings.SS_VCN, \
+            '[Developer Mode] Selected item is not [{0}]'.format(sky_plus_strings.SS_VCN)
         stbt.press(env_code)
         sleep(2)
     finally:
-        mysky_test_utils.clear_test()
+        clear_test()
 
 def test_setup_backend_dev():
     """Set up backend environment"""

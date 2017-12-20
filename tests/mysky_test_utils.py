@@ -15,12 +15,8 @@ from sky_plus_utils import debug
 from mysky_frame_objects import MySkyMainMenu
 import mysky_constants
 from mysky_constants import MY_SKY_OPEN_TIMEOUT
-
-def clear_test():
-    """Close any app"""
-    sleep(2)
-    stbt.press('KEY_SKY')
-    sleep(3)
+import interactive_constants
+import sky_plus_strings
 
 def greeting_string():
     """Get greeting string"""
@@ -36,11 +32,11 @@ def greeting_string():
         second=six_pm.time().second, microsecond=0)
 
     if now < mid_day:
-        return mysky_constants.STRING_GOOD_MORNING
+        return sky_plus_strings.GOOD_MORNING
     elif now < six_pm:
-        return mysky_constants.STRING_GOOD_AFTERNOON
+        return sky_plus_strings.GOOD_AFTERNOON
     else:
-        return mysky_constants.STRING_GOOD_EVENING
+        return sky_plus_strings.GOOD_EVENING
 
 def open_and_basic_check_mysky():
     """Open the MySky app and make basic checks"""
@@ -69,31 +65,31 @@ def open_and_check_mysky():
     menu_items = menu.menu_items
 
     # TODO: We can not know for sure which image to expect here
-    # item = [x for x in menu_items if x.text == mysky_constants.STRING_FIND_OUT_MORE][0]
+    # item = [x for x in menu_items if x.text == sky_plus_strings.FIND_OUT_MORE][0]
     # match_result = match(mysky_constants.MENU_FIND_OUT_MORE, frame=menu._frame, region=item.region)
     # debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
-    # assert match_result.match, '[MySky] Could not find {0} menu'.format(mysky_constants.STRING_FIND_OUT_MORE)
-    item = [x for x in menu_items if x.text == mysky_constants.STRING_MANAGE_YOUR_ACCOUNT][0]
+    # assert match_result.match, '[MySky] Could not find {0} menu'.format(sky_plus_strings.FIND_OUT_MORE)
+    item = [x for x in menu_items if x.text == sky_plus_strings.MANAGE_YOUR_ACCOUNT][0]
     match_result = match(mysky_constants.MENU_MANAGE_YOUR_ACCOUNT, frame=menu._frame, region=item.region)
     debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
     if sky_plus_utils.IMAGE_DEBUG_MODE:
         cv2.imwrite('matching_menu_{0}.jpg'.format(time.time()), sky_plus_utils.crop_image(menu._frame, item.region))
     assert match_result.match, '[MySky] Could not find {0} menu'.format(mysky_constants.MENU_MANAGE_YOUR_ACCOUNT)
-    item = [x for x in menu_items if x.text == mysky_constants.STRING_FIX_A_PROBLEM][0]
+    item = [x for x in menu_items if x.text == sky_plus_strings.FIX_A_PROBLEM][0]
     match_result = match(mysky_constants.MENU_FIX_A_PROBLEM, frame=menu._frame, region=item.region)
     debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
-    assert match_result.match, '[MySky] Could not find {0} menu'.format(mysky_constants.STRING_FIX_A_PROBLEM)
+    assert match_result.match, '[MySky] Could not find {0} menu'.format(sky_plus_strings.FIX_A_PROBLEM)
 
     message = menu.message
     debug('Item message: {0}'.format(message))
-    assert message == mysky_constants.STRING_FIND_OUT_MORE, \
-        '[MySky] Selected item should be [{0}], but is [{1}]'.format(mysky_constants.STRING_FIND_OUT_MORE, message)
+    assert message == sky_plus_strings.FIND_OUT_MORE, \
+        '[MySky] Selected item should be [{0}], but is [{1}]'.format(sky_plus_strings.FIND_OUT_MORE, message)
 
     return menu
 
 def button_exits_test(button):
     """Open MySky app and close it with the given button"""
-    sky_plus_utils.go_to_channel(mysky_constants.CHANNEL_SKY_ONE)
+    sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
     open_and_basic_check_mysky()
 
     # Press the button:

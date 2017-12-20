@@ -5,8 +5,10 @@ Library with utilities for navigating SkyPlusHD box menus
 """
 
 import time
-import mysky_constants
-from mysky_constants import FUZZY_SET
+from time import sleep
+import interactive_constants
+import sky_plus_strings
+from sky_plus_strings import FUZZY_SET
 import cv2
 import numpy as np
 from scipy.stats import itemfreq
@@ -88,7 +90,7 @@ def is_similar_color_rgb(color_a, color_b):
     """
     difference = abs(rgb_luminance(color_a) - rgb_luminance(color_b))
     distance = color_distance(color_a, color_b)
-    return difference < mysky_constants.COLOR_LUMINANCE_THRESHOLD and distance < mysky_constants.COLOR_DISTANCE_THRESHOLD
+    return difference < interactive_constants.COLOR_LUMINANCE_THRESHOLD and distance < interactive_constants.COLOR_DISTANCE_THRESHOLD
 
 def get_palette(image, region):
     """Get the dominant colors of a region
@@ -107,7 +109,7 @@ def get_palette(image, region):
 
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
     flags = cv2.KMEANS_RANDOM_CENTERS
-    _, labels, centroids = cv2.kmeans(pixels, K=mysky_constants.PALETTE_SIZE, bestLabels=None, criteria=criteria, attempts=10, flags=flags)
+    _, labels, centroids = cv2.kmeans(pixels, K=interactive_constants.PALETTE_SIZE, bestLabels=None, criteria=criteria, attempts=10, flags=flags)
 
     palette = np.uint8(centroids)
     color_frequency = itemfreq(labels)
@@ -133,7 +135,7 @@ def is_color_in_palette(palette, color_frequency, color_to_find):
             return True
     return False
 
-def find_text(image, region, fuzzy=True, char_whitelist=mysky_constants.OCR_CHAR_WHITELIST):
+def find_text(image, region, fuzzy=True, char_whitelist=sky_plus_strings.OCR_CHAR_WHITELIST):
     """Read the text in the given region
 
     Args:
@@ -195,6 +197,12 @@ def fuzzy_match(text):
     debug('Matches for "{0}":\n{1}'.format(text, matches))
     # We get directly the most likely match
     return matches[0][0]
+
+def clear_test():
+    """Close any app"""
+    sleep(2)
+    stbt.press('KEY_SKY')
+    sleep(3)
 
 def press_digits(digits):
     """Press a sequence of digits
