@@ -18,11 +18,11 @@ def test_smoke_open_my_messages():
     clear_test()
     try:
         sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
-        open_and_basic_check_my_messages()
+        open_and_basic_check_interactive_menu()
     finally:
         clear_test()
 
-def open_and_basic_check_my_messages():
+def open_and_basic_check_interactive_menu():
     """Open the My Messages app and make basic checks"""
     stbt.press('KEY_INTERACTIVE')
     sleep(1)
