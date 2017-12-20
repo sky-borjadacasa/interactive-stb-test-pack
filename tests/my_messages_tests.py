@@ -4,6 +4,7 @@
 Test cases for My Messages
 """
 
+from time import sleep
 import stbt
 import sky_plus_utils
 from sky_plus_utils import clear_test, debug
@@ -24,6 +25,7 @@ def test_smoke_open_my_messages():
 def open_and_basic_check_my_messages():
     """Open the My Messages app and make basic checks"""
     stbt.press('KEY_INTERACTIVE')
+    sleep(1)
     menu = stbt.wait_until(InteractiveMainMenu)
     assert menu.is_visible, '[Interactive] Main menu is not visible'
 
