@@ -90,6 +90,7 @@ def is_similar_color_rgb(color_a, color_b):
     """
     difference = abs(rgb_luminance(color_a) - rgb_luminance(color_b))
     distance = color_distance(color_a, color_b)
+    debug('[COLOR DIFF] ({0} <-> {1}) Diff: {2} - Distance: {3}'.format(color_a, color_b, difference, distance))
     return difference < interactive_constants.COLOR_LUMINANCE_THRESHOLD and distance < interactive_constants.COLOR_DISTANCE_THRESHOLD
 
 def get_palette(image, region):
