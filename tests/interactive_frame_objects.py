@@ -40,9 +40,9 @@ class InteractiveMainMenu(FrameObject):
             debug('[INTERACTIVE] Text found: {0}'.format(help_title))
             help_title_visible = (help_title == sky_plus_strings.HELP_AND_SUPPORT)
 
-            get_help = find_text(self._frame, interactive_constants.GET_HELP_REGION)
-            debug('[INTERACTIVE] Text found: {0}'.format(get_help))
-            get_help_visible = (get_help == sky_plus_strings.GET_HELP)
+            # get_help = find_text(self._frame, interactive_constants.GET_HELP_REGION)
+            # debug('[INTERACTIVE] Text found: {0}'.format(get_help))
+            # get_help_visible = (get_help == sky_plus_strings.GET_HELP)
 
             return title_visible and help_title_visible and get_help_visible
         return False
