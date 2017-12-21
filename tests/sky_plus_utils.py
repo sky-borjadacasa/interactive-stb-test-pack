@@ -178,8 +178,8 @@ def match_color(image, region, color):
     debug('Color frequency: {0}'.format(color_frequency))
     selected = is_color_in_palette(palette, color_frequency, color)
 
-    # if IMAGE_DEBUG_MODE:
-    #     cv2.imwrite('matching_color_{0}.jpg'.format(time.time()), crop_image(image, region))
+    if IMAGE_DEBUG_MODE:
+        cv2.imwrite('matching_color_{0}.jpg'.format(time.time()), crop_image(image, region))
 
     debug('Color matched: {0}, {1}'.format(selected, color))
 
