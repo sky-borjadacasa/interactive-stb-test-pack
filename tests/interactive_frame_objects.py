@@ -50,6 +50,11 @@ class InteractiveMainMenu(FrameObject):
     @property
     def message(self):
         """Get selected item text"""
+        # TODO: Delte this:
+        for item in self.menu_items:
+            debug('Item text: {0}'.format(item.text))
+            debug('Item selected: {0}'.format(item.selected))
+        # XXX
         selected_list = [x for x in self.menu_items if x.selected]
         return selected_list[0].text
 
