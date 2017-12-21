@@ -34,6 +34,7 @@ MM_PIN_REGION = Region(582, 345, width=111, height=31)
 # Images:
 INTERACTIVE_SKY_LOGO = 'images/InteractiveSkyLogo.png'
 INTERACTIVE_SKY_LOGO_SD = 'images/InteractiveSkyLogoLowRes.png'
+MM_PIN_ENTRY = 'images/PinEntry.png'
 
 # Colors:
 YELLOW_BACKGROUND_RGB = np.array([235, 189, 0])

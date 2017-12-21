@@ -71,10 +71,7 @@ class MyMessagesMenu(FrameObject):
             debug('[MY MESSAGES] Subtitle found: {0}'.format(subtitle))
             subtitle_visible = (subtitle == sky_plus_strings.MM_SUBTITLE)
 
-            pin = find_text(self._frame, interactive_constants.MM_PIN_REGION, fuzzy=False, \
-                            char_whitelist=sky_plus_strings.OCR_CHAR_WHITELIST_PIN)
-            debug('[MY MESSAGES] PIN found: {0}'.format(pin))
-            pin_visible = (pin == '____')
+            pin_visible = stbt.match(interactive_constants.MM_PIN_ENTRY)
 
             return title_visible and subtitle_visible and pin_visible
         return False
