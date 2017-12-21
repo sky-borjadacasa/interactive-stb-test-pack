@@ -23,7 +23,7 @@ def test_smoke_open_my_messages():
         stbt.press('KEY_DOWN')
         stbt.press('KEY_DOWN')
         stbt.press('KEY_DOWN')
-        assert stbt.wait_until(lambda: InteractiveMainMenu().message == sky_plus_strings.MY_MESSAGES), \
+        assert stbt.wait_until(lambda: InteractiveMainMenu().message == sky_plus_strings.MY_MESSAGES, timeout_secs=20), \
             '[Interactive] Selected item is not [{0}]'.format(sky_plus_strings.MY_MESSAGES)
         stbt.press('KEY_SELECT')
     finally:
