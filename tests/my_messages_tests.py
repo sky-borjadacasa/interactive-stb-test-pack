@@ -8,7 +8,7 @@ from time import sleep
 import stbt
 import sky_plus_utils
 from sky_plus_utils import clear_test, debug
-from interactive_frame_objects import InteractiveMainMenu
+from interactive_frame_objects import InteractiveMainMenu, MyMessagesMenu
 import interactive_constants
 import sky_plus_strings
 
@@ -25,7 +25,11 @@ def test_smoke_open_my_messages():
         stbt.press('KEY_DOWN')
         assert stbt.wait_until(lambda: InteractiveMainMenu().message == sky_plus_strings.MY_MESSAGES, timeout_secs=20), \
             '[Interactive] Selected item is not [{0}]'.format(sky_plus_strings.MY_MESSAGES)
+
+        # Open My Messages:
         stbt.press('KEY_SELECT')
+        menu = stbt.wait_until(MyMessagesMenu)
+        assert menu.is_visible, '[My Messages] Menu is not visible'
     finally:
         clear_test()
 

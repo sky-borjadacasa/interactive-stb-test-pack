@@ -45,6 +45,9 @@ MY_SKY = 'MySky'
 MY_ACCOUNT = 'My Account'
 SKY_SHOP = 'Sky Shop'
 
+# My Messages Menu:
+MM_SUBTITLE = 'My Messages may contain personal account information.'
+
 # Fuzzy set:
 FUZZY_SET = [MANAGE_YOUR_ACCOUNT,
              FIX_A_PROBLEM,
@@ -76,4 +79,5 @@ FUZZY_SET = [MANAGE_YOUR_ACCOUNT,
              STB_DEV_APP,
              MY_SKY,
              MY_ACCOUNT,
-             SKY_SHOP]
+             SKY_SHOP,
+             MM_SUBTITLE]

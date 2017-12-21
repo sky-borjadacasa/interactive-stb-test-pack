@@ -25,7 +25,7 @@ class MenuItem(object):
         self.selected = match_color(image, region, interactive_constants.YELLOW_BACKGROUND_RGB)
 
 class InteractiveMainMenu(FrameObject):
-    """FrameObject class to analyze MySky main menu."""
+    """FrameObject class to analyze Interactive main menu."""
 
     @property
     def is_visible(self):
@@ -54,3 +54,22 @@ class InteractiveMainMenu(FrameObject):
             items.append(item)
 
         return items
+
+class MyMessagesMenu(FrameObject):
+    """FrameObject class to analyze My Messages menu."""
+
+    @property
+    def is_visible(self):
+        # pylint: disable=stbt-frame-object-missing-frame
+        logo_visible = stbt.match(interactive_constants.INTERACTIVE_SKY_LOGO_SD)
+        if logo_visible:
+            title = find_text(self._frame, interactive_constants.MM_TITLE_REGION)
+            debug('[MY MESSAGES] Text found: {0}'.format(title))
+            title_visible = (title == sky_plus_strings.MY_MESSAGES)
+
+            subtitle = find_text(self._frame, interactive_constants.MM_SUBTITLE_REGION)
+            debug('[MY MESSAGES] Text found: {0}'.format(subtitle))
+            subtitle_visible = (subtitle == sky_plus_strings.MM_SUBTITLE)
+
+            return title_visible and subtitle_visible
+        return False

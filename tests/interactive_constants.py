@@ -25,8 +25,14 @@ MAIN_MENU_ITEM_REGIONS = [Region(100, 338, width=530, height=32),
                           Region(100, 590, width=530, height=32),
                           Region(647, 338, width=530, height=32)]
 
+# My Messages Regions:
+MM_TITLE_REGION = Region(90, 60, width=180, height=40)
+MM_SUBTITLE_REGION = Region(310, 185, width=670, height=45)
+
+
 # Images:
 INTERACTIVE_SKY_LOGO = 'images/InteractiveSkyLogo.png'
+INTERACTIVE_SKY_LOGO_SD = 'images/InteractiveSkyLogoLowRes.png'
 
 # Colors:
 YELLOW_BACKGROUND_RGB = np.array([235, 189, 0])
