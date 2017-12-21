@@ -4,12 +4,9 @@
 Test cases for Interactive menu
 """
 
-import time
-import cv2
 import stbt
-from stbt import FrameObject, Region
-import sky_plus_utils
-from sky_plus_utils import debug, find_text, match_color, IMAGE_DEBUG_MODE
+from stbt import FrameObject
+from sky_plus_utils import debug, find_text, match_color
 import interactive_constants
 import sky_plus_strings
 

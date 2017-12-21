@@ -11,7 +11,6 @@ from sky_plus_utils import clear_test, debug
 from interactive_frame_objects import InteractiveMainMenu
 import interactive_constants
 import sky_plus_strings
-import mysky_test_utils
 
 def test_smoke_open_my_messages():
     """Open MySky app"""
@@ -19,6 +18,14 @@ def test_smoke_open_my_messages():
     try:
         sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
         open_and_basic_check_interactive_menu()
+
+        # Navigate menus:
+        stbt.press('KEY_DOWN')
+        stbt.press('KEY_DOWN')
+        stbt.press('KEY_DOWN')
+        assert stbt.wait_until(lambda: InteractiveMainMenu().message == sky_plus_strings.MY_MESSAGES), \
+            '[Interactive] Selected item is not [{0}]'.format(sky_plus_strings.MY_MESSAGES)
+        stbt.press('KEY_SELECT')
     finally:
         clear_test()
 
@@ -36,25 +43,3 @@ def open_and_basic_check_interactive_menu():
     debug(len(menu_items))
     assert len(menu_items) == 9, '[Interactive] Main menu should have 9 items, but has {0}'.format(len(menu_items))
     return menu
-
-# def test_acceptance_simple_open_mysky():
-#     clear_test()
-#     try:
-#         sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
-#         mysky_test_utils.open_and_check_mysky()
-
-#         # Navigate menus:
-#         stbt.press('KEY_DOWN')
-#         assert stbt.wait_until(lambda: MySkyMainMenu().message == sky_plus_strings.MANAGE_YOUR_ACCOUNT), \
-#             '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.MANAGE_YOUR_ACCOUNT)
-#         stbt.press('KEY_DOWN')
-#         assert stbt.wait_until(lambda: MySkyMainMenu().message == sky_plus_strings.FIX_A_PROBLEM), \
-#             '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.FIX_A_PROBLEM)
-#         stbt.press('KEY_UP')
-#         assert stbt.wait_until(lambda: MySkyMainMenu().message == sky_plus_strings.MANAGE_YOUR_ACCOUNT), \
-#             '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.MANAGE_YOUR_ACCOUNT)
-#         stbt.press('KEY_UP')
-#         assert stbt.wait_until(lambda: MySkyMainMenu().message == sky_plus_strings.FIND_OUT_MORE), \
-#             '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.FIND_OUT_MORE)
-#     finally:
-#         clear_test()
