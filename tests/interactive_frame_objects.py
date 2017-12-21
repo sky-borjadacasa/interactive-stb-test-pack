@@ -64,12 +64,17 @@ class MyMessagesMenu(FrameObject):
         logo_visible = stbt.match(interactive_constants.INTERACTIVE_SKY_LOGO_SD)
         if logo_visible:
             title = find_text(self._frame, interactive_constants.MM_TITLE_REGION)
-            debug('[MY MESSAGES] Text found: {0}'.format(title))
+            debug('[MY MESSAGES] Title found: {0}'.format(title))
             title_visible = (title == sky_plus_strings.MY_MESSAGES)
 
             subtitle = find_text(self._frame, interactive_constants.MM_SUBTITLE_REGION)
-            debug('[MY MESSAGES] Text found: {0}'.format(subtitle))
+            debug('[MY MESSAGES] Subtitle found: {0}'.format(subtitle))
             subtitle_visible = (subtitle == sky_plus_strings.MM_SUBTITLE)
 
-            return title_visible and subtitle_visible
+            pin = find_text(self._frame, interactive_constants.MM_PIN_REGION, fuzzy=False, \
+                            char_whitelist=sky_plus_strings.OCR_CHAR_WHITELIST_PIN)
+            debug('[MY MESSAGES] PIN found: {0}'.format(pin))
+            pin_visible = (pin == '____')
+
+            return title_visible and subtitle_visible and pin_visible
         return False

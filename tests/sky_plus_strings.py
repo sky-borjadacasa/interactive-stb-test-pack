@@ -9,6 +9,7 @@ import string
 # Text recognition:
 OCR_CHAR_WHITELIST = string.ascii_letters + ' ' + string.digits
 OCR_CHAR_WHITELIST_TEMP = string.digits + '-ºc'
+OCR_CHAR_WHITELIST_PIN = string.digits + '_'
 
 # MySky:
 MANAGE_YOUR_ACCOUNT = 'Manage your account'

@@ -28,6 +28,7 @@ MAIN_MENU_ITEM_REGIONS = [Region(100, 338, width=530, height=32),
 # My Messages Regions:
 MM_TITLE_REGION = Region(90, 60, width=180, height=40)
 MM_SUBTITLE_REGION = Region(310, 185, width=670, height=45)
+MM_PIN_REGION = Region(582, 345, width=111, height=31)
 
 
 # Images:
