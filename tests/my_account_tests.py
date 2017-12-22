@@ -8,7 +8,7 @@ from time import sleep
 import stbt
 import sky_plus_utils
 from sky_plus_utils import clear_test, debug
-from interactive_frame_objects import InteractiveMainMenu, MyMessagesMenu
+from interactive_frame_objects import InteractiveMainMenu, MyMessagesMenu, MyAccountMenu
 import interactive_constants
 import sky_plus_strings
 
