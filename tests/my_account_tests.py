@@ -27,8 +27,8 @@ def test_smoke_open_my_account():
 
         # Open My Messages:
         stbt.press('KEY_SELECT')
-        menu = stbt.wait_until(MyMessagesMenu)
-        assert menu.is_visible, '[My Messages] Menu is not visible'
+        menu = stbt.wait_until(MyAccountMenu)
+        assert menu.is_visible, '[My Account] Menu is not visible'
     finally:
         clear_test()
 
