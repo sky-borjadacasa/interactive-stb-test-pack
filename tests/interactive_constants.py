@@ -30,6 +30,8 @@ MM_TITLE_REGION = Region(90, 60, width=180, height=40)
 MM_SUBTITLE_REGION = Region(310, 185, width=670, height=45)
 MM_PIN_REGION = Region(582, 345, width=111, height=31)
 
+# My Account Regions:
+MA_TITLE_REGION = Region(120, 65, width=160, height=40)
 
 # Images:
 INTERACTIVE_SKY_LOGO = 'images/InteractiveSkyLogo.png'

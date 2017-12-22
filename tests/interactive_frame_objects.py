@@ -75,3 +75,20 @@ class MyMessagesMenu(FrameObject):
 
             return title_visible and subtitle_visible and pin_visible
         return False
+
+class MyAccountMenu(FrameObject):
+    """FrameObject class to analyze My Account menu."""
+
+    @property
+    def is_visible(self):
+        # pylint: disable=stbt-frame-object-missing-frame
+        logo_visible = stbt.match(interactive_constants.INTERACTIVE_SKY_LOGO_SD)
+        if logo_visible:
+            title = find_text(self._frame, interactive_constants.MA_TITLE_REGION)
+            debug('[MY ACCOUNT] Title found: {0}'.format(title))
+            title_visible = (title == sky_plus_strings.MY_ACCOUNT)
+
+            #pin_visible = stbt.match(interactive_constants.MM_PIN_ENTRY)
+
+            return title_visible
+        return False
