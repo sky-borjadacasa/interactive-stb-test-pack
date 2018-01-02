@@ -4,13 +4,13 @@
 Test cases for My Messages
 """
 
-from time import sleep
 import stbt
 import sky_plus_utils
-from sky_plus_utils import clear_test, debug
+from sky_plus_utils import clear_test
 from interactive_frame_objects import InteractiveMainMenu, MyMessagesMenu
 import interactive_constants
 import sky_plus_strings
+from interactive_test_utils import open_and_basic_check_interactive_menu
 
 def test_smoke_open_my_messages():
     """Open MySky app"""
@@ -32,18 +32,3 @@ def test_smoke_open_my_messages():
         assert menu.is_visible, '[My Messages] Menu is not visible'
     finally:
         clear_test()
-
-def open_and_basic_check_interactive_menu():
-    """Open the My Messages app and make basic checks"""
-    stbt.press('KEY_INTERACTIVE')
-    sleep(1)
-    menu = stbt.wait_until(InteractiveMainMenu)
-    assert menu.is_visible, '[Interactive] Main menu is not visible'
-
-    menu_items = menu.menu_items
-    for item in menu_items:
-        debug('Item text: {0}'.format(item.text))
-        debug('Item selected: {0}'.format(item.selected))
-    debug(len(menu_items))
-    assert len(menu_items) == 9, '[Interactive] Main menu should have 9 items, but has {0}'.format(len(menu_items))
-    return menu
