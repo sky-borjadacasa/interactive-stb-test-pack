@@ -29,6 +29,7 @@ MAIN_MENU_ITEM_REGIONS = [Region(100, 338, width=530, height=32),
 MM_TITLE_REGION = Region(90, 60, width=180, height=40)
 MM_SUBTITLE_REGION = Region(310, 185, width=670, height=45)
 MM_PIN_REGION = Region(582, 345, width=111, height=31)
+MA_BACKGROUND_REGION = Region(600, 110, width=680, height=610)
 
 # My Account Regions:
 MA_TITLE_REGION = Region(120, 65, width=160, height=40)
@@ -37,6 +38,7 @@ MA_TITLE_REGION = Region(120, 65, width=160, height=40)
 INTERACTIVE_SKY_LOGO = 'images/InteractiveSkyLogo.png'
 INTERACTIVE_SKY_LOGO_SD = 'images/InteractiveSkyLogoLowRes.png'
 MM_PIN_ENTRY = 'images/PinEntry.png'
+MA_BACKGROUND = 'images/MyAccountBackground.png'
 
 # Colors:
 YELLOW_BACKGROUND_RGB = np.array([235, 189, 0])

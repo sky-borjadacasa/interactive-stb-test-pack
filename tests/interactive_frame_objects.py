@@ -88,7 +88,7 @@ class MyAccountMenu(FrameObject):
             debug('[MY ACCOUNT] Title found: {0}'.format(title))
             title_visible = (title == sky_plus_strings.MY_ACCOUNT)
 
-            #pin_visible = stbt.match(interactive_constants.MM_PIN_ENTRY)
+            background_visible = stbt.match(interactive_constants.MA_BACKGROUND, region=interactive_constants.MA_BACKGROUND_REGION)
 
-            return title_visible
+            return title_visible and background_visible
         return False
