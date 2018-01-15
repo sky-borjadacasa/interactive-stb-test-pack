@@ -26,7 +26,7 @@ def test_smoke_open_my_account():
         assert stbt.wait_until(lambda: InteractiveMainMenu().message == sky_plus_strings.MY_ACCOUNT, timeout_secs=20), \
             '[Interactive] Selected item is not [{0}]'.format(sky_plus_strings.MY_ACCOUNT)
 
-        # Open My Messages:
+        # Open My Messages:
         stbt.press('KEY_SELECT')
         menu = stbt.wait_until(MyAccountMenu, timeout_secs=20)
         assert menu.is_visible, '[My Account] Menu is not visible'

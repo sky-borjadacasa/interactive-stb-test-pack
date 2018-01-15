@@ -33,7 +33,7 @@ SS_CLOSE_POPUP = 'Close this popup'
 SS_DEVELOPER_MODE = 'Developer mode'
 SS_VCN = 'VCN'
 
-# Interactive Main Menu:
+# Interactive Main Menu:
 INTERACTIVE = 'Interactive'
 HELP_AND_SUPPORT = 'Help and Support'
 GET_HELP = 'Get help with Sky\'s products and services'
@@ -46,10 +46,10 @@ MY_SKY = 'MySky'
 MY_ACCOUNT = 'My Account'
 SKY_SHOP = 'Sky Shop'
 
-# My Messages Menu:
+# My Messages Menu:
 MM_SUBTITLE = 'My Messages may contain personal account information.'
 
-# Fuzzy set:
+# Fuzzy set:
 FUZZY_SET = [MANAGE_YOUR_ACCOUNT,
              FIX_A_PROBLEM,
              BILLS_AND_PAYMENTS,
