@@ -7,10 +7,10 @@ from time import sleep
 import stbt
 import sky_plus_utils
 from sky_plus_utils import clear_test
+import mysky_frame_objects
 from mysky_frame_objects import SecretSceneMainMenu, DeveloperMenuMenu
 import interactive_constants
 import sky_plus_strings
-import mysky_test_utils
 
 # Secret scene environment codes:
 ENV_CODE_DEV = 'KEY_0'
@@ -23,7 +23,7 @@ def open_developer_mode(env_code):
     clear_test()
     try:
         sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
-        mysky_test_utils.open_and_basic_check_mysky()
+        mysky_frame_objects.open_and_basic_check_mysky()
         sleep(0.5)
         sky_plus_utils.open_secret_scene()
 

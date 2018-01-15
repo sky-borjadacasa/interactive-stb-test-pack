@@ -4,18 +4,10 @@
 Test cases for MySky
 """
 
-import time
-from time import sleep
 import datetime
-import cv2
 import stbt
-from stbt import match
-import sky_plus_utils
 from sky_plus_utils import debug
-from mysky_frame_objects import MySkyMainMenu
 import mysky_constants
-from mysky_constants import MY_SKY_OPEN_TIMEOUT
-import interactive_constants
 import sky_plus_strings
 
 def greeting_string():
@@ -38,61 +30,17 @@ def greeting_string():
     else:
         return sky_plus_strings.GOOD_EVENING
 
-def open_and_basic_check_mysky():
-    """Open the MySky app and make basic checks"""
-    stbt.press('KEY_YELLOW')
-    menu = stbt.wait_until(MySkyMainMenu, timeout_secs=MY_SKY_OPEN_TIMEOUT)
-    # TODO: Check if we can improve this
-    # This is a hack because of issue #INTCORE-892
-    sleep(0.2)
-    menu = stbt.wait_until(MySkyMainMenu, timeout_secs=MY_SKY_OPEN_TIMEOUT)
-    assert menu.is_visible, '[MySky] Main menu is not visible'
+def traffic_light_is_red(frame):
+    """Tell if the traffic light is red"""
+    red_light = stbt.match(mysky_constants.TL_RED, frame=frame, region=mysky_constants.TRAFFIC_LIGHTS_REGION)
+    return red_light
 
-    greeting = menu.greeting
-    assert greeting == greeting_string(), '[MySky] Greeting is [{0}], but should be [{1}]'.format(greeting, greeting_string())
+def traffic_light_is_yellow(frame):
+    """Tell if the traffic light is yellow"""
+    red_light = stbt.match(mysky_constants.TL_YELLOW, frame=frame, region=mysky_constants.TRAFFIC_LIGHTS_REGION)
+    return red_light
 
-    menu_items = menu.menu_items
-    for item in menu_items:
-        debug('Item text: {0}'.format(item.text))
-        debug('Item selected: {0}'.format(item.selected))
-    debug(len(menu_items))
-    assert len(menu_items) == 3, '[MySky] Main menu should have 3 items, but has {0}'.format(len(menu_items))
-    return menu
-
-def open_and_check_mysky():
-    """Open the MySky app and make some checks"""
-    menu = open_and_basic_check_mysky()
-    menu_items = menu.menu_items
-
-    # TODO: We can not know for sure which image to expect here
-    # item = [x for x in menu_items if x.text == sky_plus_strings.FIND_OUT_MORE][0]
-    # match_result = match(mysky_constants.MENU_FIND_OUT_MORE, frame=menu._frame, region=item.region)
-    # debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
-    # assert match_result.match, '[MySky] Could not find {0} menu'.format(sky_plus_strings.FIND_OUT_MORE)
-    item = [x for x in menu_items if x.text == sky_plus_strings.MANAGE_YOUR_ACCOUNT][0]
-    match_result = match(mysky_constants.MENU_MANAGE_YOUR_ACCOUNT, frame=menu._frame, region=item.region)
-    debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
-    if sky_plus_utils.IMAGE_DEBUG_MODE:
-        cv2.imwrite('matching_menu_{0}.jpg'.format(time.time()), sky_plus_utils.crop_image(menu._frame, item.region))
-    assert match_result.match, '[MySky] Could not find {0} menu'.format(mysky_constants.MENU_MANAGE_YOUR_ACCOUNT)
-    item = [x for x in menu_items if x.text == sky_plus_strings.FIX_A_PROBLEM][0]
-    match_result = match(mysky_constants.MENU_FIX_A_PROBLEM, frame=menu._frame, region=item.region)
-    debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
-    assert match_result.match, '[MySky] Could not find {0} menu'.format(sky_plus_strings.FIX_A_PROBLEM)
-
-    message = menu.message
-    debug('Item message: {0}'.format(message))
-    assert message == sky_plus_strings.FIND_OUT_MORE, \
-        '[MySky] Selected item should be [{0}], but is [{1}]'.format(sky_plus_strings.FIND_OUT_MORE, message)
-
-    return menu
-
-def button_exits_test(button):
-    """Open MySky app and close it with the given button"""
-    sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
-    open_and_basic_check_mysky()
-
-    # Press the button:
-    stbt.press(button)
-    assert stbt.wait_until(lambda: not MySkyMainMenu().is_visible), \
-        '[MySky] MySky menu did not close'
+def traffic_light_is_green(frame):
+    """Tell if the traffic light is green"""
+    red_light = stbt.match(mysky_constants.TL_GREEN, frame=frame, region=mysky_constants.TRAFFIC_LIGHTS_REGION)
+    return red_light

@@ -18,6 +18,8 @@ MAIN_MENU_ITEM_1_REGION = Region(930, 135, width=300, height=150)
 MAIN_MENU_ITEM_2_REGION = Region(930, 295, width=300, height=130)
 MAIN_MENU_ITEM_3_REGION = Region(930, 435, width=300, height=130)
 
+TRAFFIC_LIGHTS_REGION = Region(29, 21, width=20, height=33)
+
 WEATHER_CITY_NAME_REGION = Region(930, 590, width=200, height=45)
 WEATHER_ICON_REGION = Region(1100, 625, width=70, height=55)
 WEATHER_TEMP_REGION = Region(930, 630, width=115, height=60)
@@ -40,3 +42,6 @@ MENU_MANAGE_YOUR_ACCOUNT = 'images/ManageYourAccount.png'
 MENU_FIX_A_PROBLEM = 'images/FixAProblem.png'
 # pylint:disable=stbt-missing-image
 MOVING_BALLS = 'images/MovingBalls{0}.png'
+TL_RED = 'images/TL_Red.png'
+TL_YELLOW = 'images/TL_Yellow.png'
+TL_GREEN = 'images/TL_Green.png'
