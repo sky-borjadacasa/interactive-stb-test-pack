@@ -201,6 +201,14 @@ class DeveloperMenuMenu(FrameObject):
         text = sky_plus_utils.find_text(self._frame, mysky_constants.SS_DEV_MODE_TITLE_REGION)
         return text
 
+def open_and_check_greeting(expected_greeting):
+    """Open the MySky app and make basic checks"""
+    stbt.press('KEY_YELLOW')
+    menu = stbt.wait_until(MySkyMainMenu, timeout_secs=MY_SKY_OPEN_TIMEOUT)
+    assert menu.is_visible, '[MySky] Main menu is not visible'
+
+    assert menu.greeting == expected_greeting, '[MySky] Greeting is [{0}], but should be [{1}]'.format(menu.greeting, expected_greeting)
+
 def open_and_basic_check_mysky():
     """Open the MySky app and make basic checks"""
     stbt.press('KEY_YELLOW')
