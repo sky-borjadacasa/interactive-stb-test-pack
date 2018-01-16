@@ -223,11 +223,6 @@ def open_and_check_mysky():
     menu = open_and_basic_check_mysky()
     menu_items = menu.menu_items
 
-    # TODO: We can not know for sure which image to expect here
-    # item = [x for x in menu_items if x.text == sky_plus_strings.FIND_OUT_MORE][0]
-    # match_result = match(mysky_constants.MENU_FIND_OUT_MORE, frame=menu._frame, region=item.region)
-    # debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
-    # assert match_result.match, '[MySky] Could not find {0} menu'.format(sky_plus_strings.FIND_OUT_MORE)
     item = [x for x in menu_items if x.text == sky_plus_strings.MANAGE_YOUR_ACCOUNT][0]
     match_result = match(mysky_constants.MENU_MANAGE_YOUR_ACCOUNT, frame=menu._frame, region=item.region)
     debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
