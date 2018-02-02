@@ -90,7 +90,6 @@ class MySkyMenuItem(object):
         self.text = sky_plus_utils.find_text(image, text_region)
         self.selected = sky_plus_utils.match_color(image, text_region, interactive_constants.YELLOW_BACKGROUND_RGB)
 
-
 class MySkyMainMenu(FrameObject):
     """FrameObject class to analyze MySky main menu."""
 
@@ -200,6 +199,49 @@ class DeveloperMenuMenu(FrameObject):
         """Get title from top of the menu"""
         text = sky_plus_utils.find_text(self._frame, mysky_constants.SS_DEV_MODE_TITLE_REGION)
         return text
+
+class ManageYourAccountMenu(FrameObject):
+    """FrameObject class to analyze Manage Your Account menu."""
+
+    @property
+    def is_visible(self):
+        # pylint: disable=stbt-frame-object-missing-frame
+        logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=mysky_constants.MY_SKY_REGION)
+        if logo_visible:
+            light_is_green = mysky_test_utils.traffic_light_is_green(self._frame)
+            text = self.title()
+            return light_is_green and text == sky_plus_strings.MANAGE_YOUR_ACCOUNT
+        return False
+
+    @property
+    def title(self):
+        """Get greeting from top of the menu"""
+        text = sky_plus_utils.find_text(self._frame, mysky_constants.MYA_TITLE_REGION)
+        return text
+
+    @property
+    def message(self):
+        """Get selected item text"""
+        # TODO:
+        # selected_list = [x for x in self.menu_items if x.selected]
+        # return selected_list[0].text
+        return self.title()
+
+    @property
+    def menu_items(self):
+        """Get menu items list"""
+        items = []
+        # TODO:
+        # item = MySkyMenuItem(self._frame, mysky_constants.MAIN_MENU_ITEM_1_REGION)
+        # items.append(item)
+        # item = MySkyMenuItem(self._frame, mysky_constants.MAIN_MENU_ITEM_2_REGION)
+        # items.append(item)
+        # item = MySkyMenuItem(self._frame, mysky_constants.MAIN_MENU_ITEM_3_REGION)
+        # items.append(item)
+
+        return items
+
+# --------------------------- UTILS
 
 def open_and_check_greeting(expected_greeting):
     """Open the MySky app and make basic checks"""

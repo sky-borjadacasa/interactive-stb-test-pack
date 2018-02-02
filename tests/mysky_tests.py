@@ -98,17 +98,19 @@ def test_timed_greeting_good_evening():
     finally:
         clear_test()
 
-# TODO: Use for UK and ROI clients
-def test_acceptance_simple_mysky_weather():
-    """Open MySky app
+def test_acceptance_simple_my_account_navigation():
+    """Open My Account menu and navigate
+    Automates: https://interactiveqa.testrail.net/index.php?/cases/view/26
     """
     clear_test()
     try:
         sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
-        menu = mysky_frame_objects.open_and_basic_check_mysky()
+        mysky_frame_objects.open_and_basic_check_mysky()
 
-        # Check weather loaded correctly:
-        menu.weather_loaded()
-
+        # Navigate menus:
+        stbt.press('KEY_DOWN')
+        assert stbt.wait_until(lambda: MySkyMainMenu().message == sky_plus_strings.MANAGE_YOUR_ACCOUNT), \
+            '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.MANAGE_YOUR_ACCOUNT)
+        stbt.press('KEY_SELECT')
     finally:
         clear_test()
