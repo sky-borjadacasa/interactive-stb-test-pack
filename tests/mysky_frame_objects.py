@@ -209,7 +209,7 @@ class ManageYourAccountMenu(FrameObject):
         logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=mysky_constants.MY_SKY_REGION)
         if logo_visible:
             light_is_green = mysky_test_utils.traffic_light_is_green(self._frame)
-            text = self.title()
+            text = sky_plus_utils.find_text(self._frame, mysky_constants.MYA_TITLE_REGION)
             return light_is_green and text == sky_plus_strings.MANAGE_YOUR_ACCOUNT
         return False
 
