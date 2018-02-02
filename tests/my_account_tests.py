@@ -33,6 +33,7 @@ def test_smoke_open_my_account():
             if imenu.message == sky_plus_strings.MY_ACCOUNT:
                 debug('[INTERACTIVE_MENU] Item found!: {0}'.format(imenu.message))
                 break
+            debug('[INTERACTIVE_MENU] Press DOWN')
             stbt.press('KEY_DOWN')
         # XXX Is this needed?
         assert stbt.wait_until(lambda: InteractiveMainMenu().message == sky_plus_strings.MY_ACCOUNT, timeout_secs=20), \
