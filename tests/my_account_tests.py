@@ -29,17 +29,17 @@ def test_smoke_open_my_account():
             debug('[INTERACTIVE_MENU] Item selected: {0}'.format(menu.message))
 
             # Wait 3 secs and check
-            sleep(3)
             if menu.message == sky_plus_strings.MY_ACCOUNT:
                 debug('[INTERACTIVE_MENU] Item found!: {0}'.format(menu.message))
                 break
             debug('[INTERACTIVE_MENU] Press DOWN')
             stbt.press('KEY_DOWN')
+            sleep(3)
         # XXX Is this needed?
         # assert stbt.wait_until(lambda: InteractiveMainMenu().message == sky_plus_strings.MY_ACCOUNT, timeout_secs=20), \
         #     '[Interactive] Selected item is not [{0}]'.format(sky_plus_strings.MY_ACCOUNT)
         assert menu.message == sky_plus_strings.MY_ACCOUNT, \
-            '[Interactive] Selected item is not [{0}]'.format(sky_plus_strings.MY_ACCOUNT)
+            '[INTERACTIVE_MENU] Selected item is not [{0}]'.format(sky_plus_strings.MY_ACCOUNT)
 
         # Open My Messages:
         stbt.press('KEY_SELECT')
