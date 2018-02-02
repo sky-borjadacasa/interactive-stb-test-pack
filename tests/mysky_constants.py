@@ -29,6 +29,10 @@ WEATHER_TEMP_MIN_REGION = Region(1180, 660, width=55, height=30)
 
 # Manage Your Account Regions:
 MYA_TITLE_REGION = Region(950, 90, width=300, height=35)
+MYA_MENU_ITEM_1_REGION = Region(930, 135, width=300, height=130)
+MYA_MENU_ITEM_2_REGION = Region(930, 275, width=300, height=130)
+MYA_MENU_ITEM_3_REGION = Region(930, 415, width=300, height=130)
+MYA_MENU_ITEM_4_REGION = Region(930, 555, width=300, height=130)
 
 # TODO: Check if used:
 SKY_Q_NEXT_GENERATION = Region(940, 115, width=285, height=30)

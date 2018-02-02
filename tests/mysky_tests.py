@@ -9,7 +9,7 @@ import sky_plus_strings
 import sky_plus_utils
 from sky_plus_utils import clear_test
 import mysky_frame_objects
-from mysky_frame_objects import MySkyMainMenu
+from mysky_frame_objects import MySkyMainMenu, ManageYourAccountMenu
 import interactive_constants
 
 def test_smoke_open_mysky():
@@ -112,5 +112,10 @@ def test_acceptance_simple_my_account_navigation():
         assert stbt.wait_until(lambda: MySkyMainMenu().message == sky_plus_strings.MANAGE_YOUR_ACCOUNT), \
             '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.MANAGE_YOUR_ACCOUNT)
         stbt.press('KEY_SELECT')
+
+        menu = stbt.wait_until(ManageYourAccountMenu)
+        assert menu.is_visible, '[ManageYourAccount] Menu is not visible'
+
+        assert menu.message == 'Bills and Payments', '[ManageYourAccount] Selected item is [{0}], but should be [{1}]'.format(menu.message, 'Bills and Payments')
     finally:
         clear_test()

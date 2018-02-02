@@ -222,22 +222,21 @@ class ManageYourAccountMenu(FrameObject):
     @property
     def message(self):
         """Get selected item text"""
-        # TODO:
-        # selected_list = [x for x in self.menu_items if x.selected]
-        # return selected_list[0].text
-        return self.title()
+        selected_list = [x for x in self.menu_items if x.selected]
+        return selected_list[0].text
 
     @property
     def menu_items(self):
         """Get menu items list"""
         items = []
-        # TODO:
-        # item = MySkyMenuItem(self._frame, mysky_constants.MAIN_MENU_ITEM_1_REGION)
-        # items.append(item)
-        # item = MySkyMenuItem(self._frame, mysky_constants.MAIN_MENU_ITEM_2_REGION)
-        # items.append(item)
-        # item = MySkyMenuItem(self._frame, mysky_constants.MAIN_MENU_ITEM_3_REGION)
-        # items.append(item)
+        item = MySkyMenuItem(self._frame, mysky_constants.MYA_MENU_ITEM_1_REGION)
+        items.append(item)
+        item = MySkyMenuItem(self._frame, mysky_constants.MYA_MENU_ITEM_2_REGION)
+        items.append(item)
+        item = MySkyMenuItem(self._frame, mysky_constants.MYA_MENU_ITEM_3_REGION)
+        items.append(item)
+        item = MySkyMenuItem(self._frame, mysky_constants.MYA_MENU_ITEM_4_REGION)
+        items.append(item)
 
         return items
 
