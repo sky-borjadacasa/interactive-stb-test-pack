@@ -4,6 +4,7 @@
 Test cases for My Account
 """
 
+from time import sleep
 import stbt
 import sky_plus_utils
 from sky_plus_utils import clear_test, debug
@@ -18,6 +19,7 @@ def test_smoke_open_my_account():
     clear_test()
     try:
         sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
+        # XXX Get menu here?
         open_and_basic_check_interactive_menu()
 
         # Navigate menus:
@@ -26,7 +28,12 @@ def test_smoke_open_my_account():
             imenu = stbt.wait_until(InteractiveMainMenu, timeout_secs=20)
             debug('[INTERACTIVE_MENU] Item selected: {0}'.format(imenu.message))
 
+            # Wait 3 secs and check
+            sleep(3)
+            if imenu.message == sky_plus_strings.MY_ACCOUNT:
+                break
             stbt.press('KEY_DOWN')
+        # XXX Is this needed?
         assert stbt.wait_until(lambda: InteractiveMainMenu().message == sky_plus_strings.MY_ACCOUNT, timeout_secs=20), \
             '[Interactive] Selected item is not [{0}]'.format(sky_plus_strings.MY_ACCOUNT)
 
