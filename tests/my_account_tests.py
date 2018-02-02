@@ -31,6 +31,7 @@ def test_smoke_open_my_account():
             # Wait 3 secs and check
             sleep(3)
             if imenu.message == sky_plus_strings.MY_ACCOUNT:
+                debug('[INTERACTIVE_MENU] Item found!: {0}'.format(imenu.message))
                 break
             stbt.press('KEY_DOWN')
         # XXX Is this needed?
