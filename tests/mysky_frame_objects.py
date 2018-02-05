@@ -71,7 +71,6 @@ def ui_ready(frame):
         True if ui is ready, False otherwise
     """
     is_green = mysky_test_utils.traffic_light_is_green(frame)
-    # XXX
     if IMAGE_DEBUG_MODE:
         cv2.imwrite('traffic_light_{0}.jpg'.format(time.time()), frame)
     return is_green
@@ -104,9 +103,7 @@ class MySkyMainMenu(FrameObject):
             text = sky_plus_utils.find_text(self._frame, mysky_constants.MAIN_MENU_LOADING_REGION)
             debug('[FIND LOADING] Text found: {0}'.format(text))
             loading_visible = (text == sky_plus_strings.LOADING)
-            light_is_green = mysky_test_utils.traffic_light_is_green(self._frame)
-            # XXX
-
+            light_is_green = ui_ready(self._frame)
             return not loading_visible and light_is_green
         return False
 
@@ -213,7 +210,7 @@ class ManageYourAccountMenu(FrameObject):
         # pylint: disable=stbt-frame-object-missing-frame
         logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=mysky_constants.MY_SKY_REGION)
         if logo_visible:
-            light_is_green = mysky_test_utils.traffic_light_is_green(self._frame)
+            light_is_green = ui_ready(self._frame)
             text = sky_plus_utils.find_text(self._frame, mysky_constants.MYA_TITLE_REGION)
             return light_is_green and text == sky_plus_strings.MANAGE_YOUR_ACCOUNT
         return False
