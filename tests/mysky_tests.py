@@ -153,6 +153,7 @@ def test_acceptance_simple_my_account_yellow_button():
     try:
         sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
         mysky_frame_objects.open_and_basic_check_manage_your_account()
+        stbt.press('KEY_YELLOW')
         mysky_frame_objects.basic_check_mysky()
     finally:
         clear_test()
