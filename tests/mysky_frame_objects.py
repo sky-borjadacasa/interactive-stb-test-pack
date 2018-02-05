@@ -119,13 +119,6 @@ class MySkyMainMenu(FrameObject):
         selected_list = [x for x in self.menu_items if x.selected]
         return selected_list[0].text
 
-    def weather_loaded(self):
-        """Check if weather section is loaded"""
-        # TODO: Check icons and temperature
-        string = sky_plus_utils.find_text(self._frame, mysky_constants.WEATHER_CITY_NAME_REGION)
-        assert string == sky_plus_strings.YOUR_LOCAL_WEATHER, \
-            '[Weather] Message should be [{0}], but is [{1}]'.format(sky_plus_strings.YOUR_LOCAL_WEATHER, string)
-
     @property
     def menu_items(self):
         """Get menu items list"""
