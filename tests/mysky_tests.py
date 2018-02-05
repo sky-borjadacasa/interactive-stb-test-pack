@@ -116,6 +116,26 @@ def test_acceptance_simple_my_account_navigation():
         menu = stbt.wait_until(ManageYourAccountMenu)
         assert menu.is_visible, '[ManageYourAccount] Menu is not visible'
 
-        assert menu.message == 'Bills and Payments', '[ManageYourAccount] Selected item is [{0}], but should be [{1}]'.format(menu.message, 'Bills and Payments')
+        # Navigate menus:
+        stbt.press('KEY_DOWN')
+        assert stbt.wait_until(lambda: ManageYourAccountMenu().message == sky_plus_strings.PACKAGE_AND_SETTINGS), \
+            '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.PACKAGE_AND_SETTINGS)
+        stbt.press('KEY_DOWN')
+        assert stbt.wait_until(lambda: ManageYourAccountMenu().message == sky_plus_strings.DETAILS_AND_MESSAGES), \
+            '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.DETAILS_AND_MESSAGES)
+        stbt.press('KEY_DOWN')
+        assert stbt.wait_until(lambda: ManageYourAccountMenu().message == sky_plus_strings.FIND_OUT_MORE), \
+            '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.FIND_OUT_MORE)
+        stbt.press('KEY_UP')
+        assert stbt.wait_until(lambda: ManageYourAccountMenu().message == sky_plus_strings.DETAILS_AND_MESSAGES), \
+            '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.DETAILS_AND_MESSAGES)
+        stbt.press('KEY_UP')
+        assert stbt.wait_until(lambda: ManageYourAccountMenu().message == sky_plus_strings.PACKAGE_AND_SETTINGS), \
+            '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.PACKAGE_AND_SETTINGS)
+        stbt.press('KEY_UP')
+        assert stbt.wait_until(lambda: ManageYourAccountMenu().message == sky_plus_strings.BILLS_AND_PAYMENTS), \
+            '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.BILLS_AND_PAYMENTS)
+
+        # TODO: Check images
     finally:
         clear_test()

@@ -14,7 +14,7 @@ OCR_CHAR_WHITELIST_PIN = string.digits + '_'
 # MySky:
 MANAGE_YOUR_ACCOUNT = 'Manage your account'
 FIX_A_PROBLEM = 'Fix a problem'
-BILLS_AND_PAYMENTS = 'Bills and payments'
+BILLS_AND_PAYMENTS = 'Bills and Payments'
 PACKAGE_AND_SETTINGS = 'TV package and settings'
 BROADBAND_AND_TALK = 'Broadband and Talk'
 DETAILS_AND_MESSAGES = 'My details and messages'
