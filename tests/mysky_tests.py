@@ -144,3 +144,15 @@ def test_acceptance_simple_my_account_navigation():
         debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
     finally:
         clear_test()
+
+def test_acceptance_simple_my_account_yellow_button():
+    """Open My Account menu and go back to MySky main menu
+    Automates: https://interactiveqa.testrail.net/index.php?/cases/view/27
+    """
+    clear_test()
+    try:
+        sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
+        mysky_frame_objects.open_and_basic_check_manage_your_account()
+        mysky_frame_objects.basic_check_mysky()
+    finally:
+        clear_test()

@@ -250,9 +250,8 @@ def open_and_check_greeting(expected_greeting):
 
     assert menu.greeting == expected_greeting, '[MySky] Greeting is [{0}], but should be [{1}]'.format(menu.greeting, expected_greeting)
 
-def open_and_basic_check_mysky():
-    """Open the MySky app and make basic checks"""
-    stbt.press('KEY_YELLOW')
+def basic_check_mysky():
+    """Make basic checks for MySKy"""
     menu = stbt.wait_until(MySkyMainMenu, timeout_secs=MY_SKY_OPEN_TIMEOUT)
     assert menu.is_visible, '[MySky] Main menu is not visible'
 
@@ -265,6 +264,12 @@ def open_and_basic_check_mysky():
         debug('Item selected: {0}'.format(item.selected))
     debug(len(menu_items))
     assert len(menu_items) == 3, '[MySky] Main menu should have 3 items, but has {0}'.format(len(menu_items))
+    return menu
+
+def open_and_basic_check_mysky():
+    """Open the MySky app and make basic checks"""
+    stbt.press('KEY_YELLOW')
+    menu = basic_check_mysky()
     return menu
 
 def open_and_check_mysky():
