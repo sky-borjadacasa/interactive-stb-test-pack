@@ -5,9 +5,10 @@ Test cases for MySky
 """
 
 import stbt
+from stbt import match
 import sky_plus_strings
 import sky_plus_utils
-from sky_plus_utils import clear_test
+from sky_plus_utils import clear_test, debug
 import mysky_frame_objects
 from mysky_frame_objects import MySkyMainMenu, ManageYourAccountMenu
 import interactive_constants
@@ -105,16 +106,7 @@ def test_acceptance_simple_my_account_navigation():
     clear_test()
     try:
         sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
-        mysky_frame_objects.open_and_basic_check_mysky()
-
-        # Navigate menus:
-        stbt.press('KEY_DOWN')
-        assert stbt.wait_until(lambda: MySkyMainMenu().message == sky_plus_strings.MANAGE_YOUR_ACCOUNT), \
-            '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.MANAGE_YOUR_ACCOUNT)
-        stbt.press('KEY_SELECT')
-
-        menu = stbt.wait_until(ManageYourAccountMenu)
-        assert menu.is_visible, '[ManageYourAccount] Menu is not visible'
+        menu = mysky_frame_objects.open_and_basic_check_manage_your_account()
 
         # Navigate menus:
         stbt.press('KEY_DOWN')
@@ -136,6 +128,19 @@ def test_acceptance_simple_my_account_navigation():
         assert stbt.wait_until(lambda: ManageYourAccountMenu().message == sky_plus_strings.BILLS_AND_PAYMENTS), \
             '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.BILLS_AND_PAYMENTS)
 
-        # TODO: Check images
+        # Check images:
+        menu_items = menu.menu_items
+        item = [x for x in menu_items if x.text == sky_plus_strings.BILLS_AND_PAYMENTS][0]
+        match_result = match(interactive_constants.MYA_BILLS_PAYMENTS, frame=menu._frame, region=item.region)
+        debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
+        item = [x for x in menu_items if x.text == sky_plus_strings.PACKAGE_AND_SETTINGS][0]
+        match_result = match(interactive_constants.MYA_PACKAGE_SETTINGS, frame=menu._frame, region=item.region)
+        debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
+        item = [x for x in menu_items if x.text == sky_plus_strings.DETAILS_AND_MESSAGES][0]
+        match_result = match(interactive_constants.MYA_DETAILS_MESSAGES, frame=menu._frame, region=item.region)
+        debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
+        item = [x for x in menu_items if x.text == sky_plus_strings.FIND_OUT_MORE][0]
+        match_result = match(interactive_constants.MYA_MY_OFFERS, frame=menu._frame, region=item.region)
+        debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
     finally:
         clear_test()

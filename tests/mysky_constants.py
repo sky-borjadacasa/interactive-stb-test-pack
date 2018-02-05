@@ -20,7 +20,7 @@ MAIN_MENU_ITEM_3_REGION = Region(930, 435, width=300, height=130)
 
 TRAFFIC_LIGHTS_REGION = Region(29, 21, width=20, height=33)
 
-# TODO: Check if used:
+# TODO: Check if used:
 WEATHER_CITY_NAME_REGION = Region(930, 590, width=200, height=45)
 WEATHER_ICON_REGION = Region(1100, 625, width=70, height=55)
 WEATHER_TEMP_REGION = Region(930, 630, width=115, height=60)
@@ -34,11 +34,11 @@ MYA_MENU_ITEM_2_REGION = Region(930, 275, width=300, height=130)
 MYA_MENU_ITEM_3_REGION = Region(930, 415, width=300, height=130)
 MYA_MENU_ITEM_4_REGION = Region(930, 555, width=300, height=130)
 
-# TODO: Check if used:
+# TODO: Check if used:
 SKY_Q_NEXT_GENERATION = Region(940, 115, width=285, height=30)
 SKY_Q_LONG_TEXT = Region(900, 435, width=350, height=140)
 
-# Secret Scene Regions:
+# Secret Scene Regions:
 SECRET_SCENE_TITLE_REGION = Region(970, 120, width=230, height=40)
 SS_MAIN_ITEM_1_REGION = Region(940, 425, width=280, height=40)
 SS_MAIN_ITEM_2_REGION = Region(940, 475, width=280, height=40)

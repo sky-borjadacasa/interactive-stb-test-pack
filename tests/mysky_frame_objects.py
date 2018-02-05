@@ -299,3 +299,17 @@ def button_exits_test(button):
     stbt.press(button)
     assert stbt.wait_until(lambda: not MySkyMainMenu().is_visible), \
         '[MySky] MySky menu did not close'
+
+def open_and_basic_check_manage_your_account():
+    """Open the Manage your account menu and make basic checks"""
+    open_and_basic_check_mysky()
+
+    # Open menu:
+    stbt.press('KEY_DOWN')
+    assert stbt.wait_until(lambda: MySkyMainMenu().message == sky_plus_strings.MANAGE_YOUR_ACCOUNT), \
+        '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.MANAGE_YOUR_ACCOUNT)
+    stbt.press('KEY_SELECT')
+
+    menu = stbt.wait_until(ManageYourAccountMenu)
+    assert menu.is_visible, '[ManageYourAccount] Menu is not visible'
+    return menu

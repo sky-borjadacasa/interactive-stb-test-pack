@@ -34,11 +34,17 @@ MA_BACKGROUND_REGION = Region(600, 110, width=680, height=610)
 # My Account Regions:
 MA_TITLE_REGION = Region(120, 65, width=160, height=40)
 
-# Images:
+# MySky Images:
 INTERACTIVE_SKY_LOGO = 'images/InteractiveSkyLogo.png'
 INTERACTIVE_SKY_LOGO_SD = 'images/InteractiveSkyLogoLowRes.png'
 MM_PIN_ENTRY = 'images/PinEntry.png'
 MA_BACKGROUND = 'images/MyAccountBackground.png'
+
+# Manage your Account Images:
+MYA_BILLS_PAYMENTS = 'images/MYA_Bills_Payments.png'
+MYA_PACKAGE_SETTINGS = 'images/MYA_Package_Settings.png'
+MYA_DETAILS_MESSAGES = 'images/MYA_Details_Messages.png'
+MYA_MY_OFFERS = 'images/MYA_My_Offers.png'
 
 # Colors:
 YELLOW_BACKGROUND_RGB = np.array([235, 189, 0])
