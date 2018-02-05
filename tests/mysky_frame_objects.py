@@ -71,6 +71,9 @@ def ui_ready(frame):
         True if ui is ready, False otherwise
     """
     is_green = mysky_test_utils.traffic_light_is_green(frame)
+    # XXX
+    if IMAGE_DEBUG_MODE:
+        cv2.imwrite('traffic_light_{0}.jpg'.format(time.time()), frame)
     return is_green
 
 # pylint: disable=too-few-public-methods
@@ -102,6 +105,8 @@ class MySkyMainMenu(FrameObject):
             debug('[FIND LOADING] Text found: {0}'.format(text))
             loading_visible = (text == sky_plus_strings.LOADING)
             light_is_green = mysky_test_utils.traffic_light_is_green(self._frame)
+            # XXX
+
             return not loading_visible and light_is_green
         return False
 
