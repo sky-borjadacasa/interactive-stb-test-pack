@@ -11,6 +11,7 @@ import mysky_frame_objects
 from mysky_frame_objects import SecretSceneMainMenu, DeveloperMenuMenu
 import interactive_constants
 import sky_plus_strings
+import test_scenario_manager
 
 # Secret scene environment codes:
 ENV_CODE_DEV = 'KEY_0'
@@ -57,7 +58,7 @@ def test_setup_backend_prod():
     """Set up backend environment"""
     open_developer_mode(ENV_CODE_PROD)
 
-def test_setup_any_vcn():
+def test_setup_vcn_any():
     """Open Developer mode"""
     clear_test()
     try:
@@ -78,4 +79,3 @@ def test_setup_any_vcn():
         stbt.wait_until(SecretSceneMainMenu)
     finally:
         clear_test()
-
