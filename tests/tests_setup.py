@@ -58,6 +58,7 @@ def test_setup_backend_prod():
     """Set up backend environment"""
     open_developer_mode(ENV_CODE_PROD)
 
+# TODO: Refactor this
 def test_setup_vcn_any():
     """Open Developer mode"""
     clear_test()
@@ -71,6 +72,13 @@ def test_setup_vcn_any():
 
         # pylint: disable=stbt-unused-return-value
         stbt.wait_until(SecretSceneMainMenu)
+        stbt.press('KEY_DOWN')
+        assert stbt.wait_until(lambda: SecretSceneMainMenu().message == sky_plus_strings.SS_DEVELOPER_MODE), \
+            '[Secret Scene] Selected item is not [{0}]'.format(sky_plus_strings.SS_DEVELOPER_MODE)
+        stbt.press('KEY_SELECT')
+        dev_mode_menu = stbt.wait_until(DeveloperMenuMenu)
+        assert dev_mode_menu.title == sky_plus_strings.SS_VCN, \
+            '[Developer Mode] Selected item is not [{0}]'.format(sky_plus_strings.SS_VCN)
         stbt.press('KEY_UP')
         sleep(5)
         press_digits(vcn)
