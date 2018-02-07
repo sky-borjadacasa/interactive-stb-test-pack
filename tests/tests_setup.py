@@ -6,7 +6,7 @@
 from time import sleep
 import stbt
 import sky_plus_utils
-from sky_plus_utils import clear_test
+from sky_plus_utils import clear_test, press_digits, debug
 import mysky_frame_objects
 from mysky_frame_objects import SecretSceneMainMenu, DeveloperMenuMenu
 import interactive_constants
@@ -56,3 +56,26 @@ def test_setup_backend_stage():
 def test_setup_backend_prod():
     """Set up backend environment"""
     open_developer_mode(ENV_CODE_PROD)
+
+def test_setup_any_vcn():
+    """Open Developer mode"""
+    clear_test()
+    try:
+        vcn = test_scenario_manager.get_any_vcn()
+        debug('[SET ANY VCN]: {0}'.format(vcn))
+        sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
+        mysky_frame_objects.open_and_basic_check_mysky()
+        sleep(0.5)
+        sky_plus_utils.open_secret_scene()
+
+        # pylint: disable=stbt-unused-return-value
+        stbt.wait_until(SecretSceneMainMenu)
+        stbt.press('KEY_UP')
+        sleep(5)
+        press_digits(vcn)
+        sleep(5)
+        stbt.press('KEY_DOWN')
+        stbt.wait_until(SecretSceneMainMenu)
+    finally:
+        clear_test()
+
