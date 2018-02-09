@@ -19,24 +19,28 @@ ENV_CODE_SIT = 'KEY_1'
 ENV_CODE_STAGE = 'KEY_2'
 ENV_CODE_PROD = 'KEY_3'
 
-def open_developer_mode(env_code):
+def open_developer_mode():
+    """Open Developer mode"""
+    sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
+    mysky_frame_objects.open_and_basic_check_mysky()
+    sleep(0.5)
+    sky_plus_utils.open_secret_scene()
+
+    # pylint: disable=stbt-unused-return-value
+    stbt.wait_until(SecretSceneMainMenu)
+    stbt.press('KEY_DOWN')
+    assert stbt.wait_until(lambda: SecretSceneMainMenu().message == sky_plus_strings.SS_DEVELOPER_MODE), \
+        '[Secret Scene] Selected item is not [{0}]'.format(sky_plus_strings.SS_DEVELOPER_MODE)
+    stbt.press('KEY_SELECT')
+    dev_mode_menu = stbt.wait_until(DeveloperMenuMenu)
+    assert dev_mode_menu.title == sky_plus_strings.SS_VCN, \
+        '[Developer Mode] Selected item is not [{0}]'.format(sky_plus_strings.SS_VCN)
+
+def setup_backend(env_code):
     """Open Developer mode"""
     clear_test()
     try:
-        sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
-        mysky_frame_objects.open_and_basic_check_mysky()
-        sleep(0.5)
-        sky_plus_utils.open_secret_scene()
-
-        # pylint: disable=stbt-unused-return-value
-        stbt.wait_until(SecretSceneMainMenu)
-        stbt.press('KEY_DOWN')
-        assert stbt.wait_until(lambda: SecretSceneMainMenu().message == sky_plus_strings.SS_DEVELOPER_MODE), \
-            '[Secret Scene] Selected item is not [{0}]'.format(sky_plus_strings.SS_DEVELOPER_MODE)
-        stbt.press('KEY_SELECT')
-        dev_mode_menu = stbt.wait_until(DeveloperMenuMenu)
-        assert dev_mode_menu.title == sky_plus_strings.SS_VCN, \
-            '[Developer Mode] Selected item is not [{0}]'.format(sky_plus_strings.SS_VCN)
+        open_developer_mode()
         stbt.press(env_code)
         sleep(2)
     finally:
@@ -44,49 +48,41 @@ def open_developer_mode(env_code):
 
 def test_setup_backend_dev():
     """Set up backend environment"""
-    open_developer_mode(ENV_CODE_DEV)
+    setup_backend(ENV_CODE_DEV)
 
 def test_setup_backend_sit():
     """Set up backend environment"""
-    open_developer_mode(ENV_CODE_SIT)
+    setup_backend(ENV_CODE_SIT)
 
 def test_setup_backend_stage():
     """Set up backend environment"""
-    open_developer_mode(ENV_CODE_STAGE)
+    setup_backend(ENV_CODE_STAGE)
 
 def test_setup_backend_prod():
     """Set up backend environment"""
-    open_developer_mode(ENV_CODE_PROD)
+    setup_backend(ENV_CODE_PROD)
 
-# TODO: Refactor this
-def test_setup_vcn_any():
-    """Open Developer mode"""
+def setup_vcn(vcn):
+    """Set fake VCN"""
     clear_test()
     try:
-        vcn = test_scenario_manager.get_any_vcn()
-        debug('[SET ANY VCN]: {0}'.format(vcn))
-        sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
-        mysky_frame_objects.open_and_basic_check_mysky()
-        sleep(0.5)
-        sky_plus_utils.open_secret_scene()
-
-        # pylint: disable=stbt-unused-return-value
-        stbt.wait_until(SecretSceneMainMenu)
-        stbt.press('KEY_DOWN')
-        assert stbt.wait_until(lambda: SecretSceneMainMenu().message == sky_plus_strings.SS_DEVELOPER_MODE), \
-            '[Secret Scene] Selected item is not [{0}]'.format(sky_plus_strings.SS_DEVELOPER_MODE)
-        stbt.press('KEY_SELECT')
-        dev_mode_menu = stbt.wait_until(DeveloperMenuMenu)
-        assert dev_mode_menu.title == sky_plus_strings.SS_VCN, \
-            '[Developer Mode] Selected item is not [{0}]'.format(sky_plus_strings.SS_VCN)
+        debug('[SETTING VCN]: {0}'.format(vcn))
+        open_developer_mode()
         stbt.press('KEY_UP')
         sleep(5)
-        for i in range(0,9):
+        # pylint: disable=unused-variable
+        for i in range(0, 9):
             stbt.press('KEY_LEFT')
             sleep(0.1)
         press_digits(vcn)
         sleep(5)
         stbt.press('KEY_DOWN')
+        #pylint: disable=stbt-unused-return-value
         stbt.wait_until(SecretSceneMainMenu)
     finally:
         clear_test()
+
+def test_setup_vcn_any():
+    """Set any VCN"""
+    vcn = test_scenario_manager.get_any_vcn()
+    setup_vcn(vcn)
