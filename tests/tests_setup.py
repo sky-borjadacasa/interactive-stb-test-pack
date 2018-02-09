@@ -86,3 +86,8 @@ def test_setup_vcn_any():
     """Set any VCN"""
     vcn = test_scenario_manager.get_any_vcn()
     setup_vcn(vcn)
+
+def test_setup_vcn_vip():
+    """Set any VCN"""
+    vcn = test_scenario_manager.get_vip_vcn()
+    setup_vcn(vcn)
