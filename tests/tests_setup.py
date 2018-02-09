@@ -81,6 +81,9 @@ def test_setup_vcn_any():
             '[Developer Mode] Selected item is not [{0}]'.format(sky_plus_strings.SS_VCN)
         stbt.press('KEY_UP')
         sleep(5)
+        for i in range(0,9):
+            stbt.press('KEY_LEFT')
+            sleep(0.1)
         press_digits(vcn)
         sleep(5)
         stbt.press('KEY_DOWN')
