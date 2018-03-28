@@ -13,6 +13,7 @@ from sky_plus_utils import debug, IMAGE_DEBUG_MODE
 import mysky_constants
 from mysky_constants import MY_SKY_OPEN_TIMEOUT
 import mysky_test_utils
+from mysky_test_utils import get_bottom_text_region, get_default_image_region
 import interactive_constants
 import sky_plus_strings
 
@@ -81,16 +82,23 @@ class MySkyMenuItem(object):
 
     text = ''
     selected = False
-    image = None
+    frame = None
     region = None
+    image_region = None
+    text_region = None
 
-    def __init__(self, image, region):
-        self.image = image
+    def __init__(self, frame, region, text_region_function=get_bottom_text_region, image_region_function=get_default_image_region):
+        self.frame = frame
         self.region = region
-        text_region = get_text_region(region)
-        debug('REGION: {0}'.format(text_region))
-        self.text = sky_plus_utils.find_text(image, text_region)
-        self.selected = sky_plus_utils.match_color(image, text_region, interactive_constants.YELLOW_BACKGROUND_RGB)
+        if image_region_function is not None:
+            self.image_region = image_region_function(region)
+        if text_region_function is not None:
+            self.text_region = text_region_function(region)
+        # TODO: Refactor
+        debug('REGION: {0}'.format(self.text_region))
+        if self.text_region is not None:
+            self.text = sky_plus_utils.find_text(frame, self.text_region)
+            self.selected = sky_plus_utils.match_color(frame, self.text_region, interactive_constants.YELLOW_BACKGROUND_RGB)
 
 class MySkyMainMenu(FrameObject):
     """FrameObject class to analyze MySky main menu."""
