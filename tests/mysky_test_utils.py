@@ -30,5 +30,5 @@ def get_bottom_text_region(region):
 
 def get_default_image_region(region):
     """Return the text area of a menu item"""
-    text_region = Region(region.x + 8, region.y + 5, right=region.right - 6, bottom=region.bottom - 45)
-    return text_region
+    image_region = Region(region.x + 8, region.y + 5, right=region.right - 6, bottom=region.bottom - 45)
+    return image_region

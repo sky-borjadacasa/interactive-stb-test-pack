@@ -166,16 +166,17 @@ class SecretSceneMainMenu(FrameObject):
     def menu_items(self):
         """Get menu items list"""
         items = []
-        item = MySkyMenuItem(self._frame, mysky_constants.SS_MAIN_ITEM_1_REGION)
+        item = MySkyMenuItem(self._frame, mysky_constants.SS_MAIN_ITEM_1_REGION, image_region_function=None)
         items.append(item)
-        item = MySkyMenuItem(self._frame, mysky_constants.SS_MAIN_ITEM_2_REGION)
+        item = MySkyMenuItem(self._frame, mysky_constants.SS_MAIN_ITEM_2_REGION, image_region_function=None)
         items.append(item)
 
-        for item in items:
-            text_region = get_text_region(item.region)
-            debug('REGION: {0}'.format(text_region))
-            item.text = sky_plus_utils.find_text(self._frame, text_region)
-            item.selected = sky_plus_utils.match_color(self._frame, text_region, interactive_constants.YELLOW_BACKGROUND_RGB)
+        # TODO: Check
+        # for item in items:
+        #     text_region = item.text_region
+        #     debug('REGION: {0}'.format(text_region))
+        #     item.text = sky_plus_utils.find_text(self._frame, text_region)
+        #     item.selected = sky_plus_utils.match_color(self._frame, text_region, interactive_constants.YELLOW_BACKGROUND_RGB)
 
         return items
 
