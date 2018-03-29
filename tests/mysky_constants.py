@@ -39,7 +39,8 @@ SS_DEV_MODE_SUBTITLE_REGION = Region(980, 235, width=205, height=40)
 
 # Images:
 SKY_TOP_LOGO = 'images/SkyTopLogo.png'
-MENU_FIND_OUT_MORE = 'images/SkyQ.png'
+# TODO: Fix this:
+MENU_EXPLORE_MORE = 'images/SkyQ.png'
 MENU_MANAGE_YOUR_ACCOUNT = 'images/ManageYourAccount.png'
 MENU_FIX_A_PROBLEM = 'images/FixAProblem.png'
 # pylint:disable=stbt-missing-image

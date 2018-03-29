@@ -22,7 +22,7 @@ DETAILS_AND_MESSAGES = 'My details and messages'
 PICTURE_PROBLEMS = 'TV picture problems'
 NO_SATELITE_SIGNAL = 'No satelite signal'
 FORGOTTEN_PIN = 'Forgotten PIN'
-FIND_OUT_MORE = 'Find out more'
+EXPLORE_MORE = 'Explore more'
 LOADING = 'Loading...'
 NEXT_GENERATION = 'The next generation box'
 YOUR_LOCAL_WEATHER = 'Your local weather'
@@ -58,7 +58,7 @@ FUZZY_SET = [MANAGE_YOUR_ACCOUNT,
              PICTURE_PROBLEMS,
              NO_SATELITE_SIGNAL,
              FORGOTTEN_PIN,
-             FIND_OUT_MORE,
+             EXPLORE_MORE,
              LOADING,
              NEXT_GENERATION,
              YOUR_LOCAL_WEATHER,

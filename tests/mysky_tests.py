@@ -50,8 +50,8 @@ def test_acceptance_simple_open_mysky():
         assert stbt.wait_until(lambda: MySkyMainMenu().message == sky_plus_strings.MANAGE_YOUR_ACCOUNT), \
             '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.MANAGE_YOUR_ACCOUNT)
         stbt.press('KEY_UP')
-        assert stbt.wait_until(lambda: MySkyMainMenu().message == sky_plus_strings.FIND_OUT_MORE), \
-            '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.FIND_OUT_MORE)
+        assert stbt.wait_until(lambda: MySkyMainMenu().message == sky_plus_strings.EXPLORE_MORE), \
+            '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.EXPLORE_MORE)
     finally:
         clear_test()
 
@@ -90,8 +90,8 @@ def test_acceptance_simple_my_account_navigation():
         assert stbt.wait_until(lambda: ManageYourAccountMenu().message == sky_plus_strings.DETAILS_AND_MESSAGES), \
             '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.DETAILS_AND_MESSAGES)
         stbt.press('KEY_DOWN')
-        assert stbt.wait_until(lambda: ManageYourAccountMenu().message == sky_plus_strings.FIND_OUT_MORE), \
-            '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.FIND_OUT_MORE)
+        assert stbt.wait_until(lambda: ManageYourAccountMenu().message == sky_plus_strings.EXPLORE_MORE), \
+            '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.EXPLORE_MORE)
         stbt.press('KEY_UP')
         assert stbt.wait_until(lambda: ManageYourAccountMenu().message == sky_plus_strings.DETAILS_AND_MESSAGES), \
             '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.DETAILS_AND_MESSAGES)
@@ -113,7 +113,7 @@ def test_acceptance_simple_my_account_navigation():
         item = [x for x in menu_items if x.text == sky_plus_strings.DETAILS_AND_MESSAGES][0]
         match_result = match(interactive_constants.MYA_DETAILS_MESSAGES, frame=menu._frame, region=item.region)
         debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
-        item = [x for x in menu_items if x.text == sky_plus_strings.FIND_OUT_MORE][0]
+        item = [x for x in menu_items if x.text == sky_plus_strings.EXPLORE_MORE][0]
         match_result = match(interactive_constants.MYA_MY_OFFERS, frame=menu._frame, region=item.region)
         debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
     finally:

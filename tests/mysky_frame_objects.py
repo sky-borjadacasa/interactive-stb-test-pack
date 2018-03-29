@@ -278,8 +278,8 @@ def open_and_check_mysky():
 
     message = menu.message
     debug('Item message: {0}'.format(message))
-    assert message == sky_plus_strings.FIND_OUT_MORE, \
-        '[MySky] Selected item should be [{0}], but is [{1}]'.format(sky_plus_strings.FIND_OUT_MORE, message)
+    assert message == sky_plus_strings.EXPLORE_MORE, \
+        '[MySky] Selected item should be [{0}], but is [{1}]'.format(sky_plus_strings.EXPLORE_MORE, message)
 
     return menu
 
