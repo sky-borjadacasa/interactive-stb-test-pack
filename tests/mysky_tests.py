@@ -40,6 +40,12 @@ def test_acceptance_simple_open_mysky():
         stbt.press('KEY_DOWN')
         assert stbt.wait_until(lambda: MySkyMainMenu().message == sky_plus_strings.FIX_A_PROBLEM), \
             '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.FIX_A_PROBLEM)
+        stbt.press('KEY_DOWN')
+        assert stbt.wait_until(lambda: MySkyMainMenu().message == sky_plus_strings.YOUR_FORECAST), \
+            '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.YOUR_FORECAST)
+        stbt.press('KEY_UP')
+        assert stbt.wait_until(lambda: MySkyMainMenu().message == sky_plus_strings.FIX_A_PROBLEM), \
+            '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.FIX_A_PROBLEM)
         stbt.press('KEY_UP')
         assert stbt.wait_until(lambda: MySkyMainMenu().message == sky_plus_strings.MANAGE_YOUR_ACCOUNT), \
             '[MySky] Selected item is not [{0}]'.format(sky_plus_strings.MANAGE_YOUR_ACCOUNT)

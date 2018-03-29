@@ -137,6 +137,8 @@ class MySkyMainMenu(FrameObject):
         items.append(item)
         item = MySkyMenuItem(self._frame, mysky_constants.MAIN_MENU_ITEM_3_REGION)
         items.append(item)
+        item = MySkyMenuItem(self._frame, mysky_constants.MAIN_MENU_ITEM_4_REGION)
+        items.append(item)
 
         return items
 
@@ -258,15 +260,12 @@ def basic_check_mysky():
     menu = stbt.wait_until(MySkyMainMenu, timeout_secs=MY_SKY_OPEN_TIMEOUT)
     assert menu.is_visible, '[MySky] Main menu is not visible'
 
-    greeting = menu.greeting
-    assert greeting == mysky_test_utils.greeting_string(), '[MySky] Greeting is [{0}], but should be [{1}]'.format(greeting, mysky_test_utils.greeting_string())
-
     menu_items = menu.menu_items
     for item in menu_items:
         debug('Item text: {0}'.format(item.text))
         debug('Item selected: {0}'.format(item.selected))
     debug(len(menu_items))
-    assert len(menu_items) == 3, '[MySky] Main menu should have 3 items, but has {0}'.format(len(menu_items))
+    assert len(menu_items) == 4, '[MySky] Main menu should have 3 items, but has {0}'.format(len(menu_items))
     return menu
 
 def open_and_basic_check_mysky():

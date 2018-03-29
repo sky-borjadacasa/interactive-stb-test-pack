@@ -14,6 +14,7 @@ OCR_CHAR_WHITELIST_PIN = string.digits + '_'
 # MySky:
 MANAGE_YOUR_ACCOUNT = 'Manage your account'
 FIX_A_PROBLEM = 'Fix a problem'
+YOUR_FORECAST = 'Your forecast'
 BILLS_AND_PAYMENTS = 'Bills and Payments'
 PACKAGE_AND_SETTINGS = 'TV package and settings'
 BROADBAND_AND_TALK = 'Broadband and Talk'
@@ -21,6 +22,7 @@ DETAILS_AND_MESSAGES = 'My details and messages'
 PICTURE_PROBLEMS = 'TV picture problems'
 NO_SATELITE_SIGNAL = 'No satelite signal'
 FORGOTTEN_PIN = 'Forgotten PIN'
+# TODO: Remove
 GOOD_MORNING = 'Good Morning'
 GOOD_AFTERNOON = 'Good Afternoon'
 GOOD_EVENING = 'Good Evening'
@@ -52,6 +54,7 @@ MM_SUBTITLE = 'My Messages may contain personal account information.'
 # Fuzzy set:
 FUZZY_SET = [MANAGE_YOUR_ACCOUNT,
              FIX_A_PROBLEM,
+             YOUR_FORECAST,
              BILLS_AND_PAYMENTS,
              PACKAGE_AND_SETTINGS,
              BROADBAND_AND_TALK,

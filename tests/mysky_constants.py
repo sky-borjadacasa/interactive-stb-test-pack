@@ -19,9 +19,10 @@ TRAFFIC_LIGHTS_REGION = Region(29, 21, width=20, height=33)
 # TODO: Will be removed from version 1.34
 MY_SKY_GREETING_REGION = Region(930, 90, width=300, height=45)
 MAIN_MENU_LOADING_REGION = Region(1015, 280, width=140, height=50)
-MAIN_MENU_ITEM_1_REGION = Region(930, 135, width=300, height=150)
-MAIN_MENU_ITEM_2_REGION = Region(930, 295, width=300, height=130)
-MAIN_MENU_ITEM_3_REGION = Region(930, 435, width=300, height=130)
+MAIN_MENU_ITEM_1_REGION = Region(930, 95, width=300, height=150)
+MAIN_MENU_ITEM_2_REGION = Region(930, 255, width=300, height=130)
+MAIN_MENU_ITEM_3_REGION = Region(930, 395, width=300, height=130)
+MAIN_MENU_ITEM_4_REGION = Region(930, 535, width=300, height=130)
 
 
 # Manage Your Account Regions:
