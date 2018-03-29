@@ -4,32 +4,9 @@
 Test cases for MySky
 """
 
-import datetime
 import stbt
 from stbt import Region
-from sky_plus_utils import debug
 import mysky_constants
-import sky_plus_strings
-
-def greeting_string():
-    """Get greeting string"""
-    now = datetime.datetime.now()
-    debug('Datetime now: {0}'.format(now))
-    mid_day_string = "12:00:00"
-    mid_day = datetime.datetime.strptime(mid_day_string, "%H:%M:%S")
-    mid_day = now.replace(hour=mid_day.time().hour, minute=mid_day.time().minute, \
-        second=mid_day.time().second, microsecond=0)
-    six_pm_string = "18:00:00"
-    six_pm = datetime.datetime.strptime(six_pm_string, "%H:%M:%S")
-    six_pm = now.replace(hour=six_pm.time().hour, minute=six_pm.time().minute, \
-        second=six_pm.time().second, microsecond=0)
-
-    if now < mid_day:
-        return sky_plus_strings.GOOD_MORNING
-    elif now < six_pm:
-        return sky_plus_strings.GOOD_AFTERNOON
-    else:
-        return sky_plus_strings.GOOD_EVENING
 
 def traffic_light_is_red(frame):
     """Tell if the traffic light is red"""

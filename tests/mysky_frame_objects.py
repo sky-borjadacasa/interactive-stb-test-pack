@@ -116,12 +116,6 @@ class MySkyMainMenu(FrameObject):
         return False
 
     @property
-    def greeting(self):
-        """Get greeting from top of the menu"""
-        text = sky_plus_utils.find_text(self._frame, mysky_constants.MY_SKY_GREETING_REGION)
-        return text
-
-    @property
     def message(self):
         """Get selected item text"""
         selected_list = [x for x in self.menu_items if x.selected]
@@ -246,14 +240,6 @@ class ManageYourAccountMenu(FrameObject):
         return items
 
 # --------------------------- UTILS
-
-def open_and_check_greeting(expected_greeting):
-    """Open the MySky app and make basic checks"""
-    stbt.press('KEY_YELLOW')
-    menu = stbt.wait_until(MySkyMainMenu, timeout_secs=MY_SKY_OPEN_TIMEOUT)
-    assert menu.is_visible, '[MySky] Main menu is not visible'
-
-    assert menu.greeting == expected_greeting, '[MySky] Greeting is [{0}], but should be [{1}]'.format(menu.greeting, expected_greeting)
 
 def basic_check_mysky():
     """Make basic checks for MySKy"""

@@ -16,8 +16,6 @@ MY_SKY_MOVING_BALLS_REGION = Region(1100, 0, width=180, height=100)
 TRAFFIC_LIGHTS_REGION = Region(29, 21, width=20, height=33)
 
 # MySky Regions:
-# TODO: Will be removed from version 1.34
-MY_SKY_GREETING_REGION = Region(930, 90, width=300, height=45)
 MAIN_MENU_LOADING_REGION = Region(1015, 280, width=140, height=50)
 MAIN_MENU_ITEM_1_REGION = Region(930, 95, width=300, height=150)
 MAIN_MENU_ITEM_2_REGION = Region(930, 255, width=300, height=130)

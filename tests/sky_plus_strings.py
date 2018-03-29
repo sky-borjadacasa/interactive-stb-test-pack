@@ -22,10 +22,6 @@ DETAILS_AND_MESSAGES = 'My details and messages'
 PICTURE_PROBLEMS = 'TV picture problems'
 NO_SATELITE_SIGNAL = 'No satelite signal'
 FORGOTTEN_PIN = 'Forgotten PIN'
-# TODO: Remove
-GOOD_MORNING = 'Good Morning'
-GOOD_AFTERNOON = 'Good Afternoon'
-GOOD_EVENING = 'Good Evening'
 FIND_OUT_MORE = 'Find out more'
 LOADING = 'Loading...'
 NEXT_GENERATION = 'The next generation box'
@@ -62,9 +58,6 @@ FUZZY_SET = [MANAGE_YOUR_ACCOUNT,
              PICTURE_PROBLEMS,
              NO_SATELITE_SIGNAL,
              FORGOTTEN_PIN,
-             GOOD_MORNING,
-             GOOD_AFTERNOON,
-             GOOD_EVENING,
              FIND_OUT_MORE,
              LOADING,
              NEXT_GENERATION,

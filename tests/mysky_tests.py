@@ -73,39 +73,6 @@ def test_acceptance_simple_backup_button_exits():
     finally:
         clear_test()
 
-def test_timed_greeting_good_morning():
-    """Open MySky app and check that the greeting is Good morning
-    Automates: https://interactiveqa.testrail.net/index.php?/cases/view/4
-    NOTE: This test must run between midnight and midday
-    """
-    clear_test()
-    try:
-        mysky_frame_objects.open_and_check_greeting(sky_plus_strings.GOOD_MORNING)
-    finally:
-        clear_test()
-
-def test_timed_greeting_good_afternoon():
-    """Open MySky app and check that the greeting is Good afternoon
-    Automates: https://interactiveqa.testrail.net/index.php?/cases/view/5
-    NOTE: This test must run between midday and 18.00
-    """
-    clear_test()
-    try:
-        mysky_frame_objects.open_and_check_greeting(sky_plus_strings.GOOD_AFTERNOON)
-    finally:
-        clear_test()
-
-def test_timed_greeting_good_evening():
-    """Open MySky app and check that the greeting is Good evening
-    Automates: https://interactiveqa.testrail.net/index.php?/cases/view/6
-    NOTE: This test must run between 18.00 and midnight
-    """
-    clear_test()
-    try:
-        mysky_frame_objects.open_and_check_greeting(sky_plus_strings.GOOD_EVENING)
-    finally:
-        clear_test()
-
 def test_acceptance_simple_my_account_navigation():
     """Open My Account menu and navigate
     Automates: https://interactiveqa.testrail.net/index.php?/cases/view/26
