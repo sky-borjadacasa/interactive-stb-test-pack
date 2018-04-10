@@ -21,7 +21,7 @@ ENV_CODE_PROD = 'KEY_3'
 
 def open_developer_mode():
     """Open Developer mode"""
-    sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
+    sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE_HD)
     mysky_frame_objects.open_and_basic_check_mysky()
     sleep(0.5)
     sky_plus_utils.open_secret_scene()

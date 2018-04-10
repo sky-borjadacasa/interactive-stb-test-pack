@@ -18,7 +18,7 @@ def test_smoke_open_mysky():
     """Open MySky app"""
     clear_test()
     try:
-        sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
+        sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE_HD)
         mysky_frame_objects.open_and_basic_check_mysky()
     finally:
         clear_test()
@@ -30,7 +30,7 @@ def test_acceptance_simple_open_mysky():
     """
     clear_test()
     try:
-        sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
+        sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE_HD)
         mysky_frame_objects.open_and_check_mysky()
 
         # Navigate menus:
@@ -79,7 +79,7 @@ def test_acceptance_simple_my_account_navigation():
     """
     clear_test()
     try:
-        sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
+        sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE_HD)
         menu = mysky_frame_objects.open_and_basic_check_manage_your_account()
 
         # Navigate menus:
@@ -125,7 +125,7 @@ def test_acceptance_simple_my_account_yellow_button():
     """
     clear_test()
     try:
-        sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE)
+        sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE_HD)
         mysky_frame_objects.open_and_basic_check_manage_your_account()
         stbt.press('KEY_YELLOW')
         sleep(1)

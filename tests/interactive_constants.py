@@ -8,7 +8,7 @@ import numpy as np
 from stbt import Region
 
 # Channels:
-CHANNEL_SKY_ONE = '106'
+CHANNEL_SKY_ONE_HD = '106'
 
 # Regions:
 TITLE_REGION = Region(45, 30, width=170, height=45)
