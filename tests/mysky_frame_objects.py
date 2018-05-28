@@ -17,6 +17,7 @@ from mysky_test_utils import get_bottom_text_region, get_default_image_region
 import interactive_constants
 import sky_plus_strings
 
+
 def get_text_region(region):
     """Get region of item where text should be located
 
@@ -29,25 +30,6 @@ def get_text_region(region):
     bottom = Region(region.x + 10, region.bottom - 45, width=region.width - 20, bottom=region.bottom - 5)
     return bottom
 
-# DEPRECATED: Use traffic lights better
-def detect_moving_balls(frame):
-    """Detect moving balls in the given frame
-
-    Args:
-        frame (stbt.Frame): Frame to search
-
-    Returns:
-        True if moving balls are found, False otherwise
-    """
-    for i in range(1, 5):
-        filename = mysky_constants.MOVING_BALLS.format(i)
-        debug('[MOVING BALLS] Using file: {0}'.format(filename))
-        if IMAGE_DEBUG_MODE:
-            cv2.imwrite('moving_balls_frame_{0}.jpg'.format(time.time()), sky_plus_utils.crop_image(frame, mysky_constants.MY_SKY_MOVING_BALLS_REGION))
-        moving_balls = stbt.match(filename, frame=frame, region=mysky_constants.MY_SKY_MOVING_BALLS_REGION)
-        if moving_balls:
-            return True
-    return False
 
 def ui_locked_or_refreshing(frame):
     """Detect if traffic lights are red (ui locked) or yellow (ui refreshing) in the given frame
@@ -62,6 +44,7 @@ def ui_locked_or_refreshing(frame):
     is_yellow = mysky_test_utils.traffic_light_is_yellow(frame)
     return is_red or is_yellow
 
+
 def ui_ready(frame):
     """Detect if traffic lights are green in the given frame
 
@@ -75,6 +58,7 @@ def ui_ready(frame):
     if IMAGE_DEBUG_MODE:
         cv2.imwrite('traffic_light_{0}.jpg'.format(time.time()), frame)
     return is_green
+
 
 # pylint: disable=too-few-public-methods
 class MySkyMenuItem(object):
@@ -99,6 +83,7 @@ class MySkyMenuItem(object):
         if self.text_region is not None:
             self.text = sky_plus_utils.find_text(frame, self.text_region)
             self.selected = sky_plus_utils.match_color(frame, self.text_region, interactive_constants.YELLOW_BACKGROUND_RGB)
+
 
 class MySkyMainMenu(FrameObject):
     """FrameObject class to analyze MySky main menu."""
@@ -136,6 +121,7 @@ class MySkyMainMenu(FrameObject):
 
         return items
 
+
 class SecretSceneMainMenu(FrameObject):
     """FrameObject class to analyze Secret Scene main menu."""
 
@@ -170,17 +156,10 @@ class SecretSceneMainMenu(FrameObject):
         items.append(item)
         item = MySkyMenuItem(self._frame, mysky_constants.SS_MAIN_ITEM_2_REGION, image_region_function=None)
         items.append(item)
-
-        # TODO: Check
-        # for item in items:
-        #     text_region = item.text_region
-        #     debug('REGION: {0}'.format(text_region))
-        #     item.text = sky_plus_utils.find_text(self._frame, text_region)
-        #     item.selected = sky_plus_utils.match_color(self._frame, text_region, interactive_constants.YELLOW_BACKGROUND_RGB)
-
         return items
 
-class DeveloperMenuMenu(FrameObject):
+
+class DeveloperModeMenu(FrameObject):
     """FrameObject class to analyze Secret Scene Developer mode menu."""
 
     @property
@@ -199,6 +178,22 @@ class DeveloperMenuMenu(FrameObject):
         """Get title from top of the menu"""
         text = sky_plus_utils.find_text(self._frame, mysky_constants.SS_DEV_MODE_TITLE_REGION)
         return text
+
+    @property
+    def message(self):
+        """Get selected item text"""
+        selected_list = [x for x in self.menu_items if x.selected]
+        return selected_list[0].text
+
+    @property
+    def menu_items(self):
+        """Get menu items list"""
+        items = []
+        for region in mysky_constants.SS_DEV_MODE_ITEM_REGIONS:
+            item = MySkyMenuItem(self._frame, region, image_region_function=None)
+            items.append(item)
+        return items
+
 
 class ManageYourAccountMenu(FrameObject):
     """FrameObject class to analyze Manage Your Account menu."""
@@ -240,7 +235,11 @@ class ManageYourAccountMenu(FrameObject):
 
         return items
 
-# --------------------------- UTILS
+
+# ################# #
+# ##### Utils ##### #
+# ################# #
+
 
 def basic_check_mysky():
     """Make basic checks for MySKy"""
@@ -255,11 +254,13 @@ def basic_check_mysky():
     assert len(menu_items) == 4, '[MySky] Main menu should have 3 items, but has {0}'.format(len(menu_items))
     return menu
 
+
 def open_and_basic_check_mysky():
     """Open the MySky app and make basic checks"""
     stbt.press('KEY_YELLOW')
     menu = basic_check_mysky()
     return menu
+
 
 def open_and_check_mysky():
     """Open the MySky app and make some checks"""
@@ -284,6 +285,7 @@ def open_and_check_mysky():
 
     return menu
 
+
 def button_exits_test(button):
     """Open MySky app and close it with the given button"""
     sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE_HD)
@@ -293,6 +295,7 @@ def button_exits_test(button):
     stbt.press(button)
     assert stbt.wait_until(lambda: not MySkyMainMenu().is_visible), \
         '[MySky] MySky menu did not close'
+
 
 def open_and_basic_check_manage_your_account():
     """Open the Manage your account menu and make basic checks"""

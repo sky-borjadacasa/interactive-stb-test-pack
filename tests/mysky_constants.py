@@ -36,6 +36,14 @@ SS_MAIN_ITEM_1_REGION = Region(940, 425, width=280, height=40)
 SS_MAIN_ITEM_2_REGION = Region(940, 475, width=280, height=40)
 SS_DEV_MODE_TITLE_REGION = Region(1050, 125, width=60, height=40)
 SS_DEV_MODE_SUBTITLE_REGION = Region(980, 235, width=205, height=40)
+SS_DEV_MODE_ITEM_REGIONS = [Region(932, 283, width=290, height=50),
+                            Region(932, 333, width=290, height=50),
+                            Region(932, 383, width=290, height=50),
+                            Region(932, 433, width=290, height=50),
+                            Region(932, 483, width=290, height=50),
+                            Region(932, 533, width=290, height=50),
+                            Region(932, 583, width=290, height=50),
+                            Region(932, 633, width=290, height=50)]
 
 # Images:
 SKY_TOP_LOGO = 'images/SkyTopLogo.png'

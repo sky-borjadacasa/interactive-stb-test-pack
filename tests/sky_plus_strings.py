@@ -30,6 +30,14 @@ INTERACTIVE_MY_SKY = 'Interactive My Sky'
 SS_CLOSE_POPUP = 'Close this popup'
 SS_DEVELOPER_MODE = 'Developer mode'
 SS_VCN = 'VCN'
+SSD_SCRATCH = 'Scratch test menu'
+SSD_DUMP_STATE = 'Dump state to serial'
+SSD_DUMP_AV_INFO = 'Dump AV info to serial'
+SSD_CV_LIVE = 'Content version \'live\''
+SSD_CV_PREVIEW = 'Content version \'preview\''
+SSD_ENABLE_HD = 'Enable HD'
+SSD_DISABLE_HD = 'Disable HD'
+SSD_GENERATE_FONTS_MAP = 'Generate fonts map'
 
 # Interactive Main Menu:
 INTERACTIVE = 'Interactive'
@@ -66,6 +74,16 @@ FUZZY_SET = [MANAGE_YOUR_ACCOUNT,
              SS_CLOSE_POPUP,
              SS_DEVELOPER_MODE,
              SS_VCN,
+             SS_DEVELOPER_MODE,
+             SS_VCN,
+             SSD_SCRATCH,
+             SSD_DUMP_STATE,
+             SSD_DUMP_AV_INFO,
+             SSD_CV_LIVE,
+             SSD_CV_PREVIEW,
+             SSD_ENABLE_HD,
+             SSD_DISABLE_HD,
+             SSD_GENERATE_FONTS_MAP,
              INTERACTIVE,
              HELP_AND_SUPPORT,
              GET_HELP,
