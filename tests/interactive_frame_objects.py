@@ -10,6 +10,7 @@ from sky_plus_utils import debug, find_text, match_color
 import interactive_constants
 import sky_plus_strings
 
+
 # pylint: disable=too-few-public-methods
 class MenuItem(object):
     """Class to store the attributes of a MySky menu item"""
@@ -24,8 +25,11 @@ class MenuItem(object):
         self.text = find_text(image, region)
         self.selected = match_color(image, region, interactive_constants.YELLOW_BACKGROUND_RGB)
 
+
 class InteractiveMainMenu(FrameObject):
     """FrameObject class to analyze Interactive main menu."""
+
+    items = []
 
     @property
     def is_visible(self):
@@ -45,15 +49,20 @@ class InteractiveMainMenu(FrameObject):
         selected_list = [x for x in self.menu_items if x.selected]
         return selected_list[0].text
 
-    @property
-    def menu_items(self):
-        """Get menu items list"""
-        items = []
+    def populate_items(self):
+        """Load menu items list"""
         for region in interactive_constants.MAIN_MENU_ITEM_REGIONS:
             item = MenuItem(self._frame, region)
-            items.append(item)
+            self.items.append(item)
 
-        return items
+    @property
+    # TODO: Refactor usage
+    def menu_items(self):
+        """Get menu items list"""
+        if not self.items:
+            self.populate_items()
+        return self.items
+
 
 class MyMessagesMenu(FrameObject):
     """FrameObject class to analyze My Messages menu."""
@@ -75,6 +84,7 @@ class MyMessagesMenu(FrameObject):
 
             return title_visible and subtitle_visible and pin_visible
         return False
+
 
 class MyAccountMenu(FrameObject):
     """FrameObject class to analyze My Account menu."""
