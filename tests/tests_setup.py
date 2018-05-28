@@ -90,7 +90,7 @@ def test_setup_enable_hd():
     clear_test()
     try:
         open_developer_mode()
-        developer_mode_enter_menu(sky_plus_strings.SSD_DISABLE_HD)
+        developer_mode_enter_menu(sky_plus_strings.SSD_ENABLE_HD)
         sleep(2)
     finally:
         clear_test()
