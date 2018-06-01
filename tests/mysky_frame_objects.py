@@ -133,8 +133,8 @@ class SecretSceneMainMenu(FrameObject):
             debug('[DEBUG_REFACTOR] Constructor -> 01')
             frame = stbt.get_frame()
         debug('[DEBUG_REFACTOR] Constructor -> 02')
-        #super(FrameObject, self).__init__(frame)
-        self.frame = frame
+        super(FrameObject, self).__init__(frame)
+        #self.frame = frame
         debug('[DEBUG_REFACTOR] Constructor -> 03')
         self.items = []
         debug('[DEBUG_REFACTOR] Constructor -> 04')
