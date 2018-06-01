@@ -71,7 +71,8 @@ class MySkyMenuItem(object):
     image_region = None
     text_region = None
 
-    def __init__(self, frame, region, text_region_function=get_bottom_text_region, image_region_function=get_default_image_region):
+    def __init__(self, frame, region, text_region_function=get_bottom_text_region,
+                 image_region_function=get_default_image_region):
         self.frame = frame
         self.region = region
         if image_region_function is not None:
@@ -82,7 +83,8 @@ class MySkyMenuItem(object):
         debug('REGION: {0}'.format(self.text_region))
         if self.text_region is not None:
             self.text = sky_plus_utils.find_text(frame, self.text_region)
-            self.selected = sky_plus_utils.match_color(frame, self.text_region, interactive_constants.YELLOW_BACKGROUND_RGB)
+            self.selected = sky_plus_utils.match_color(frame, self.text_region,
+                                                       interactive_constants.YELLOW_BACKGROUND_RGB)
 
 
 class MySkyMainMenu(FrameObject):
@@ -125,7 +127,9 @@ class MySkyMainMenu(FrameObject):
 class SecretSceneMainMenu(FrameObject):
     """FrameObject class to analyze Secret Scene main menu."""
 
-    items = []
+    def __init__(self, frame=None):
+        super(FrameObject, self).__init__(frame)
+        self.items = []
 
     @property
     def is_visible(self):
