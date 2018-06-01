@@ -127,17 +127,17 @@ class MySkyMainMenu(FrameObject):
 class SecretSceneMainMenu(FrameObject):
     """FrameObject class to analyze Secret Scene main menu."""
 
-    def __init__(self, frame=None):
-        debug('[DEBUG_REFACTOR] Constructor -> 00')
-        if frame is None:
-            debug('[DEBUG_REFACTOR] Constructor -> 01')
-            frame = stbt.get_frame()
-        debug('[DEBUG_REFACTOR] Constructor -> 02')
-        #super(FrameObject, self).__init__(frame)
-        self.frame = frame
-        debug('[DEBUG_REFACTOR] Constructor -> 03')
-        self.items = []
-        debug('[DEBUG_REFACTOR] Constructor -> 04')
+    # def __init__(self, frame=None):
+    #     debug('[DEBUG_REFACTOR] Constructor -> 00')
+    #     if frame is None:
+    #         debug('[DEBUG_REFACTOR] Constructor -> 01')
+    #         frame = stbt.get_frame()
+    #     debug('[DEBUG_REFACTOR] Constructor -> 02')
+    #     #super(FrameObject, self).__init__(frame)
+    #     self.frame = frame
+    #     debug('[DEBUG_REFACTOR] Constructor -> 03')
+    #     self.items = []
+    #     debug('[DEBUG_REFACTOR] Constructor -> 04')
 
     @property
     def is_visible(self):
@@ -178,6 +178,7 @@ class SecretSceneMainMenu(FrameObject):
     # TODO: Refactor usage
     def menu_items(self):
         """Get menu items list"""
+        self.items = []
         debug('[DEBUG_REFACTOR] Enter menu_items -> len(self.items) = {0}'.format(len(self.items)))
         if not self.items:
             self.populate_items()
