@@ -128,6 +128,8 @@ class SecretSceneMainMenu(FrameObject):
     """FrameObject class to analyze Secret Scene main menu."""
 
     def __init__(self, frame=None):
+        if frame is None:
+            frame = stbt.get_frame()
         super(FrameObject, self).__init__(frame)
         self.items = []
 
