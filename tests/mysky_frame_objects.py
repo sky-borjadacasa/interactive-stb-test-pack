@@ -128,10 +128,15 @@ class SecretSceneMainMenu(FrameObject):
     """FrameObject class to analyze Secret Scene main menu."""
 
     def __init__(self, frame=None):
+        debug('[DEBUG_REFACTOR] Constructor -> 00')
         if frame is None:
+            debug('[DEBUG_REFACTOR] Constructor -> 01')
             frame = stbt.get_frame()
+        debug('[DEBUG_REFACTOR] Constructor -> 02')
         super(FrameObject, self).__init__(frame)
+        debug('[DEBUG_REFACTOR] Constructor -> 03')
         self.items = []
+        debug('[DEBUG_REFACTOR] Constructor -> 04')
 
     @property
     def is_visible(self):
