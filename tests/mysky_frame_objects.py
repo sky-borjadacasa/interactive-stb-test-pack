@@ -159,9 +159,7 @@ class SecretSceneMainMenu(FrameObject):
     @property
     def message(self):
         """Get selected item text"""
-        debug('[DEBUG_REFACTOR] Enter message -> len(self.items) = {0}'.format(len(self.items)))
         selected_list = [x for x in self.menu_items if x.selected]
-        debug('[DEBUG_REFACTOR] Exit message -> len(self.items) = {0}'.format(len(self.items)))
         return selected_list[0].text
 
     def populate_items(self):
@@ -173,17 +171,15 @@ class SecretSceneMainMenu(FrameObject):
         items.append(item)
         item = MySkyMenuItem(self._frame, mysky_constants.SS_MAIN_ITEM_2_REGION, image_region_function=None)
         items.append(item)
-        debug('[DEBUG_REFACTOR] Exit populate_items -> len(self.items) = {0}'.format(len(self.items)))
+        debug('[DEBUG_REFACTOR] Exit populate_items -> len(self.items) = {0}'.format(len(items)))
         return items
 
     @property
     # TODO: Refactor usage
     def menu_items(self):
         """Get menu items list"""
-        debug('[DEBUG_REFACTOR] Enter menu_items -> len(self.items) = {0}'.format(len(self.items)))
         # if not self.items:
         #     self.populate_items()
-        debug('[DEBUG_REFACTOR] Exit menu_items -> len(self.items) = {0}'.format(len(self.items)))
         return self.populate_items()
 
 
