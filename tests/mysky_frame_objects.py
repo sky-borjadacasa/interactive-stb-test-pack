@@ -18,6 +18,14 @@ import interactive_constants
 import sky_plus_strings
 
 
+# ##################### #
+# ##### Constants ##### #
+# ##################### #
+
+SS_MAIN_REGIONS = [Region(940, 425, width=280, height=40),
+                   Region(940, 475, width=280, height=40)]
+
+
 def get_text_region(region):
     """Get region of item where text should be located
 
@@ -158,13 +166,9 @@ class SecretSceneMainMenu(FrameObject):
 
     def populate_items(self):
         """Load menu items list"""
-        debug('[DEBUG_REFACTOR] Enter populate_items')
-        # TODO: Refactor
-        item = MySkyMenuItem(self._frame, mysky_constants.SS_MAIN_ITEM_1_REGION, image_region_function=None)
-        self.items.append(item)
-        item = MySkyMenuItem(self._frame, mysky_constants.SS_MAIN_ITEM_2_REGION, image_region_function=None)
-        self.items.append(item)
-        debug('[DEBUG_REFACTOR] Exit populate_items -> len(self.items) = {0}'.format(len(self.items)))
+        for region in SS_MAIN_REGIONS:
+            item = MySkyMenuItem(self._frame, region, image_region_function=None)
+            self.items.append(item)
 
     @property
     # TODO: Refactor usage
