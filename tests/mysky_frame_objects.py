@@ -168,22 +168,23 @@ class SecretSceneMainMenu(FrameObject):
         """Load menu items list"""
         debug('[DEBUG_REFACTOR] Enter populate_items')
         # TODO: Refactor
+        items = []
         item = MySkyMenuItem(self._frame, mysky_constants.SS_MAIN_ITEM_1_REGION, image_region_function=None)
-        self.items.append(item)
+        items.append(item)
         item = MySkyMenuItem(self._frame, mysky_constants.SS_MAIN_ITEM_2_REGION, image_region_function=None)
-        self.items.append(item)
+        items.append(item)
         debug('[DEBUG_REFACTOR] Exit populate_items -> len(self.items) = {0}'.format(len(self.items)))
+        return items
 
     @property
     # TODO: Refactor usage
     def menu_items(self):
         """Get menu items list"""
-        self.items = []
         debug('[DEBUG_REFACTOR] Enter menu_items -> len(self.items) = {0}'.format(len(self.items)))
-        if not self.items:
-            self.populate_items()
+        # if not self.items:
+        #     self.populate_items()
         debug('[DEBUG_REFACTOR] Exit menu_items -> len(self.items) = {0}'.format(len(self.items)))
-        return self.items
+        return items
 
 
 class DeveloperModeMenu(FrameObject):
