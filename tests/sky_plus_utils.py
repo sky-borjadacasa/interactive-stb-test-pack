@@ -136,6 +136,7 @@ def is_color_in_palette(palette, color_frequency, color_to_find):
             return True
     return False
 
+
 def find_text(image, region, fuzzy=True, char_whitelist=sky_plus_strings.OCR_CHAR_WHITELIST):
     """Read the text in the given region
 
@@ -148,10 +149,6 @@ def find_text(image, region, fuzzy=True, char_whitelist=sky_plus_strings.OCR_CHA
     Returns:
         Text of the given item
     """
-    cropped_image = crop_image(image, region)
-    cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
-
-    text = ''
     ocr_options = {'tessedit_char_whitelist': char_whitelist}
     text = stbt.ocr(region=region, tesseract_config=ocr_options).strip().encode('utf-8')
     debug('Text found: [{0}] in region {1}'.format(text, region))
@@ -159,21 +156,23 @@ def find_text(image, region, fuzzy=True, char_whitelist=sky_plus_strings.OCR_CHA
         text = fuzzy_match(text)
     debug('Text matched: [{0}] in region {1}'.format(text, region))
     if IMAGE_DEBUG_MODE:
-        cv2.imwrite('finding_text_{0}_{1}.jpg'.format(time.time(), text), crop_image(image, region))
+        cv2.imwrite('finding_text_{0}_{1}.jpg'.format(text, time.time()), crop_image(image, region))
 
     return text
 
-def match_color(image, region, color):
+
+def match_color(frame, region, color):
     """Tell if the region dominant color matches (aprox.) the given color
 
     Args:
+        frame (stbt.Frame): Frame to search
         region (stbt.Region): Region of the image to search defined by the top-left and bottom-right coordinates
         color (numpy.ndarray): Color to match in RGB format
 
     Returns:
         True if if the dominant color matches the given color
     """
-    palette, color_frequency = get_palette(image, region)
+    palette, color_frequency = get_palette(frame, region)
     debug('Palette: {0}'.format(palette))
     debug('Color frequency: {0}'.format(color_frequency))
     selected = is_color_in_palette(palette, color_frequency, color)
@@ -184,6 +183,7 @@ def match_color(image, region, color):
     debug('Color matched: {0}, {1}'.format(selected, color))
 
     return selected
+
 
 def fuzzy_match(text):
     """Get the text fuzzy matched against our dictionary
