@@ -184,7 +184,7 @@ class SecretSceneMainMenu(FrameObject):
         # if not self.items:
         #     self.populate_items()
         debug('[DEBUG_REFACTOR] Exit menu_items -> len(self.items) = {0}'.format(len(self.items)))
-        return items
+        return self.populate_items()
 
 
 class DeveloperModeMenu(FrameObject):
