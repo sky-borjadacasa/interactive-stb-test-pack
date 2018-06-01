@@ -125,6 +125,8 @@ class MySkyMainMenu(FrameObject):
 class SecretSceneMainMenu(FrameObject):
     """FrameObject class to analyze Secret Scene main menu."""
 
+    items = []
+
     @property
     def is_visible(self):
         # pylint: disable=stbt-frame-object-missing-frame
@@ -148,15 +150,21 @@ class SecretSceneMainMenu(FrameObject):
         selected_list = [x for x in self.menu_items if x.selected]
         return selected_list[0].text
 
+    def populate_items(self):
+        """Load menu items list"""
+        # TODO: Refactor
+        item = MySkyMenuItem(self._frame, mysky_constants.SS_MAIN_ITEM_1_REGION, image_region_function=None)
+        self.items.append(item)
+        item = MySkyMenuItem(self._frame, mysky_constants.SS_MAIN_ITEM_2_REGION, image_region_function=None)
+        self.items.append(item)
+
     @property
+    # TODO: Refactor usage
     def menu_items(self):
         """Get menu items list"""
-        items = []
-        item = MySkyMenuItem(self._frame, mysky_constants.SS_MAIN_ITEM_1_REGION, image_region_function=None)
-        items.append(item)
-        item = MySkyMenuItem(self._frame, mysky_constants.SS_MAIN_ITEM_2_REGION, image_region_function=None)
-        items.append(item)
-        return items
+        if not self.items:
+            self.populate_items()
+        return self.items
 
 
 class DeveloperModeMenu(FrameObject):
