@@ -22,12 +22,19 @@ import sky_plus_strings
 # ##### Constants ##### #
 # ##################### #
 
+MAIN_MENU_LOADING_REGION = Region(1015, 280, width=140, height=50)
+MAIN_MENU_REGIONS = [Region(930, 95, width=300, height=150),
+                     Region(930, 255, width=300, height=130),
+                     Region(930, 395, width=300, height=130),
+                     Region(930, 535, width=300, height=130)]
+
+SECRET_SCENE_TITLE_REGION = Region(970, 120, width=230, height=40)
 SS_MAIN_REGIONS = [Region(940, 425, width=280, height=40),
                    Region(940, 475, width=280, height=40)]
 
 
 def get_text_region(region):
-    """Get region of item where text should be located
+    """Get the default region of a menu item where the text should be located
 
     Args:
         region (stbt.Region): Region to crop
@@ -87,7 +94,7 @@ class MySkyMenuItem(object):
             self.image_region = image_region_function(region)
         if text_region_function is not None:
             self.text_region = text_region_function(region)
-        # TODO: Refactor
+        # TODO: Refactor -> Can use lambdas for this? Maybe we should have defaults? Maybe only use functions when there's image?
         debug('REGION: {0}'.format(self.text_region))
         if self.text_region is not None:
             self.text = sky_plus_utils.find_text(frame, self.text_region)
@@ -98,12 +105,18 @@ class MySkyMenuItem(object):
 class MySkyMainMenu(FrameObject):
     """FrameObject class to analyze MySky main menu."""
 
+    def __init__(self, frame=None):
+        if frame is None:
+            frame = stbt.get_frame()
+        super(FrameObject, self).__init__(frame)
+        self.items = []
+
     @property
     def is_visible(self):
         # pylint: disable=stbt-frame-object-missing-frame
         logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=mysky_constants.MY_SKY_REGION)
         if logo_visible:
-            text = sky_plus_utils.find_text(self._frame, mysky_constants.MAIN_MENU_LOADING_REGION)
+            text = sky_plus_utils.find_text(self._frame, MAIN_MENU_LOADING_REGION)
             debug('[FIND LOADING] Text found: {0}'.format(text))
             loading_visible = (text == sky_plus_strings.LOADING)
             light_is_green = ui_ready(self._frame)
@@ -116,20 +129,18 @@ class MySkyMainMenu(FrameObject):
         selected_list = [x for x in self.menu_items if x.selected]
         return selected_list[0].text
 
+    def populate_items(self):
+        """Load menu items list"""
+        for region in MAIN_MENU_REGIONS:
+            item = MySkyMenuItem(self._frame, region, image_region_function=lambda f: None)
+            self.items.append(item)
+
     @property
     def menu_items(self):
         """Get menu items list"""
-        items = []
-        item = MySkyMenuItem(self._frame, mysky_constants.MAIN_MENU_ITEM_1_REGION)
-        items.append(item)
-        item = MySkyMenuItem(self._frame, mysky_constants.MAIN_MENU_ITEM_2_REGION)
-        items.append(item)
-        item = MySkyMenuItem(self._frame, mysky_constants.MAIN_MENU_ITEM_3_REGION)
-        items.append(item)
-        item = MySkyMenuItem(self._frame, mysky_constants.MAIN_MENU_ITEM_4_REGION)
-        items.append(item)
-
-        return items
+        if not self.items:
+            self.populate_items()
+        return self.items
 
 
 class SecretSceneMainMenu(FrameObject):
@@ -146,7 +157,7 @@ class SecretSceneMainMenu(FrameObject):
         # pylint: disable=stbt-frame-object-missing-frame
         logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=mysky_constants.MY_SKY_REGION)
         if logo_visible:
-            text = sky_plus_utils.find_text(self._frame, mysky_constants.SECRET_SCENE_TITLE_REGION)
+            text = sky_plus_utils.find_text(self._frame, SECRET_SCENE_TITLE_REGION)
             debug('[FIND Interactive My Sky] Text found: {0}'.format(text))
             title_visible = (text == sky_plus_strings.INTERACTIVE_MY_SKY)
             return title_visible
@@ -155,7 +166,7 @@ class SecretSceneMainMenu(FrameObject):
     @property
     def title(self):
         """Get title from top of the menu"""
-        text = sky_plus_utils.find_text(self._frame, mysky_constants.SECRET_SCENE_TITLE_REGION)
+        text = sky_plus_utils.find_text(self._frame, SECRET_SCENE_TITLE_REGION)
         return text
 
     @property
@@ -167,7 +178,7 @@ class SecretSceneMainMenu(FrameObject):
     def populate_items(self):
         """Load menu items list"""
         for region in SS_MAIN_REGIONS:
-            item = MySkyMenuItem(self._frame, region, image_region_function=None)
+            item = MySkyMenuItem(self._frame, region, image_region_function=lambda f: None)
             self.items.append(item)
 
     @property
