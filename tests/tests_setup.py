@@ -5,7 +5,6 @@
 
 from time import sleep
 import stbt
-import mysky_constants
 import sky_plus_utils
 from sky_plus_utils import clear_test, press_digits, debug
 import mysky_frame_objects
@@ -149,7 +148,7 @@ def developer_mode_enter_menu(menu_name):
     # Navigate menus:
     menu = None
     # pylint: disable=unused-variable
-    for i in range(0, len(mysky_constants.SS_DEV_MODE_ITEM_REGIONS)):
+    for i in range(0, len(mysky_frame_objects.SS_DEV_MODE_ITEM_REGIONS)):
         menu = stbt.wait_until(DeveloperModeMenu, timeout_secs=20)
         debug('[DEVELOPER_MODE] Item selected: {0}'.format(menu.message))
 

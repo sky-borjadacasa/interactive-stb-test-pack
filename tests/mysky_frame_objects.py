@@ -130,7 +130,7 @@ class MySkyMainMenu(FrameObject):
     def __init__(self, frame=None):
         if frame is None:
             frame = stbt.get_frame()
-        super(FrameObject, self).__init__(frame)
+        super(MySkyMainMenu, self).__init__(frame)
         self.items = []
 
     @property
@@ -171,7 +171,7 @@ class SecretSceneMainMenu(FrameObject):
     def __init__(self, frame=None):
         if frame is None:
             frame = stbt.get_frame()
-        super(FrameObject, self).__init__(frame)
+        super(SecretSceneMainMenu, self).__init__(frame)
         self.items = []
 
     @property
@@ -218,7 +218,7 @@ class DeveloperModeMenu(FrameObject):
     def __init__(self, frame=None):
         if frame is None:
             frame = stbt.get_frame()
-        super(FrameObject, self).__init__(frame)
+        super(DeveloperModeMenu, self).__init__(frame)
         self.items = []
 
     @property
@@ -264,7 +264,7 @@ class ManageYourAccountMenu(FrameObject):
     def __init__(self, frame=None):
         if frame is None:
             frame = stbt.get_frame()
-        super(FrameObject, self).__init__(frame)
+        super(ManageYourAccountMenu, self).__init__(frame)
         self.items = []
 
     @property
