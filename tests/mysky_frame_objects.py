@@ -22,15 +22,37 @@ import sky_plus_strings
 # ##### Constants ##### #
 # ##################### #
 
+# MySky constants:
+MY_SKY_REGION = Region(880, 0, width=400, height=720)  # The 400 pixels to the right and the whole height of the screen
 MAIN_MENU_LOADING_REGION = Region(1015, 280, width=140, height=50)
 MAIN_MENU_REGIONS = [Region(930, 95, width=300, height=150),
                      Region(930, 255, width=300, height=130),
                      Region(930, 395, width=300, height=130),
                      Region(930, 535, width=300, height=130)]
 
+# Secret Scene constants:
 SECRET_SCENE_TITLE_REGION = Region(970, 120, width=230, height=40)
 SS_MAIN_REGIONS = [Region(940, 425, width=280, height=40),
                    Region(940, 475, width=280, height=40)]
+
+# Developer mode constants:
+SS_DEV_MODE_TITLE_REGION = Region(1050, 125, width=60, height=40)
+SS_DEV_MODE_SUBTITLE_REGION = Region(980, 235, width=205, height=40)
+SS_DEV_MODE_ITEM_REGIONS = [Region(932, 283, width=290, height=50),
+                            Region(932, 333, width=290, height=50),
+                            Region(932, 383, width=290, height=50),
+                            Region(932, 433, width=290, height=50),
+                            Region(932, 483, width=290, height=50),
+                            Region(932, 533, width=290, height=50),
+                            Region(932, 583, width=290, height=50),
+                            Region(932, 633, width=290, height=50)]
+
+# Manage Your Account constants:
+MYA_TITLE_REGION = Region(950, 90, width=300, height=35)
+MYA_MENU_ITEM_REGIONS = [Region(930, 135, width=300, height=130),
+                         Region(930, 275, width=300, height=130),
+                         Region(930, 415, width=300, height=130),
+                         Region(930, 555, width=300, height=130)]
 
 
 def get_text_region(region):
@@ -114,7 +136,7 @@ class MySkyMainMenu(FrameObject):
     @property
     def is_visible(self):
         # pylint: disable=stbt-frame-object-missing-frame
-        logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=mysky_constants.MY_SKY_REGION)
+        logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=MY_SKY_REGION)
         if logo_visible:
             text = sky_plus_utils.find_text(self._frame, MAIN_MENU_LOADING_REGION)
             debug('[FIND LOADING] Text found: {0}'.format(text))
@@ -155,7 +177,7 @@ class SecretSceneMainMenu(FrameObject):
     @property
     def is_visible(self):
         # pylint: disable=stbt-frame-object-missing-frame
-        logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=mysky_constants.MY_SKY_REGION)
+        logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=MY_SKY_REGION)
         if logo_visible:
             text = sky_plus_utils.find_text(self._frame, SECRET_SCENE_TITLE_REGION)
             debug('[FIND Interactive My Sky] Text found: {0}'.format(text))
@@ -193,12 +215,18 @@ class SecretSceneMainMenu(FrameObject):
 class DeveloperModeMenu(FrameObject):
     """FrameObject class to analyze Secret Scene Developer mode menu."""
 
+    def __init__(self, frame=None):
+        if frame is None:
+            frame = stbt.get_frame()
+        super(FrameObject, self).__init__(frame)
+        self.items = []
+
     @property
     def is_visible(self):
         # pylint: disable=stbt-frame-object-missing-frame
-        logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=mysky_constants.MY_SKY_REGION)
+        logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=MY_SKY_REGION)
         if logo_visible:
-            text = sky_plus_utils.find_text(self._frame, mysky_constants.SS_DEV_MODE_TITLE_REGION)
+            text = sky_plus_utils.find_text(self._frame, SS_DEV_MODE_TITLE_REGION)
             debug('[FIND VCN] Text found: {0}'.format(text))
             title_visible = (text == sky_plus_strings.SS_VCN)
             return title_visible
@@ -207,7 +235,7 @@ class DeveloperModeMenu(FrameObject):
     @property
     def title(self):
         """Get title from top of the menu"""
-        text = sky_plus_utils.find_text(self._frame, mysky_constants.SS_DEV_MODE_TITLE_REGION)
+        text = sky_plus_utils.find_text(self._frame, SS_DEV_MODE_TITLE_REGION)
         return text
 
     @property
@@ -216,33 +244,43 @@ class DeveloperModeMenu(FrameObject):
         selected_list = [x for x in self.menu_items if x.selected]
         return selected_list[0].text
 
+    def populate_items(self):
+        """Load menu items list"""
+        for region in SS_DEV_MODE_ITEM_REGIONS:
+            item = MySkyMenuItem(self._frame, region, image_region_function=lambda f: None)
+            self.items.append(item)
+
     @property
     def menu_items(self):
         """Get menu items list"""
-        items = []
-        for region in mysky_constants.SS_DEV_MODE_ITEM_REGIONS:
-            item = MySkyMenuItem(self._frame, region, image_region_function=None)
-            items.append(item)
-        return items
+        if not self.items:
+            self.populate_items()
+        return self.items
 
 
 class ManageYourAccountMenu(FrameObject):
     """FrameObject class to analyze Manage Your Account menu."""
 
+    def __init__(self, frame=None):
+        if frame is None:
+            frame = stbt.get_frame()
+        super(FrameObject, self).__init__(frame)
+        self.items = []
+
     @property
     def is_visible(self):
         # pylint: disable=stbt-frame-object-missing-frame
-        logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=mysky_constants.MY_SKY_REGION)
+        logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=MY_SKY_REGION)
         if logo_visible:
             light_is_green = ui_ready(self._frame)
-            text = sky_plus_utils.find_text(self._frame, mysky_constants.MYA_TITLE_REGION)
+            text = sky_plus_utils.find_text(self._frame, MYA_TITLE_REGION)
             return light_is_green and text == sky_plus_strings.MANAGE_YOUR_ACCOUNT
         return False
 
     @property
     def title(self):
         """Get greeting from top of the menu"""
-        text = sky_plus_utils.find_text(self._frame, mysky_constants.MYA_TITLE_REGION)
+        text = sky_plus_utils.find_text(self._frame, MYA_TITLE_REGION)
         return text
 
     @property
@@ -251,20 +289,18 @@ class ManageYourAccountMenu(FrameObject):
         selected_list = [x for x in self.menu_items if x.selected]
         return selected_list[0].text
 
+    def populate_items(self):
+        """Load menu items list"""
+        for region in MYA_MENU_ITEM_REGIONS:
+            item = MySkyMenuItem(self._frame, region, image_region_function=lambda f: None)
+            self.items.append(item)
+
     @property
     def menu_items(self):
         """Get menu items list"""
-        items = []
-        item = MySkyMenuItem(self._frame, mysky_constants.MYA_MENU_ITEM_1_REGION)
-        items.append(item)
-        item = MySkyMenuItem(self._frame, mysky_constants.MYA_MENU_ITEM_2_REGION)
-        items.append(item)
-        item = MySkyMenuItem(self._frame, mysky_constants.MYA_MENU_ITEM_3_REGION)
-        items.append(item)
-        item = MySkyMenuItem(self._frame, mysky_constants.MYA_MENU_ITEM_4_REGION)
-        items.append(item)
-
-        return items
+        if not self.items:
+            self.populate_items()
+        return self.items
 
 
 # ################# #
