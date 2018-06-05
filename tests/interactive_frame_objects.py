@@ -125,7 +125,7 @@ class InteractiveFrameObject(FrameObject):
 
     def populate_items(self):
         """Load menu items list"""
-        for region in self.menu_items:
+        for region in self.menu_regions:
             item = self.item_class(self._frame, region)
             if item.text:
                 self.items.append(item)
