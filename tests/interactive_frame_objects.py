@@ -55,6 +55,7 @@ class InteractiveMainMenu(FrameObject):
     def is_visible(self):
         # pylint: disable=stbt-frame-object-missing-frame
         logo_visible = stbt.match(interactive_constants.INTERACTIVE_SKY_LOGO)
+        debug('[INTERACTIVE] Logo visible: {0}'.format(logo_visible))
         if logo_visible:
             title = find_text(self._frame, interactive_constants.TITLE_REGION)
             debug('[INTERACTIVE] Text found: {0}'.format(title))
