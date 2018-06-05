@@ -114,6 +114,10 @@ class InteractiveFrameObject(FrameObject):
         self.items = []
 
     @property
+    def is_visible(self):
+        raise NotImplementedError('Objects deriving from InteractiveFrameObject must define an is_visible property')
+
+    @property
     def message(self):
         """Get selected item text"""
         selected_list = [x for x in self.menu_items if x.selected]
