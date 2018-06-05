@@ -158,7 +158,7 @@ def find_text(image, region, fuzzy=True, char_whitelist=sky_plus_strings.OCR_CHA
     if IMAGE_DEBUG_MODE:
         cv2.imwrite('finding_text_{0}_{1}.jpg'.format(text, time.time()), crop_image(image, region))
 
-    return text
+    return text.strip()
 
 
 def match_color(frame, region, color):

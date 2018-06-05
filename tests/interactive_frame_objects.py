@@ -102,14 +102,43 @@ class CustomMenuItem(object):
 # ######################### #
 
 
-class InteractiveMainMenu(FrameObject):
-    """FrameObject class to analyze Interactive main menu."""
+class InteractiveFrameObject(FrameObject):
+    """FrameObject class to be extended for other Interactive Frame Objects."""
 
-    def __init__(self, frame=None):
+    def __init__(self, menu_regions, item_class=MenuItem, frame=None):
         if frame is None:
             frame = stbt.get_frame()
-        super(InteractiveMainMenu, self).__init__(frame)
+        super(InteractiveFrameObject, self).__init__(frame)
+        self.menu_regions = menu_regions
+        self.item_class = item_class
         self.items = []
+
+    @property
+    def message(self):
+        """Get selected item text"""
+        selected_list = [x for x in self.menu_items if x.selected]
+        return selected_list[0].text
+
+    def populate_items(self):
+        """Load menu items list"""
+        for region in self.menu_items:
+            item = self.item_class(self._frame, region)
+            if item.text:
+                self.items.append(item)
+
+    @property
+    def menu_items(self):
+        """Get menu items list"""
+        if not self.items:
+            self.populate_items()
+        return self.items
+
+
+class InteractiveMainMenu(InteractiveFrameObject):
+    """FrameObject class to analyze Interactive main menu."""
+
+    def __init__(self):
+        super(InteractiveMainMenu, self).__init__(MAIN_MENU_ITEM_REGIONS)
 
     @property
     def is_visible(self):
@@ -123,25 +152,6 @@ class InteractiveMainMenu(FrameObject):
 
             return title_visible
         return False
-
-    @property
-    def message(self):
-        """Get selected item text"""
-        selected_list = [x for x in self.menu_items if x.selected]
-        return selected_list[0].text
-
-    def populate_items(self):
-        """Load menu items list"""
-        for region in MAIN_MENU_ITEM_REGIONS:
-            item = MenuItem(self._frame, region)
-            self.items.append(item)
-
-    @property
-    def menu_items(self):
-        """Get menu items list"""
-        if not self.items:
-            self.populate_items()
-        return self.items
 
 
 class MyMessagesMenu(FrameObject):
