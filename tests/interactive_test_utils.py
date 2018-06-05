@@ -7,8 +7,8 @@ Test cases for My Messages
 from time import sleep
 import stbt
 from sky_plus_utils import debug
-from interactive_constants import MAIN_MENU_ITEM_REGIONS
-from interactive_frame_objects import InteractiveMainMenu
+from interactive_frame_objects import InteractiveMainMenu, MAIN_MENU_ITEM_REGIONS
+
 
 def open_and_basic_check_interactive_menu():
     """Open the My Messages app and make basic checks"""
@@ -25,6 +25,7 @@ def open_and_basic_check_interactive_menu():
     assert len(menu_items) == 9, '[Interactive] Main menu should have 9 items, but has {0}'.format(len(menu_items))
     return menu
 
+
 def enter_menu(menu_name):
     """Select menu with the given name
 
@@ -34,6 +35,7 @@ def enter_menu(menu_name):
     # Navigate menus:
     menu = None
     # pylint: disable=unused-variable
+    # TODO: Review this logic
     for i in range(0, len(MAIN_MENU_ITEM_REGIONS)):
         menu = stbt.wait_until(InteractiveMainMenu, timeout_secs=20)
         debug('[INTERACTIVE_MENU] Item selected: {0}'.format(menu.message))

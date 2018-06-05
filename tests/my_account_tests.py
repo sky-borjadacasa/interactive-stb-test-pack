@@ -12,6 +12,7 @@ import interactive_constants
 import sky_plus_strings
 from interactive_test_utils import open_and_basic_check_interactive_menu, enter_menu
 
+
 def test_smoke_open_my_account():
     """Open MySky app"""
     clear_test()
