@@ -7,7 +7,7 @@ Test cases for MySky
 import time
 import cv2
 import stbt
-from stbt import FrameObject, Region, match
+from stbt import Region, match
 import sky_plus_utils
 from sky_plus_utils import debug, IMAGE_DEBUG_MODE
 import mysky_constants
@@ -15,7 +15,7 @@ from mysky_constants import MY_SKY_OPEN_TIMEOUT
 import mysky_test_utils
 import interactive_constants
 import sky_plus_strings
-from interactive_frame_objects import MenuItem, ImageMenuItem, InteractiveFrameObject
+from interactive_frame_objects import ImageMenuItem, InteractiveFrameObject
 
 # ##################### #
 # ##### Constants ##### #
@@ -108,14 +108,11 @@ class MySkyMainMenu(InteractiveFrameObject):
         return False
 
 
-class SecretSceneMainMenu(FrameObject):
+class SecretSceneMainMenu(InteractiveFrameObject):
     """FrameObject class to analyze Secret Scene main menu."""
 
-    def __init__(self, frame=None):
-        if frame is None:
-            frame = stbt.get_frame()
-        super(SecretSceneMainMenu, self).__init__(frame)
-        self.items = []
+    def __init__(self):
+        super(SecretSceneMainMenu, self).__init__(SS_MAIN_REGIONS)
 
     @property
     def is_visible(self):
@@ -134,35 +131,12 @@ class SecretSceneMainMenu(FrameObject):
         text = sky_plus_utils.find_text(self._frame, SECRET_SCENE_TITLE_REGION)
         return text
 
-    @property
-    def message(self):
-        """Get selected item text"""
-        selected_list = [x for x in self.menu_items if x.selected]
-        return selected_list[0].text
 
-    def populate_items(self):
-        """Load menu items list"""
-        for region in SS_MAIN_REGIONS:
-            item = MenuItem(self._frame, region)
-            self.items.append(item)
-
-    @property
-    # TODO: Refactor usage
-    def menu_items(self):
-        """Get menu items list"""
-        if not self.items:
-            self.populate_items()
-        return self.items
-
-
-class DeveloperModeMenu(FrameObject):
+class DeveloperModeMenu(InteractiveFrameObject):
     """FrameObject class to analyze Secret Scene Developer mode menu."""
 
-    def __init__(self, frame=None):
-        if frame is None:
-            frame = stbt.get_frame()
-        super(DeveloperModeMenu, self).__init__(frame)
-        self.items = []
+    def __init__(self):
+        super(DeveloperModeMenu, self).__init__(SS_DEV_MODE_ITEM_REGIONS)
 
     @property
     def is_visible(self):
@@ -181,34 +155,12 @@ class DeveloperModeMenu(FrameObject):
         text = sky_plus_utils.find_text(self._frame, SS_DEV_MODE_TITLE_REGION)
         return text
 
-    @property
-    def message(self):
-        """Get selected item text"""
-        selected_list = [x for x in self.menu_items if x.selected]
-        return selected_list[0].text
 
-    def populate_items(self):
-        """Load menu items list"""
-        for region in SS_DEV_MODE_ITEM_REGIONS:
-            item = MenuItem(self._frame, region)
-            self.items.append(item)
-
-    @property
-    def menu_items(self):
-        """Get menu items list"""
-        if not self.items:
-            self.populate_items()
-        return self.items
-
-
-class ManageYourAccountMenu(FrameObject):
+class ManageYourAccountMenu(InteractiveFrameObject):
     """FrameObject class to analyze Manage Your Account menu."""
 
-    def __init__(self, frame=None):
-        if frame is None:
-            frame = stbt.get_frame()
-        super(ManageYourAccountMenu, self).__init__(frame)
-        self.items = []
+    def __init__(self):
+        super(ManageYourAccountMenu, self).__init__(MYA_MENU_ITEM_REGIONS, item_class=ImageMenuItem)
 
     @property
     def is_visible(self):
@@ -225,25 +177,6 @@ class ManageYourAccountMenu(FrameObject):
         """Get greeting from top of the menu"""
         text = sky_plus_utils.find_text(self._frame, MYA_TITLE_REGION)
         return text
-
-    @property
-    def message(self):
-        """Get selected item text"""
-        selected_list = [x for x in self.menu_items if x.selected]
-        return selected_list[0].text
-
-    def populate_items(self):
-        """Load menu items list"""
-        for region in MYA_MENU_ITEM_REGIONS:
-            item = ImageMenuItem(self._frame, region)
-            self.items.append(item)
-
-    @property
-    def menu_items(self):
-        """Get menu items list"""
-        if not self.items:
-            self.populate_items()
-        return self.items
 
 
 # ################# #
