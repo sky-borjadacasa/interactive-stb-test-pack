@@ -17,6 +17,9 @@ from mysky_test_utils import get_bottom_text_region, get_default_image_region
 # ##### Constants ##### #
 # ##################### #
 
+
+TITLE_REGION = Region(45, 30, width=170, height=45)
+
 MAIN_MENU_ITEM_REGIONS = [Region(100, 338, width=530, height=32),
                           Region(100, 374, width=530, height=32),
                           Region(100, 410, width=530, height=32),
@@ -26,6 +29,14 @@ MAIN_MENU_ITEM_REGIONS = [Region(100, 338, width=530, height=32),
                           Region(100, 554, width=530, height=32),
                           Region(100, 590, width=530, height=32),
                           Region(647, 338, width=530, height=32)]
+
+# My Messages Regions:
+MM_TITLE_REGION = Region(90, 60, width=180, height=40)
+MM_SUBTITLE_REGION = Region(310, 185, width=670, height=45)
+MA_BACKGROUND_REGION = Region(600, 110, width=680, height=610)
+
+# My Account Regions:
+MA_TITLE_REGION = Region(120, 65, width=160, height=40)
 
 
 # ############################# #
@@ -150,7 +161,7 @@ class InteractiveMainMenu(InteractiveFrameObject):
         logo_visible = stbt.match(interactive_constants.INTERACTIVE_SKY_LOGO)
         debug('[INTERACTIVE] Logo visible: {0}'.format(logo_visible))
         if logo_visible:
-            title = find_text(self._frame, interactive_constants.TITLE_REGION)
+            title = find_text(self._frame, TITLE_REGION)
             debug('[INTERACTIVE] Text found: {0}'.format(title))
             title_visible = (title == sky_plus_strings.INTERACTIVE)
 
@@ -170,11 +181,11 @@ class MyMessagesMenu(InteractiveFrameObject):
         logo_visible = stbt.match(interactive_constants.INTERACTIVE_SKY_LOGO_SD)
         debug('[MY MESSAGES] Logo visible: {0}'.format(logo_visible))
         if logo_visible:
-            title = find_text(self._frame, interactive_constants.MM_TITLE_REGION)
+            title = find_text(self._frame, MM_TITLE_REGION)
             debug('[MY MESSAGES] Title found: {0}'.format(title))
             title_visible = (title == sky_plus_strings.MY_MESSAGES)
 
-            subtitle = find_text(self._frame, interactive_constants.MM_SUBTITLE_REGION)
+            subtitle = find_text(self._frame, MM_SUBTITLE_REGION)
             debug('[MY MESSAGES] Subtitle found: {0}'.format(subtitle))
             subtitle_visible = (subtitle == sky_plus_strings.MM_SUBTITLE)
 
@@ -196,11 +207,11 @@ class MyAccountMenu(InteractiveFrameObject):
         logo_visible = stbt.match(interactive_constants.INTERACTIVE_SKY_LOGO_SD)
         debug('[MY ACCOUNT] Logo visible: {0}'.format(logo_visible))
         if logo_visible:
-            title = find_text(self._frame, interactive_constants.MA_TITLE_REGION)
+            title = find_text(self._frame, MA_TITLE_REGION)
             debug('[MY ACCOUNT] Title found: {0}'.format(title))
             title_visible = (title == sky_plus_strings.MY_ACCOUNT)
 
-            background_visible = stbt.match(interactive_constants.MA_BACKGROUND, region=interactive_constants.MA_BACKGROUND_REGION)
+            background_visible = stbt.match(interactive_constants.MA_BACKGROUND, region=MA_BACKGROUND_REGION)
 
             return title_visible and background_visible
         return False

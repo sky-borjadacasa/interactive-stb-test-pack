@@ -5,24 +5,9 @@ Contants for Interactive testing
 """
 
 import numpy as np
-from stbt import Region
 
 # Channels:
 CHANNEL_SKY_ONE_HD = '106'
-
-# Regions:
-TITLE_REGION = Region(45, 30, width=170, height=45)
-HELP_TITLE_REGION = Region(45, 85, width=210, height=35)
-GET_HELP_REGION = Region(45, 120, width=465, height=30)
-
-# My Messages Regions:
-MM_TITLE_REGION = Region(90, 60, width=180, height=40)
-MM_SUBTITLE_REGION = Region(310, 185, width=670, height=45)
-MM_PIN_REGION = Region(582, 345, width=111, height=31)
-MA_BACKGROUND_REGION = Region(600, 110, width=680, height=610)
-
-# My Account Regions:
-MA_TITLE_REGION = Region(120, 65, width=160, height=40)
 
 # MySky Images:
 INTERACTIVE_SKY_LOGO = 'images/InteractiveSkyLogo.png'
