@@ -161,8 +161,11 @@ class InteractiveMainMenu(InteractiveFrameObject):
 class MyMessagesMenu(FrameObject):
     """FrameObject class to analyze My Messages menu."""
 
-    def __init__(self):
-        super(MyMessagesMenu, self).__init__([])
+    def __init__(self, frame=None):
+        if frame is None:
+            frame = stbt.get_frame()
+        super(MyMessagesMenu, self).__init__(frame)
+        self.items = []
 
     @property
     def is_visible(self):
@@ -187,8 +190,11 @@ class MyMessagesMenu(FrameObject):
 class MyAccountMenu(FrameObject):
     """FrameObject class to analyze My Account menu."""
 
-    def __init__(self):
-        super(MyAccountMenu, self).__init__([])
+    def __init__(self, frame=None):
+        if frame is None:
+            frame = stbt.get_frame()
+        super(MyAccountMenu, self).__init__(frame)
+        self.items = []
 
     @property
     def is_visible(self):
