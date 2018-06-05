@@ -13,9 +13,9 @@ from sky_plus_utils import debug, IMAGE_DEBUG_MODE
 import mysky_constants
 from mysky_constants import MY_SKY_OPEN_TIMEOUT
 import mysky_test_utils
-from mysky_test_utils import get_bottom_text_region, get_default_image_region
 import interactive_constants
 import sky_plus_strings
+from interactive_frame_objects import ImageMenuItem
 
 
 # ##################### #
@@ -55,19 +55,6 @@ MYA_MENU_ITEM_REGIONS = [Region(930, 135, width=300, height=130),
                          Region(930, 555, width=300, height=130)]
 
 
-def get_text_region(region):
-    """Get the default region of a menu item where the text should be located
-
-    Args:
-        region (stbt.Region): Region to crop
-
-    Returns:
-        Region of the text
-    """
-    bottom = Region(region.x + 10, region.bottom - 45, width=region.width - 20, bottom=region.bottom - 5)
-    return bottom
-
-
 def ui_locked_or_refreshing(frame):
     """Detect if traffic lights are red (ui locked) or yellow (ui refreshing) in the given frame
 
@@ -97,33 +84,6 @@ def ui_ready(frame):
     return is_green
 
 
-# pylint: disable=too-few-public-methods
-class MySkyMenuItem(object):
-    """Class to store the attributes of a MySky menu item"""
-
-    text = ''
-    selected = False
-    frame = None
-    region = None
-    image_region = None
-    text_region = None
-
-    def __init__(self, frame, region, text_region_function=get_bottom_text_region,
-                 image_region_function=get_default_image_region):
-        self.frame = frame
-        self.region = region
-        if image_region_function is not None:
-            self.image_region = image_region_function(region)
-        if text_region_function is not None:
-            self.text_region = text_region_function(region)
-        # TODO: Refactor -> Can use lambdas for this? Maybe we should have defaults? Maybe only use functions when there's image?
-        debug('REGION: {0}'.format(self.text_region))
-        if self.text_region is not None:
-            self.text = sky_plus_utils.find_text(frame, self.text_region)
-            self.selected = sky_plus_utils.match_color(frame, self.text_region,
-                                                       interactive_constants.YELLOW_BACKGROUND_RGB)
-
-
 class MySkyMainMenu(FrameObject):
     """FrameObject class to analyze MySky main menu."""
 
@@ -137,9 +97,10 @@ class MySkyMainMenu(FrameObject):
     def is_visible(self):
         # pylint: disable=stbt-frame-object-missing-frame
         logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=MY_SKY_REGION)
+        debug('[MYSKY MAIN] Logo visible: {0}'.format(logo_visible))
         if logo_visible:
             text = sky_plus_utils.find_text(self._frame, MAIN_MENU_LOADING_REGION)
-            debug('[FIND LOADING] Text found: {0}'.format(text))
+            debug('[MYSKY MAIN] Text found: {0}'.format(text))
             loading_visible = (text == sky_plus_strings.LOADING)
             light_is_green = ui_ready(self._frame)
             return not loading_visible and light_is_green
@@ -154,7 +115,7 @@ class MySkyMainMenu(FrameObject):
     def populate_items(self):
         """Load menu items list"""
         for region in MAIN_MENU_REGIONS:
-            item = MySkyMenuItem(self._frame, region, image_region_function=lambda f: None)
+            item = ImageMenuItem(self._frame, region)
             self.items.append(item)
 
     @property
@@ -200,7 +161,7 @@ class SecretSceneMainMenu(FrameObject):
     def populate_items(self):
         """Load menu items list"""
         for region in SS_MAIN_REGIONS:
-            item = MySkyMenuItem(self._frame, region, image_region_function=lambda f: None)
+            item = ImageMenuItem(self._frame, region)
             self.items.append(item)
 
     @property
@@ -247,7 +208,7 @@ class DeveloperModeMenu(FrameObject):
     def populate_items(self):
         """Load menu items list"""
         for region in SS_DEV_MODE_ITEM_REGIONS:
-            item = MySkyMenuItem(self._frame, region, image_region_function=lambda f: None)
+            item = ImageMenuItem(self._frame, region)
             self.items.append(item)
 
     @property
@@ -292,7 +253,7 @@ class ManageYourAccountMenu(FrameObject):
     def populate_items(self):
         """Load menu items list"""
         for region in MYA_MENU_ITEM_REGIONS:
-            item = MySkyMenuItem(self._frame, region, image_region_function=lambda f: None)
+            item = ImageMenuItem(self._frame, region)
             self.items.append(item)
 
     @property

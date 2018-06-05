@@ -6,9 +6,11 @@ Test cases for Interactive menu
 
 import stbt
 from stbt import FrameObject, Region
+import sky_plus_utils
 from sky_plus_utils import debug, find_text, match_color
 import interactive_constants
 import sky_plus_strings
+from mysky_test_utils import get_bottom_text_region, get_default_image_region
 
 
 # ##################### #
@@ -26,8 +28,12 @@ MAIN_MENU_ITEM_REGIONS = [Region(100, 338, width=530, height=32),
                           Region(647, 338, width=530, height=32)]
 
 
+# ############################# #
+# ##### Menu Item classes ##### #
+# ############################# #
+
+
 # pylint: disable=too-few-public-methods
-# TODO: Refactor?
 class MenuItem(object):
     """Class to store the attributes of a MySky menu item"""
 
@@ -40,6 +46,60 @@ class MenuItem(object):
         self.image = image
         self.text = find_text(image, region)
         self.selected = match_color(image, region, interactive_constants.YELLOW_BACKGROUND_RGB)
+
+
+# pylint: disable=too-few-public-methods
+class ImageMenuItem(object):
+    """Class to store the attributes of a MySky menu item"""
+
+    text = ''
+    selected = False
+    frame = None
+    region = None
+    image_region = None
+    text_region = None
+
+    def __init__(self, frame, region):
+        self.frame = frame
+        self.region = region
+        self.text_region = get_bottom_text_region(region)
+        self.image_region = get_default_image_region(region)
+        debug('REGION: {0}'.format(self.text_region))
+        if self.text_region is not None:
+            self.text = sky_plus_utils.find_text(frame, self.text_region)
+            self.selected = sky_plus_utils.match_color(frame, self.text_region,
+                                                       interactive_constants.YELLOW_BACKGROUND_RGB)
+
+
+# pylint: disable=too-few-public-methods
+class CustomMenuItem(object):
+    """Class to store the attributes of a MySky menu item"""
+
+    text = ''
+    selected = False
+    frame = None
+    region = None
+    image_region = None
+    text_region = None
+
+    def __init__(self, frame, region, text_region_function=get_bottom_text_region,
+                 image_region_function=get_default_image_region):
+        self.frame = frame
+        self.region = region
+        if image_region_function is not None:
+            self.image_region = image_region_function(region)
+        if text_region_function is not None:
+            self.text_region = text_region_function(region)
+        debug('REGION: {0}'.format(self.text_region))
+        if self.text_region is not None:
+            self.text = sky_plus_utils.find_text(frame, self.text_region)
+            self.selected = sky_plus_utils.match_color(frame, self.text_region,
+                                                       interactive_constants.YELLOW_BACKGROUND_RGB)
+
+
+# ######################### #
+# ##### Frame Objects ##### #
+# ######################### #
 
 
 class InteractiveMainMenu(FrameObject):
