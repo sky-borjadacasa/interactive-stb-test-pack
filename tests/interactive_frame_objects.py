@@ -158,14 +158,11 @@ class InteractiveMainMenu(InteractiveFrameObject):
         return False
 
 
-class MyMessagesMenu(FrameObject):
+class MyMessagesMenu(InteractiveFrameObject):
     """FrameObject class to analyze My Messages menu."""
 
-    def __init__(self, frame=None):
-        if frame is None:
-            frame = stbt.get_frame()
-        super(MyMessagesMenu, self).__init__(frame)
-        self.items = []
+    def __init__(self):
+        super(MyMessagesMenu, self).__init__([])
 
     @property
     def is_visible(self):
@@ -187,14 +184,11 @@ class MyMessagesMenu(FrameObject):
         return False
 
 
-class MyAccountMenu(FrameObject):
+class MyAccountMenu(InteractiveFrameObject):
     """FrameObject class to analyze My Account menu."""
 
-    def __init__(self, frame=None):
-        if frame is None:
-            frame = stbt.get_frame()
-        super(MyAccountMenu, self).__init__(frame)
-        self.items = []
+    def __init__(self):
+        super(MyAccountMenu, self).__init__([])
 
     @property
     def is_visible(self):
