@@ -15,8 +15,7 @@ from mysky_constants import MY_SKY_OPEN_TIMEOUT
 import mysky_test_utils
 import interactive_constants
 import sky_plus_strings
-from interactive_frame_objects import ImageMenuItem
-
+from interactive_frame_objects import MenuItem, ImageMenuItem, InteractiveFrameObject
 
 # ##################### #
 # ##### Constants ##### #
@@ -84,14 +83,16 @@ def ui_ready(frame):
     return is_green
 
 
-class MySkyMainMenu(FrameObject):
+# ######################### #
+# ##### Frame Objects ##### #
+# ######################### #
+
+
+class MySkyMainMenu(InteractiveFrameObject):
     """FrameObject class to analyze MySky main menu."""
 
-    def __init__(self, frame=None):
-        if frame is None:
-            frame = stbt.get_frame()
-        super(MySkyMainMenu, self).__init__(frame)
-        self.items = []
+    def __init__(self):
+        super(MySkyMainMenu, self).__init__(MAIN_MENU_REGIONS, item_class=ImageMenuItem)
 
     @property
     def is_visible(self):
@@ -105,25 +106,6 @@ class MySkyMainMenu(FrameObject):
             light_is_green = ui_ready(self._frame)
             return not loading_visible and light_is_green
         return False
-
-    @property
-    def message(self):
-        """Get selected item text"""
-        selected_list = [x for x in self.menu_items if x.selected]
-        return selected_list[0].text
-
-    def populate_items(self):
-        """Load menu items list"""
-        for region in MAIN_MENU_REGIONS:
-            item = ImageMenuItem(self._frame, region)
-            self.items.append(item)
-
-    @property
-    def menu_items(self):
-        """Get menu items list"""
-        if not self.items:
-            self.populate_items()
-        return self.items
 
 
 class SecretSceneMainMenu(FrameObject):
@@ -161,7 +143,7 @@ class SecretSceneMainMenu(FrameObject):
     def populate_items(self):
         """Load menu items list"""
         for region in SS_MAIN_REGIONS:
-            item = ImageMenuItem(self._frame, region)
+            item = MenuItem(self._frame, region)
             self.items.append(item)
 
     @property
@@ -208,7 +190,7 @@ class DeveloperModeMenu(FrameObject):
     def populate_items(self):
         """Load menu items list"""
         for region in SS_DEV_MODE_ITEM_REGIONS:
-            item = ImageMenuItem(self._frame, region)
+            item = MenuItem(self._frame, region)
             self.items.append(item)
 
     @property
