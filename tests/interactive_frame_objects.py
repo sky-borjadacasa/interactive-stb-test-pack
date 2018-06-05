@@ -83,13 +83,21 @@ class InteractiveMainMenu(FrameObject):
             self.populate_items()
         return self.items
 
+
 class MyMessagesMenu(FrameObject):
     """FrameObject class to analyze My Messages menu."""
+
+    def __init__(self, frame=None):
+        if frame is None:
+            frame = stbt.get_frame()
+        super(MyMessagesMenu, self).__init__(frame)
+        self.items = []
 
     @property
     def is_visible(self):
         # pylint: disable=stbt-frame-object-missing-frame
         logo_visible = stbt.match(interactive_constants.INTERACTIVE_SKY_LOGO_SD)
+        debug('[MY MESSAGES] Logo visible: {0}'.format(logo_visible))
         if logo_visible:
             title = find_text(self._frame, interactive_constants.MM_TITLE_REGION)
             debug('[MY MESSAGES] Title found: {0}'.format(title))
@@ -104,13 +112,21 @@ class MyMessagesMenu(FrameObject):
             return title_visible and subtitle_visible and pin_visible
         return False
 
+
 class MyAccountMenu(FrameObject):
     """FrameObject class to analyze My Account menu."""
+
+    def __init__(self, frame=None):
+        if frame is None:
+            frame = stbt.get_frame()
+        super(MyAccountMenu, self).__init__(frame)
+        self.items = []
 
     @property
     def is_visible(self):
         # pylint: disable=stbt-frame-object-missing-frame
         logo_visible = stbt.match(interactive_constants.INTERACTIVE_SKY_LOGO_SD)
+        debug('[MY ACCOUNT] Logo visible: {0}'.format(logo_visible))
         if logo_visible:
             title = find_text(self._frame, interactive_constants.MA_TITLE_REGION)
             debug('[MY ACCOUNT] Title found: {0}'.format(title))
