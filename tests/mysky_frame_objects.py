@@ -14,6 +14,7 @@ import mysky_constants
 from mysky_constants import MY_SKY_OPEN_TIMEOUT
 import mysky_test_utils
 import interactive_constants
+import interactive_test_utils as itu
 import sky_plus_strings
 from interactive_frame_objects import ImageMenuItem, InteractiveFrameObject
 
@@ -231,7 +232,7 @@ def open_and_check_mysky():
 
 def button_exits_test(button):
     """Open MySky app and close it with the given button"""
-    sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE_HD)
+    itu.go_to_channel(interactive_constants.CHANNEL_SKY_ONE_HD)
     open_and_basic_check_mysky()
 
     # Press the button:

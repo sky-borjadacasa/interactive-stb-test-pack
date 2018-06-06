@@ -5,7 +5,6 @@ Library with utilities for navigating SkyPlusHD box menus
 """
 
 import time
-from time import sleep
 import interactive_constants
 import sky_plus_strings
 from sky_plus_strings import FUZZY_SET
@@ -18,6 +17,7 @@ import stbt
 DEBUG_MODE = True
 IMAGE_DEBUG_MODE = True
 
+
 def debug(text):
     """Print the given text if debug mode is on.
 
@@ -26,6 +26,7 @@ def debug(text):
     """
     if DEBUG_MODE:
         print '[DEBUG] {0}'.format(text)
+
 
 def crop_image(image, region):
     """Crop the image
@@ -41,6 +42,7 @@ def crop_image(image, region):
         return image.copy()
     return image[region.y:region.bottom, region.x:region.right].copy()
 
+
 def rgb_luminance(color):
     """Calculate luminance of RGB color
 
@@ -52,16 +54,18 @@ def rgb_luminance(color):
     """
     return 0.299 * color[0] + 0.587 * color[1] + 0.114 * color[2]
 
+
 def bgr_to_rgb(color):
     """Convert color from BGR to RGB
 
     Args:
-        color_a (numpy.ndarray): Color in BGR format
+        color (numpy.ndarray): Color in BGR format
 
     Returns:
         Color in RGB format
     """
     return color[::-1]
+
 
 def color_distance(color_a, color_b):
     """Tell if two colors are close
@@ -78,6 +82,7 @@ def color_distance(color_a, color_b):
     b_distance = abs(color_a[2] - color_b[2])
     return r_distance + g_distance + b_distance
 
+
 def is_similar_color_rgb(color_a, color_b):
     """Tell if two colors are similar
 
@@ -92,6 +97,7 @@ def is_similar_color_rgb(color_a, color_b):
     distance = color_distance(color_a, color_b)
     debug('[COLOR DIFF] ({0} <-> {1}) Diff: {2} - Distance: {3}'.format(color_a, color_b, difference, distance))
     return difference < interactive_constants.COLOR_LUMINANCE_THRESHOLD and distance < interactive_constants.COLOR_DISTANCE_THRESHOLD
+
 
 def get_palette(image, region):
     """Get the dominant colors of a region
@@ -117,6 +123,7 @@ def get_palette(image, region):
     color_frequency.sort(0)
 
     return palette, color_frequency
+
 
 def is_color_in_palette(palette, color_frequency, color_to_find):
     """Find the most common color in a palette that matches the wanted color
@@ -198,33 +205,3 @@ def fuzzy_match(text):
     debug('Matches for "{0}":\n{1}'.format(text, matches))
     # We get directly the most likely match
     return matches[0][0]
-
-def clear_test():
-    """Close any app"""
-    sleep(2)
-    stbt.press('KEY_SKY')
-    sleep(3)
-
-def press_digits(digits):
-    """Press a sequence of digits
-
-    Args:
-        digits (string): digits to input
-    """
-    for digit in digits:
-        button = 'KEY_{0}'.format(digit)
-        stbt.press(button)
-
-def go_to_channel(channel):
-    """Got to the given channel
-
-    Args:
-        channel (string): Channel to input
-    """
-    assert len(channel) == 3, '[Go to channel] Channel should have 3 digits, but has {0}'.format(len(channel))
-    press_digits(channel)
-
-def open_secret_scene():
-    """Open secret scene menu
-    """
-    press_digits('062840')

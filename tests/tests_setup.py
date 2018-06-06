@@ -5,8 +5,8 @@
 
 from time import sleep
 import stbt
-import sky_plus_utils
-from sky_plus_utils import clear_test, press_digits, debug
+from sky_plus_utils import debug
+import interactive_test_utils as itu
 import mysky_frame_objects
 from mysky_frame_objects import SecretSceneMainMenu, DeveloperModeMenu
 import interactive_constants
@@ -22,10 +22,10 @@ ENV_CODE_PROD = 'KEY_3'
 
 def open_developer_mode():
     """Open Developer mode"""
-    sky_plus_utils.go_to_channel(interactive_constants.CHANNEL_SKY_ONE_HD)
+    itu.go_to_channel(interactive_constants.CHANNEL_SKY_ONE_HD)
     mysky_frame_objects.open_and_basic_check_mysky()
     sleep(0.5)
-    sky_plus_utils.open_secret_scene()
+    itu.open_secret_scene()
 
     # pylint: disable=stbt-unused-return-value
     stbt.wait_until(SecretSceneMainMenu)
@@ -40,13 +40,13 @@ def open_developer_mode():
 
 def setup_backend(env_code):
     """Open Developer mode"""
-    clear_test()
+    itu.clear_test()
     try:
         open_developer_mode()
         stbt.press(env_code)
         sleep(2)
     finally:
-        clear_test()
+        itu.clear_test()
 
 
 def test_setup_backend_dev():
@@ -75,24 +75,24 @@ def test_setup_backend_prod():
 
 def test_setup_disable_hd():
     """Disable HD"""
-    clear_test()
+    itu.clear_test()
     try:
         open_developer_mode()
         developer_mode_enter_menu(sky_plus_strings.SSD_DISABLE_HD)
         sleep(2)
     finally:
-        clear_test()
+        itu.clear_test()
 
 
 def test_setup_enable_hd():
     """Enable HD"""
-    clear_test()
+    itu.clear_test()
     try:
         open_developer_mode()
         developer_mode_enter_menu(sky_plus_strings.SSD_ENABLE_HD)
         sleep(2)
     finally:
-        clear_test()
+        itu.clear_test()
 
 
 # ################# #
@@ -102,7 +102,7 @@ def test_setup_enable_hd():
 
 def setup_vcn(vcn):
     """Set fake VCN"""
-    clear_test()
+    itu.clear_test()
     try:
         debug('[SETTING VCN]: {0}'.format(vcn))
         open_developer_mode()
@@ -112,13 +112,13 @@ def setup_vcn(vcn):
         for i in range(0, 9):
             stbt.press('KEY_LEFT')
             sleep(0.1)
-        press_digits(vcn)
+        itu.press_digits(vcn)
         sleep(5)
         stbt.press('KEY_DOWN')
-        #pylint: disable=stbt-unused-return-value
+        # pylint: disable=stbt-unused-return-value
         stbt.wait_until(SecretSceneMainMenu)
     finally:
-        clear_test()
+        itu.clear_test()
 
 
 def test_setup_vcn_any():
