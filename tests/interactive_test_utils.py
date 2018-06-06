@@ -7,7 +7,15 @@ Test cases for My Messages
 from time import sleep
 import stbt
 from sky_plus_utils import debug
-from interactive_frame_objects import InteractiveMainMenu, MAIN_MENU_ITEM_REGIONS
+from interactive_frame_objects import InteractiveMainMenu
+
+
+# ##################### #
+# ##### Constants ##### #
+# ##################### #
+
+
+MAX_MENU_LENGTH = 20
 
 
 # ####################### #
@@ -49,33 +57,51 @@ def open_secret_scene():
     press_digits('062840')
 
 
-# TODO: Create select menu
-def enter_menu(menu_name):
+# TODO: Remember to use 20secs for Interactive Menu
+def select_menu(frame_object, menu_name, timeout_secs=10):
     """Select menu with the given name
 
     Args:
-        menu_name (str): Name of the menu to open
+        frame_object (Class): Class of the Frame Object that can read this menu
+        menu_name (str): Name of the menu to select
+        timeout_secs (int): Timeout in seconds for finding the frame object
     """
-    # Navigate menus:
-    menu = None
-    # pylint: disable=unused-variable
-    # TODO: Review this logic
-    for i in range(0, len(MAIN_MENU_ITEM_REGIONS)):
-        menu = stbt.wait_until(InteractiveMainMenu, timeout_secs=20)
-        debug('[INTERACTIVE_MENU] Item selected: {0}'.format(menu.message))
+    # Get the menus:
+    menu = stbt.wait_until(frame_object, timeout_secs=timeout_secs)
+
+    # Check if the menu we want exists:
+    menu_item = [x for x in menu.menu_items if x.text == menu_name]
+    assert menu_item is not None, 'Menu item {0} not found in this screen'.format(menu_name)
+
+    if menu.message == menu_name:
+        return
+
+    for i in range(0, MAX_MENU_LENGTH):
+        menu = stbt.wait_until(frame_object, timeout_secs=timeout_secs)
+        debug('[SELECT_MENU] Screen {0} selected: {1}->{2}'.format(type(menu).__name__, i, menu.message))
 
         if menu.message == menu_name:
-            debug('[INTERACTIVE_MENU] Item found!: {0}'.format(menu.message))
+            debug('[SELECT_MENU] Item found: {0} -> {1}->{2}'.format(type(menu).__name__, i, menu.message))
             break
-        debug('[INTERACTIVE_MENU] Press DOWN')
         stbt.press('KEY_DOWN')
         # Give STB 3 seconds to move the highlighted menu entry
         sleep(3)
 
     assert menu.message == menu_name, \
-        '[INTERACTIVE_MENU] Selected item is not [{0}]'.format(menu_name)
+        '[SELECT_MENU] ({0}) Selected item is not [{1}]'.format(type(menu).__name__, menu_name)
 
-    # Open My Messages:
+
+def enter_menu(frame_object, menu_name, timeout_secs=10):
+    """Select and enter menu with the given name
+
+    Args:
+        frame_object (Class): Class of the Frame Object that can read this menu
+        menu_name (str): Name of the menu to enter
+        timeout_secs (int): Timeout in seconds for finding the frame object
+    """
+    select_menu(frame_object, menu_name, timeout_secs)
+
+    # Open menu:
     stbt.press('KEY_SELECT')
 
 
@@ -95,6 +121,5 @@ def open_and_basic_check_interactive_menu():
     for item in menu_items:
         debug('Item text: {0}'.format(item.text))
         debug('Item selected: {0}'.format(item.selected))
-    debug(len(menu_items))
     assert len(menu_items) == 9, '[Interactive] Main menu should have 9 items, but has {0}'.format(len(menu_items))
     return menu
