@@ -5,8 +5,6 @@ Library with utilities for navigating SkyPlusHD box menus
 """
 
 import time
-from time import sleep
-import interactive_constants
 import sky_plus_strings
 from sky_plus_strings import FUZZY_SET
 import cv2
@@ -15,8 +13,19 @@ from scipy.stats import itemfreq
 from fuzzywuzzy import process
 import stbt
 
+
+# ##################### #
+# ##### Constants ##### #
+# ##################### #
+
+
 DEBUG_MODE = True
 IMAGE_DEBUG_MODE = True
+
+COLOR_LUMINANCE_THRESHOLD = 10
+COLOR_DISTANCE_THRESHOLD = 45
+PALETTE_SIZE = 2
+
 
 def debug(text):
     """Print the given text if debug mode is on.
@@ -26,6 +35,7 @@ def debug(text):
     """
     if DEBUG_MODE:
         print '[DEBUG] {0}'.format(text)
+
 
 def crop_image(image, region):
     """Crop the image
@@ -41,6 +51,7 @@ def crop_image(image, region):
         return image.copy()
     return image[region.y:region.bottom, region.x:region.right].copy()
 
+
 def rgb_luminance(color):
     """Calculate luminance of RGB color
 
@@ -52,16 +63,18 @@ def rgb_luminance(color):
     """
     return 0.299 * color[0] + 0.587 * color[1] + 0.114 * color[2]
 
+
 def bgr_to_rgb(color):
     """Convert color from BGR to RGB
 
     Args:
-        color_a (numpy.ndarray): Color in BGR format
+        color (numpy.ndarray): Color in BGR format
 
     Returns:
         Color in RGB format
     """
     return color[::-1]
+
 
 def color_distance(color_a, color_b):
     """Tell if two colors are close
@@ -78,6 +91,7 @@ def color_distance(color_a, color_b):
     b_distance = abs(color_a[2] - color_b[2])
     return r_distance + g_distance + b_distance
 
+
 def is_similar_color_rgb(color_a, color_b):
     """Tell if two colors are similar
 
@@ -91,7 +105,8 @@ def is_similar_color_rgb(color_a, color_b):
     difference = abs(rgb_luminance(color_a) - rgb_luminance(color_b))
     distance = color_distance(color_a, color_b)
     debug('[COLOR DIFF] ({0} <-> {1}) Diff: {2} - Distance: {3}'.format(color_a, color_b, difference, distance))
-    return difference < interactive_constants.COLOR_LUMINANCE_THRESHOLD and distance < interactive_constants.COLOR_DISTANCE_THRESHOLD
+    return difference < COLOR_LUMINANCE_THRESHOLD and distance < COLOR_DISTANCE_THRESHOLD
+
 
 def get_palette(image, region):
     """Get the dominant colors of a region
@@ -110,13 +125,14 @@ def get_palette(image, region):
 
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
     flags = cv2.KMEANS_RANDOM_CENTERS
-    _, labels, centroids = cv2.kmeans(pixels, K=interactive_constants.PALETTE_SIZE, bestLabels=None, criteria=criteria, attempts=10, flags=flags)
+    _, labels, centroids = cv2.kmeans(pixels, K=PALETTE_SIZE, bestLabels=None, criteria=criteria, attempts=10, flags=flags)
 
     palette = np.uint8(centroids)
     color_frequency = itemfreq(labels)
     color_frequency.sort(0)
 
     return palette, color_frequency
+
 
 def is_color_in_palette(palette, color_frequency, color_to_find):
     """Find the most common color in a palette that matches the wanted color
@@ -136,6 +152,7 @@ def is_color_in_palette(palette, color_frequency, color_to_find):
             return True
     return False
 
+
 def find_text(image, region, fuzzy=True, char_whitelist=sky_plus_strings.OCR_CHAR_WHITELIST):
     """Read the text in the given region
 
@@ -148,10 +165,6 @@ def find_text(image, region, fuzzy=True, char_whitelist=sky_plus_strings.OCR_CHA
     Returns:
         Text of the given item
     """
-    cropped_image = crop_image(image, region)
-    cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
-
-    text = ''
     ocr_options = {'tessedit_char_whitelist': char_whitelist}
     text = stbt.ocr(region=region, tesseract_config=ocr_options).strip().encode('utf-8')
     debug('Text found: [{0}] in region {1}'.format(text, region))
@@ -159,31 +172,34 @@ def find_text(image, region, fuzzy=True, char_whitelist=sky_plus_strings.OCR_CHA
         text = fuzzy_match(text)
     debug('Text matched: [{0}] in region {1}'.format(text, region))
     if IMAGE_DEBUG_MODE:
-        cv2.imwrite('finding_text_{0}_{1}.jpg'.format(time.time(), text), crop_image(image, region))
+        cv2.imwrite('finding_text_{0}_{1}.jpg'.format(text, time.time()), crop_image(image, region))
 
-    return text
+    return text.strip()
 
-def match_color(image, region, color):
+
+def match_color(frame, region, color):
     """Tell if the region dominant color matches (aprox.) the given color
 
     Args:
+        frame (stbt.Frame): Frame to search
         region (stbt.Region): Region of the image to search defined by the top-left and bottom-right coordinates
         color (numpy.ndarray): Color to match in RGB format
 
     Returns:
         True if if the dominant color matches the given color
     """
-    palette, color_frequency = get_palette(image, region)
+    palette, color_frequency = get_palette(frame, region)
     debug('Palette: {0}'.format(palette))
     debug('Color frequency: {0}'.format(color_frequency))
     selected = is_color_in_palette(palette, color_frequency, color)
 
     if IMAGE_DEBUG_MODE:
-        cv2.imwrite('matching_color_{0}.jpg'.format(time.time()), crop_image(image, region))
+        cv2.imwrite('matching_color_{0}.jpg'.format(time.time()), crop_image(frame, region))
 
     debug('Color matched: {0}, {1}'.format(selected, color))
 
     return selected
+
 
 def fuzzy_match(text):
     """Get the text fuzzy matched against our dictionary
@@ -198,33 +214,3 @@ def fuzzy_match(text):
     debug('Matches for "{0}":\n{1}'.format(text, matches))
     # We get directly the most likely match
     return matches[0][0]
-
-def clear_test():
-    """Close any app"""
-    sleep(2)
-    stbt.press('KEY_SKY')
-    sleep(3)
-
-def press_digits(digits):
-    """Press a sequence of digits
-
-    Args:
-        digits (string): digits to input
-    """
-    for digit in digits:
-        button = 'KEY_{0}'.format(digit)
-        stbt.press(button)
-
-def go_to_channel(channel):
-    """Got to the given channel
-
-    Args:
-        channel (string): Channel to input
-    """
-    assert len(channel) == 3, '[Go to channel] Channel should have 3 digits, but has {0}'.format(len(channel))
-    press_digits(channel)
-
-def open_secret_scene():
-    """Open secret scene menu
-    """
-    press_digits('062840')
