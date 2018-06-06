@@ -119,9 +119,10 @@ class SecretSceneMainMenu(InteractiveFrameObject):
     def is_visible(self):
         # pylint: disable=stbt-frame-object-missing-frame
         logo_visible = stbt.match(mysky_constants.SKY_TOP_LOGO, region=MY_SKY_REGION)
+        debug('[SECRET_SCENE] Logo visible: {0}'.format(logo_visible))
         if logo_visible:
             text = sky_plus_utils.find_text(self._frame, SECRET_SCENE_TITLE_REGION)
-            debug('[FIND Interactive My Sky] Text found: {0}'.format(text))
+            debug('[SECRET_SCENE] Text found: {0}'.format(text))
             title_visible = (text == sky_plus_strings.INTERACTIVE_MY_SKY)
             return title_visible
         return False
