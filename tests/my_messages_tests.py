@@ -17,7 +17,7 @@ def test_smoke_open_my_messages():
     try:
         itu.go_to_channel(interactive_constants.CHANNEL_SKY_ONE_HD)
         itu.open_and_basic_check_interactive_menu()
-        itu.enter_menu(InteractiveMainMenu, sky_plus_strings.MY_ACCOUNT, timeout_secs=20)
+        itu.enter_menu(InteractiveMainMenu, sky_plus_strings.MY_MESSAGES, timeout_secs=20)
 
         menu = stbt.wait_until(MyMessagesMenu)
         assert menu.is_visible, '[My Messages] Menu is not visible'
