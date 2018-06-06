@@ -67,6 +67,7 @@ def select_menu(frame_object, menu_name, timeout_secs=10):
         timeout_secs (int): Timeout in seconds for finding the frame object
     """
     # Get the menus:
+    # pylint: disable=stbt-wait-until-callable
     menu = stbt.wait_until(frame_object, timeout_secs=timeout_secs)
 
     # Check if the menu we want exists:
@@ -77,6 +78,7 @@ def select_menu(frame_object, menu_name, timeout_secs=10):
         return
 
     for i in range(0, MAX_MENU_LENGTH):
+        # pylint: disable=stbt-wait-until-callable
         menu = stbt.wait_until(frame_object, timeout_secs=timeout_secs)
         debug('[SELECT_MENU] Screen {0} selected: {1}->{2}'.format(type(menu).__name__, i, menu.message))
 
