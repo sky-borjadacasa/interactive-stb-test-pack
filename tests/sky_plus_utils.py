@@ -5,7 +5,6 @@ Library with utilities for navigating SkyPlusHD box menus
 """
 
 import time
-import interactive_constants
 import sky_plus_strings
 from sky_plus_strings import FUZZY_SET
 import cv2
@@ -14,8 +13,18 @@ from scipy.stats import itemfreq
 from fuzzywuzzy import process
 import stbt
 
+
+# ##################### #
+# ##### Constants ##### #
+# ##################### #
+
+
 DEBUG_MODE = True
 IMAGE_DEBUG_MODE = True
+
+COLOR_LUMINANCE_THRESHOLD = 10
+COLOR_DISTANCE_THRESHOLD = 45
+PALETTE_SIZE = 2
 
 
 def debug(text):
@@ -96,7 +105,7 @@ def is_similar_color_rgb(color_a, color_b):
     difference = abs(rgb_luminance(color_a) - rgb_luminance(color_b))
     distance = color_distance(color_a, color_b)
     debug('[COLOR DIFF] ({0} <-> {1}) Diff: {2} - Distance: {3}'.format(color_a, color_b, difference, distance))
-    return difference < interactive_constants.COLOR_LUMINANCE_THRESHOLD and distance < interactive_constants.COLOR_DISTANCE_THRESHOLD
+    return difference < COLOR_LUMINANCE_THRESHOLD and distance < COLOR_DISTANCE_THRESHOLD
 
 
 def get_palette(image, region):
@@ -116,7 +125,7 @@ def get_palette(image, region):
 
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
     flags = cv2.KMEANS_RANDOM_CENTERS
-    _, labels, centroids = cv2.kmeans(pixels, K=interactive_constants.PALETTE_SIZE, bestLabels=None, criteria=criteria, attempts=10, flags=flags)
+    _, labels, centroids = cv2.kmeans(pixels, K=PALETTE_SIZE, bestLabels=None, criteria=criteria, attempts=10, flags=flags)
 
     palette = np.uint8(centroids)
     color_frequency = itemfreq(labels)

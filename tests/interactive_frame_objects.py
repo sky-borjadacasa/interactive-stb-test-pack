@@ -4,6 +4,7 @@
 Test cases for Interactive menu
 """
 
+import numpy as np
 import stbt
 from stbt import FrameObject, Region
 import sky_plus_utils
@@ -17,6 +18,12 @@ from mysky_test_utils import get_bottom_text_region, get_default_image_region
 # ##### Constants ##### #
 # ##################### #
 
+INTERACTIVE_SKY_LOGO = 'images/InteractiveSkyLogo.png'
+MM_PIN_ENTRY = 'images/PinEntry.png'
+MA_BACKGROUND = 'images/MyAccountBackground.png'
+
+# Colors:
+YELLOW_BACKGROUND_RGB = np.array([235, 189, 0])
 
 TITLE_REGION = Region(45, 30, width=170, height=45)
 
@@ -56,7 +63,7 @@ class MenuItem(object):
     def __init__(self, image, region):
         self.image = image
         self.text = find_text(image, region)
-        self.selected = match_color(image, region, interactive_constants.YELLOW_BACKGROUND_RGB)
+        self.selected = match_color(image, region, YELLOW_BACKGROUND_RGB)
 
 
 # pylint: disable=too-few-public-methods
@@ -78,8 +85,7 @@ class ImageMenuItem(object):
         debug('REGION: {0}'.format(self.text_region))
         if self.text_region is not None:
             self.text = sky_plus_utils.find_text(frame, self.text_region)
-            self.selected = sky_plus_utils.match_color(frame, self.text_region,
-                                                       interactive_constants.YELLOW_BACKGROUND_RGB)
+            self.selected = sky_plus_utils.match_color(frame, self.text_region, YELLOW_BACKGROUND_RGB)
 
 
 # pylint: disable=too-few-public-methods
@@ -104,8 +110,7 @@ class CustomMenuItem(object):
         debug('REGION: {0}'.format(self.text_region))
         if self.text_region is not None:
             self.text = sky_plus_utils.find_text(frame, self.text_region)
-            self.selected = sky_plus_utils.match_color(frame, self.text_region,
-                                                       interactive_constants.YELLOW_BACKGROUND_RGB)
+            self.selected = sky_plus_utils.match_color(frame, self.text_region, YELLOW_BACKGROUND_RGB)
 
 
 # ######################### #
@@ -158,7 +163,7 @@ class InteractiveMainMenu(InteractiveFrameObject):
     @property
     def is_visible(self):
         # pylint: disable=stbt-frame-object-missing-frame
-        logo_visible = stbt.match(interactive_constants.INTERACTIVE_SKY_LOGO)
+        logo_visible = stbt.match(INTERACTIVE_SKY_LOGO)
         debug('[INTERACTIVE] Logo visible: {0}'.format(logo_visible))
         if logo_visible:
             title = find_text(self._frame, TITLE_REGION)
@@ -189,7 +194,7 @@ class MyMessagesMenu(InteractiveFrameObject):
             debug('[MY MESSAGES] Subtitle found: {0}'.format(subtitle))
             subtitle_visible = (subtitle == sky_plus_strings.MM_SUBTITLE)
 
-            pin_visible = stbt.match(interactive_constants.MM_PIN_ENTRY)
+            pin_visible = stbt.match(MM_PIN_ENTRY)
 
             return title_visible and subtitle_visible and pin_visible
         return False
@@ -211,7 +216,7 @@ class MyAccountMenu(InteractiveFrameObject):
             debug('[MY ACCOUNT] Title found: {0}'.format(title))
             title_visible = (title == sky_plus_strings.MY_ACCOUNT)
 
-            background_visible = stbt.match(interactive_constants.MA_BACKGROUND, region=MA_BACKGROUND_REGION)
+            background_visible = stbt.match(MA_BACKGROUND, region=MA_BACKGROUND_REGION)
 
             return title_visible and background_visible
         return False

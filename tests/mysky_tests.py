@@ -15,6 +15,18 @@ import interactive_constants
 import interactive_test_utils as itu
 
 
+# ##################### #
+# ##### Constants ##### #
+# ##################### #
+
+
+# Manage your Account Images:
+MYA_BILLS_PAYMENTS = 'images/MYA_Bills_Payments.png'
+MYA_PACKAGE_SETTINGS = 'images/MYA_Package_Settings.png'
+MYA_DETAILS_MESSAGES = 'images/MYA_Details_Messages.png'
+MYA_MY_OFFERS = 'images/MYA_My_Offers.png'
+
+
 def test_smoke_open_mysky():
     """Open MySky app"""
     itu.clear_test()
@@ -110,16 +122,16 @@ def test_acceptance_simple_my_account_navigation():
         # Check images:
         menu_items = menu.menu_items
         item = [x for x in menu_items if x.text == sky_plus_strings.BILLS_AND_PAYMENTS][0]
-        match_result = match(interactive_constants.MYA_BILLS_PAYMENTS, frame=menu._frame, region=item.region)
+        match_result = match(MYA_BILLS_PAYMENTS, frame=menu._frame, region=item.region)
         debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
         item = [x for x in menu_items if x.text == sky_plus_strings.PACKAGE_AND_SETTINGS][0]
-        match_result = match(interactive_constants.MYA_PACKAGE_SETTINGS, frame=menu._frame, region=item.region)
+        match_result = match(MYA_PACKAGE_SETTINGS, frame=menu._frame, region=item.region)
         debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
         item = [x for x in menu_items if x.text == sky_plus_strings.DETAILS_AND_MESSAGES][0]
-        match_result = match(interactive_constants.MYA_DETAILS_MESSAGES, frame=menu._frame, region=item.region)
+        match_result = match(MYA_DETAILS_MESSAGES, frame=menu._frame, region=item.region)
         debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
         item = [x for x in menu_items if x.text == sky_plus_strings.EXPLORE_MORE][0]
-        match_result = match(interactive_constants.MYA_MY_OFFERS, frame=menu._frame, region=item.region)
+        match_result = match(MYA_MY_OFFERS, frame=menu._frame, region=item.region)
         debug('match_result: {0}{1}'.format(match_result.match, match_result.first_pass_result))
     finally:
         itu.clear_test()

@@ -27,12 +27,8 @@ def open_developer_mode():
     sleep(0.5)
     itu.open_secret_scene()
 
-    # pylint: disable=stbt-unused-return-value
-    stbt.wait_until(SecretSceneMainMenu)
-    stbt.press('KEY_DOWN')
-    assert stbt.wait_until(lambda: SecretSceneMainMenu().message == sky_plus_strings.SS_DEVELOPER_MODE), \
-        '[Secret Scene] Selected item is not [{0}]'.format(sky_plus_strings.SS_DEVELOPER_MODE)
-    stbt.press('KEY_SELECT')
+    itu.enter_menu(SecretSceneMainMenu, sky_plus_strings.SS_DEVELOPER_MODE)
+
     dev_mode_menu = stbt.wait_until(DeveloperModeMenu)
     assert dev_mode_menu.title == sky_plus_strings.SS_VCN, \
         '[Developer Mode] Selected item is not [{0}]'.format(sky_plus_strings.SS_VCN)
@@ -78,7 +74,7 @@ def test_setup_disable_hd():
     itu.clear_test()
     try:
         open_developer_mode()
-        developer_mode_enter_menu(sky_plus_strings.SSD_DISABLE_HD)
+        itu.enter_menu(DeveloperModeMenu, sky_plus_strings.SSD_DISABLE_HD, timeout_secs=20)
         sleep(2)
     finally:
         itu.clear_test()
@@ -89,7 +85,7 @@ def test_setup_enable_hd():
     itu.clear_test()
     try:
         open_developer_mode()
-        developer_mode_enter_menu(sky_plus_strings.SSD_ENABLE_HD)
+        itu.enter_menu(DeveloperModeMenu, sky_plus_strings.SSD_ENABLE_HD, timeout_secs=20)
         sleep(2)
     finally:
         itu.clear_test()
@@ -131,37 +127,3 @@ def test_setup_vcn_vip():
     """Set any VCN"""
     vcn = test_scenario_manager.get_vip_vcn()
     setup_vcn(vcn)
-
-
-# ################# #
-# ##### utils ##### #
-# ################# #
-
-
-# TODO: Refactor for any FrameObject
-def developer_mode_enter_menu(menu_name):
-    """Select menu with the given name inside the Developer Mode menu
-
-    Args:
-        menu_name (str): Name of the menu to open
-    """
-    # Navigate menus:
-    menu = None
-    # pylint: disable=unused-variable
-    for i in range(0, len(mysky_frame_objects.SS_DEV_MODE_ITEM_REGIONS)):
-        menu = stbt.wait_until(DeveloperModeMenu, timeout_secs=20)
-        debug('[DEVELOPER_MODE] Item selected: {0}'.format(menu.message))
-
-        if menu.message == menu_name:
-            debug('[DEVELOPER_MODE] Item found!: {0}'.format(menu.message))
-            break
-        debug('[DEVELOPER_MODE] Press DOWN')
-        stbt.press('KEY_DOWN')
-        # Give STB 3 seconds to move the highlighted menu entry
-        sleep(3)
-
-    assert menu.message == menu_name, \
-        '[DEVELOPER_MODE] Selected item is not [{0}]'.format(menu_name)
-
-    # Open My Messages:
-    stbt.press('KEY_SELECT')
