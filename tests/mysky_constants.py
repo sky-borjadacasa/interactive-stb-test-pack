@@ -14,8 +14,6 @@ TRAFFIC_LIGHTS_REGION = Region(29, 21, width=20, height=33)
 
 # Images:
 SKY_TOP_LOGO = 'images/SkyTopLogo.png'
-# TODO: Fix this:
-MENU_EXPLORE_MORE = 'images/SkyQ.png'
 MENU_MANAGE_YOUR_ACCOUNT = 'images/ManageYourAccount.png'
 MENU_FIX_A_PROBLEM = 'images/FixAProblem.png'
 TL_RED = 'images/TL_Red.png'

@@ -57,7 +57,6 @@ def open_secret_scene():
     press_digits('062840')
 
 
-# TODO: Remember to use 20secs for Interactive Menu
 def select_menu(frame_object, menu_name, timeout_secs=10):
     """Select menu with the given name
 
